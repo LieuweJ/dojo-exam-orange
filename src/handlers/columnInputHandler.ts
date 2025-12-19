@@ -23,7 +23,7 @@ export class ColumnInputHandler implements IColumnInputHandler {
       const column = this.mapToColumn(raw);
 
       if (!this.validator.isValid(column, board)) {
-        this.output.render(`Column ${column + 1} is full or invalid. Please choose another column.`);
+        this.output.render(`Column ${raw} is full or invalid. Please choose another column.`);
 
         continue;
       }
