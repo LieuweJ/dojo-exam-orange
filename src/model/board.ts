@@ -14,7 +14,6 @@ export type IBoard = BoardCell[][];
 
 export type IBoardClass = {
   getBoard(): IBoard;
-  // addMove(move: Move): void;
 }
 
 export class Board implements IBoardClass {
@@ -30,15 +29,4 @@ export class Board implements IBoardClass {
   getBoard() {
     return this.board.map(row => [...row]);
   }
-
-  // addMove({row, marker}: Move) {
-  //   const rowIndex = row - 1;
-  //   const firstEmptyColIndex = this.board[rowIndex].indexOf(EMPTY_CELL);
-  //
-  //   if (firstEmptyColIndex === -1) {
-  //     throw new Error(`Row ${row} is full`);
-  //   }
-  //
-  //   this.board[rowIndex][firstEmptyColIndex] = marker;
-  // }
 }
