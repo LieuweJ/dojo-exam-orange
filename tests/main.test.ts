@@ -1,7 +1,7 @@
 import { Game } from '../src/game';
 import { Board, IBoardClass, IBoard } from '../src/model/board';
 import { IOutputPresenter } from '../src/presenter/output/boardPresenter';
-import { IColumnInputHandler } from '../src/handlers/ColumnInputHandler';
+import { IColumnInputHandler } from '../src/handlers/columnInputHandler';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardClass;

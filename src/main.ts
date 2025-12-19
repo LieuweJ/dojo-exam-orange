@@ -4,7 +4,7 @@ import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
 import { BoardPresenter } from './presenter/output/boardPresenter';
 import { RulesPresenter } from './presenter/output/rulesPresenter';
 import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
-import { ColumnInputHandler } from './handlers/ColumnInputHandler';
+import { ColumnInputHandler } from './handlers/columnInputHandler';
 
 const RULES_FILE = 'src/docs/rules-of-play.md';
 

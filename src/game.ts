@@ -1,6 +1,6 @@
 import { IBoard, IBoardClass } from './model/board';
 import { IOutputPresenter } from './presenter/output/boardPresenter';
-import { IColumnInputHandler } from './handlers/ColumnInputHandler';
+import { IColumnInputHandler } from './handlers/columnInputHandler';
 
 export type IGame = {
   play(): void;

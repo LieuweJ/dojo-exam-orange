@@ -1,4 +1,4 @@
-import { ColumnInputHandler } from '../../handlers/ColumnInputHandler';
+import { ColumnInputHandler } from '../../handlers/columnInputHandler';
 import { IInputAdapter } from '../../adapters/terminalInputAdapter';
 import { EMPTY_CELL, IBoard } from '../../model/board';
 
