@@ -38,4 +38,13 @@ describe('A game of orange-in-a-row can be played', () => {
       board.getBoard(),
     );
   });
+
+  test('Board displays coins with correct colors for each player', () => {
+    game.play();
+
+    expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
+    expect(boardPresenterSpy.present).toHaveBeenCalledWith(
+      board.getBoard(),
+    );
+  });
 });

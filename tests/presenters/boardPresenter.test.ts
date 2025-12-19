@@ -1,6 +1,6 @@
 import { BoardPresenter } from '../../src/presenter/boardPresenter';
 import { IOutputAdapter } from '../../src/adapters/outputAdapter';
-import { EMPTY_CELL, IBoard } from '../../src/model/board';
+import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../src/model/board';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -14,17 +14,17 @@ describe('BoardPresenter', () => {
     presenter = new BoardPresenter(outputAdapter);
   });
 
-  test('renders a small empty board correctly', () => {
+  test('Board displays coins with correct colors for each player', () => {
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, MARKER_X],
+      [MARKER_O, MARKER_X],
     ];
 
     presenter.present(board);
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
-      `|   |   |\n|   |   |\n|   |   |\n---------\n`
+      `| ⚪ | ⚪ |\n| ⚪ | 🔴 |\n| 🟡 | 🔴 |\n---------\n`
     );
   });
 });

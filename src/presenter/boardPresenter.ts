@@ -1,9 +1,15 @@
 import { IOutputAdapter } from '../adapters/outputAdapter';
-import { IBoard } from '../model/board';
+import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../model/board';
+
+const BOARD_CELL_TO_UI = new Map<BoardCell, string>([
+  [EMPTY_CELL, '⚪'],
+  [MARKER_X, '🔴'],
+  [MARKER_O, '🟡'],
+]);
 
 export type IPresenter<T> = {
   present(arg: T): void;
-}
+};
 
 export class BoardPresenter implements IPresenter<IBoard> {
   constructor(private outputAdapter: IOutputAdapter) {}
@@ -14,11 +20,10 @@ export class BoardPresenter implements IPresenter<IBoard> {
     for (const row of board) {
       output += '|';
       for (const cell of row) {
-        output += '   |' ;
+        output += ` ${BOARD_CELL_TO_UI.get(cell)} |`;
       }
       output += '\n';
-      bottom += '---'
-
+      bottom += '---';
     }
     output += bottom + '\n';
 
