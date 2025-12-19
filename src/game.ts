@@ -1,4 +1,4 @@
-import { IBoard, IBoardClass } from './model/board';
+import { IBoard, IBoardClass, MARKER_X, ColumnIndex} from './model/board';
 import { IOutputPresenter } from './presenter/output/boardPresenter';
 import { IColumnInputHandler } from './handlers/columnInputHandler';
 
@@ -17,7 +17,10 @@ export class Game implements IGame {
   public async play() {
     this.helpPresenter.present()
     this.boardPresenter.present(this.board.getBoard());
+
     const column = await this.columInputHandler.askFor(this.board.getBoard());
-    console.log(`You selected column: ${column}`);
+    this.board.addMove({column: column as ColumnIndex, marker: MARKER_X});
+
+    this.boardPresenter.present(this.board.getBoard());
   }
 }

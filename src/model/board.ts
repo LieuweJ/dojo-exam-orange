@@ -7,13 +7,14 @@ export type I_MARKER_X = typeof MARKER_X;
 export type I_MARKER_O = typeof MARKER_O;
 
 export type BoardCell = I_EMPTY_CELL | I_MARKER_X | I_MARKER_O;
-type RowIndex = 1 | 2 | 3 | 4 | 5 | 6;
-type Move = {row: RowIndex, marker: Exclude<BoardCell, I_EMPTY_CELL>;}
+export type ColumnIndex = 1 | 2 | 3 | 4 | 5 | 6;
+type Move = {column: ColumnIndex, marker: Exclude<BoardCell, I_EMPTY_CELL>;}
 
 export type IBoard = BoardCell[][];
 
 export type IBoardClass = {
   getBoard(): IBoard;
+  addMove(move: Move): void;
 }
 
 export class Board implements IBoardClass {
@@ -28,5 +29,16 @@ export class Board implements IBoardClass {
 
   getBoard() {
     return this.board.map(row => [...row]);
+  }
+
+  addMove({ column, marker }: Move) {
+    for (let row = this.board.length - 1; row >= 0; row--) {
+      if (this.board[row][column] === EMPTY_CELL) {
+        this.board[row][column] = marker;
+        return;
+      }
+    }
+
+    throw new Error(`Board column ${column} is full or invalid.`);
   }
 }
