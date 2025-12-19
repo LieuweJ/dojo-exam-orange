@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { IOutputAdapter } from '../adapters/outputAdapter';
-import { IPresenter } from './boardPresenter';
+import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
+import { IOutputPresenter } from './boardPresenter';
 
-export class RulesPresenter implements IPresenter<void> {
+export class RulesPresenter implements IOutputPresenter<void> {
   constructor(
     private readonly output: IOutputAdapter,
     private readonly filePath: string

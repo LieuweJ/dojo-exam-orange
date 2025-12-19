@@ -2,7 +2,7 @@ export type IOutputAdapter = {
   render(message: string): void;
 }
 
-export class OutputAdapter implements IOutputAdapter {
+export class TerminalOutputAdapter implements IOutputAdapter {
   render(message: string): void {
     console.log(message);
   }

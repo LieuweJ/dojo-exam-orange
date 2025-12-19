@@ -1,5 +1,5 @@
-import { IOutputAdapter } from '../adapters/outputAdapter';
-import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../model/board';
+import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
+import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../model/board';
 
 const BOARD_CELL_TO_UI = new Map<BoardCell, string>([
   [EMPTY_CELL, '·'],
@@ -7,11 +7,11 @@ const BOARD_CELL_TO_UI = new Map<BoardCell, string>([
   [MARKER_O, '○'], // open circle
 ]);
 
-export type IPresenter<T> = {
+export type IOutputPresenter<T> = {
   present(arg: T): void;
 };
 
-export class BoardPresenter implements IPresenter<IBoard> {
+export class BoardPresenter implements IOutputPresenter<IBoard> {
   constructor(private outputAdapter: IOutputAdapter) {}
 
   public present(board: IBoard): void {

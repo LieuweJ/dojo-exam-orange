@@ -1,6 +1,6 @@
-import { BoardPresenter } from '../../src/presenter/boardPresenter';
-import { IOutputAdapter } from '../../src/adapters/outputAdapter';
-import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../src/model/board';
+import { BoardPresenter } from '../../../src/presenter/output/boardPresenter';
+import { IOutputAdapter } from '../../../src/adapters/terminalOutputAdapter';
+import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/model/board';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;

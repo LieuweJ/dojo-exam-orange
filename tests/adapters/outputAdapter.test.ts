@@ -1,12 +1,12 @@
-import { OutputAdapter } from '../../src/adapters/outputAdapter';
+import { TerminalOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
 
 describe('Output adapter', () => {
   let spy: jest.SpyInstance;
-  let output: OutputAdapter;
+  let output: TerminalOutputAdapter;
 
   beforeEach(() => {
     spy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    output = new OutputAdapter();
+    output = new TerminalOutputAdapter();
   });
 
   afterEach(() => {

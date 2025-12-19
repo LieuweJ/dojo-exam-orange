@@ -1,21 +1,22 @@
 import { Game } from './game';
 import { Board } from './model/board';
-import { OutputAdapter } from './adapters/outputAdapter';
-import { BoardPresenter } from './presenter/boardPresenter';
-import { RulesPresenter } from './presenter/rulesPresenter';
-// import { InputAdapter } from './adapters/inputAdapter';
+import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
+import { BoardPresenter } from './presenter/output/boardPresenter';
+import { RulesPresenter } from './presenter/output/rulesPresenter';
+import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
+import { ColumnInputHandler } from './handlers/ColumnInputHandler';
 
 const RULES_FILE = 'src/docs/rules-of-play.md';
 
-const outputAdapter = new OutputAdapter();
-// const inputAdapter = new InputAdapter();
+const outputAdapter = new TerminalOutputAdapter();
+const inputAdapter = new TerminalInputAdapter();
 
 async function main() {
   const game = new Game(
     new Board(),
     new BoardPresenter(outputAdapter),
     new RulesPresenter(outputAdapter, RULES_FILE),
-    // inputAdapter
+    new ColumnInputHandler(inputAdapter)
   );
 
   try {
@@ -23,7 +24,7 @@ async function main() {
   } catch (error) {
     console.error('An error occurred while starting the game:', error);
   } finally {
-    // inputAdapter.close();
+    inputAdapter.close();
   }
 }
 
