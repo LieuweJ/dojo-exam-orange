@@ -1,0 +1,35 @@
+{
+  "name": "orange-in-a-row",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "coverage": "npx jest --coverage",
+    "compile": "npx tsc",
+    "update-kata": "npx tsc && node dist/main.js",
+    "kata": "node dist/main.js",
+    "help": "echo \"Useful commands in this project:\n- 'npm run help' - see useful commands.\n- 'npm run test' - run all tests.\n- 'npm run coverage' - run all tests and generate a coverage report.\n- 'npm run compile' - compile the TypeScript code to JavaScript (output goes to /dist).\n- 'npm run kata' - run the kata (executes main.js).\n- 'npm run update-kata' - compile latest code and run the kata (executes main.js).\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-prettier": "^5.5.4",
+    "jest": "^29.7.0",
+    "jest-each": "^29.7.0",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6"
+  },
+  "type": "commonjs"
+}
