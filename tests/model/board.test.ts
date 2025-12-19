@@ -8,7 +8,7 @@ describe('Board.addMove', () => {
   });
 
   it('places a marker in the lowest empty row of a column', () => {
-    board.addMove({ column: 3, marker: MARKER_X });
+    board.addMove({ column: col(3), marker: MARKER_X });
 
     const state = board.getBoard();
 
@@ -16,8 +16,8 @@ describe('Board.addMove', () => {
   });
 
   it('stacks markers in the same column', () => {
-    board.addMove({ column: 3, marker: MARKER_X });
-    board.addMove({ column: 3, marker: MARKER_O });
+    board.addMove({ column: col(3), marker: MARKER_X });
+    board.addMove({ column: col(3), marker: MARKER_O });
 
     const state = board.getBoard();
 
@@ -27,17 +27,19 @@ describe('Board.addMove', () => {
 
   it('throws when adding a move to a full column', () => {
     for (let i = 0; i < 6; i++) {
-      board.addMove({ column: 3, marker: MARKER_X });
+      board.addMove({ column: col(3), marker: MARKER_X });
     }
 
     expect(() => {
-      board.addMove({ column: 3, marker: MARKER_O });
+      board.addMove({ column: col(3), marker: MARKER_O });
     }).toThrow('Board column 3 is full or invalid.');
   });
 
   it('throws when column is not on the board', () => {
     expect(() => {
-      board.addMove({ column: 99 as ColumnIndex, marker: MARKER_O });
+      board.addMove({ column: col(99), marker: MARKER_O });
     }).toThrow('Board column 99 is full or invalid.');
   });
 });
+
+export const col = (n: number) => n as ColumnIndex;

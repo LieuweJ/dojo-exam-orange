@@ -1,7 +1,8 @@
-import { Game } from '../src/game';
-import { Board, IBoardClass, IBoard } from '../src/model/board';
+import { Game, PlayersByMarker } from '../src/game';
+import { Board, IBoardClass, IBoard, MARKER_O, MARKER_X, ColumnIndex } from '../src/model/board';
 import { IOutputPresenter } from '../src/presenter/output/boardPresenter';
 import { IColumnInputHandler } from '../src/handlers/columnInputHandler';
+import { Player } from '../src/model/player';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardClass;
@@ -26,6 +27,10 @@ describe('A game of orange-in-a-row can be played', () => {
     };
 
     game = new Game(
+      {
+        [MARKER_X]: new Player('Alice'),
+        [MARKER_O]: new Player('Bob'),
+      },
       board,
       boardPresenterSpy,
       helpPresenterSpy,
@@ -38,7 +43,7 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('new game presents the rules and the initial board', () => {
-    columnInputHandlerSpy.askFor.mockResolvedValueOnce(4);
+    columnInputHandlerSpy.askFor.mockResolvedValue(col(4));
 
     game.play();
 
@@ -49,7 +54,7 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('Board displays coins with correct colors for each player', () => {
-    columnInputHandlerSpy.askFor.mockResolvedValueOnce(4);
+    columnInputHandlerSpy.askFor.mockResolvedValue(col(4));
     game.play();
 
     expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
@@ -57,4 +62,39 @@ describe('A game of orange-in-a-row can be played', () => {
       board.getBoard(),
     );
   });
+
+  test('throws when player for MARKER_X is missing', () => {
+    expect(() => {
+      new Game(
+        {
+          [MARKER_O]: new Player('Bob'),
+        } as PlayersByMarker,
+        board,
+        boardPresenterSpy,
+        helpPresenterSpy,
+        columnInputHandlerSpy
+      );
+    }).toThrow(
+      new Error(`Player for marker ${MARKER_X.toString()} is missing.`)
+    );
+  });
+
+  test('throws when player for MARKER_O is missing', () => {
+    expect(() => {
+      new Game(
+        {
+          [MARKER_X]: new Player('Alice'),
+        } as PlayersByMarker,
+        board,
+        boardPresenterSpy,
+        helpPresenterSpy,
+        columnInputHandlerSpy
+      );
+    }).toThrow(
+      new Error(`Player for marker ${MARKER_O.toString()} is missing.`)
+    );
+  });
+
 });
+
+export const col = (n: number) => n as ColumnIndex;
