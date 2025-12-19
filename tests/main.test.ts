@@ -1,32 +1,41 @@
 import { Game } from '../src/game';
-import { Board, IBoardClass } from '../src/model/board';
-import { IBoardPresenter } from '../src/presenter/boardPresenter';
+import { Board, IBoardClass, IBoard } from '../src/model/board';
+import { IPresenter } from '../src/presenter/boardPresenter';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardClass;
-  let presenterSpy: jest.Mocked<IBoardPresenter>;
+  let boardPresenterSpy: jest.Mocked<IPresenter<IBoard>>;
+  let helpPresenterSpy: jest.Mocked<IPresenter<void>>;
   let game: Game;
 
   beforeEach(() => {
     board = new Board();
 
-    presenterSpy = {
+    boardPresenterSpy = {
       present: jest.fn(),
     };
 
-    game = new Game({
+    helpPresenterSpy = {
+      present: jest.fn(),
+    };
+
+    game = new Game(
       board,
-      boardPresenter: presenterSpy,
-    });
+      boardPresenterSpy,
+      helpPresenterSpy,
+    );
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('new game presents the initial board', () => {
+  test('new game presents the rules and the initial board', () => {
     game.play();
 
-    expect(presenterSpy.present).toHaveBeenCalledWith(board.getBoard());
+    expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
+    expect(boardPresenterSpy.present).toHaveBeenCalledWith(
+      board.getBoard(),
+    );
   });
 });

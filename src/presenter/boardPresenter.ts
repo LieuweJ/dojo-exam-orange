@@ -1,11 +1,11 @@
 import { IOutputAdapter } from '../adapters/outputAdapter';
-import { EMPTY_CELL, IBoard } from '../model/board';
+import { IBoard } from '../model/board';
 
-export type IBoardPresenter = {
-  present(board: IBoard): void;
+export type IPresenter<T> = {
+  present(arg: T): void;
 }
 
-export class BoardPresenter implements IBoardPresenter {
+export class BoardPresenter implements IPresenter<IBoard> {
   constructor(private outputAdapter: IOutputAdapter) {}
 
   public present(board: IBoard): void {
