@@ -24,7 +24,7 @@ describe('BoardPresenter', () => {
     presenter.present(board);
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
-      `| ⚪ | ⚪ |\n| ⚪ | 🔴 |\n| 🟡 | 🔴 |\n---------\n`
+      `| · | · |\n| · | ● |\n| ○ | ● |\n|---|---|\n| 1 | 2 |\n`
     );
   });
 });
