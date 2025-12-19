@@ -1,6 +1,14 @@
-export function sum(a: number, b: number): number {
-  return a + b;
-}
+import { Game } from './game';
+import { Board } from './model/board';
+import { OutputAdapter } from './adapters/outputAdapter';
+import { BoardPresenter } from './presenter/boardPresenter';
 
-console.log("Run 'npm run update-kata' from the commandline" +
-" and you will see this message in the console.");
+const game = new Game(
+  {
+    board: new Board(),
+    boardPresenter: new BoardPresenter(new OutputAdapter()),
+  }
+);
+
+game.play();
+
