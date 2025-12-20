@@ -1,5 +1,5 @@
 import { Game } from './game';
-import { Board, MARKER_O, MARKER_X } from './model/board';
+import { BoardState, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from './model/boardState';
 import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
 import { BoardPresenter } from './presenter/output/boardPresenter';
 import { RulesPresenter } from './presenter/output/rulesPresenter';
@@ -13,10 +13,19 @@ const RULES_FILE = 'src/docs/rules-of-play.md';
 const outputAdapter = new TerminalOutputAdapter();
 const inputAdapter = new TerminalInputAdapter();
 
+const emptyBoard: IBoard = [
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+];
+
 async function main() {
   const game = new Game(
     {[MARKER_O]: new Player('Player 2'), [MARKER_X]: new Player('Player 1')},
-    new Board(),
+    new BoardState(emptyBoard),
     new BoardPresenter(outputAdapter),
     new RulesPresenter(outputAdapter, RULES_FILE),
     new ColumnInputHandler(inputAdapter, outputAdapter, new AvailableColumnValidator())

@@ -1,6 +1,6 @@
 export const EMPTY_CELL = Symbol('.');
-export const MARKER_X = Symbol('+');
-export const MARKER_O = Symbol('-');
+export const MARKER_X = Symbol('x');
+export const MARKER_O = Symbol('o');
 
 export type I_EMPTY_CELL = typeof EMPTY_CELL;
 export type I_MARKER_X = typeof MARKER_X;
@@ -13,20 +13,13 @@ export type Move = {column: ColumnIndex, marker: PlayerBoardMarker;}
 
 export type IBoard = BoardCell[][];
 
-export type IBoardClass = {
+export type IBoardState = {
   getBoard(): IBoard;
   addMove(move: Move): void;
 }
 
-export class Board implements IBoardClass {
-  private board: IBoard = [
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  ];
+export class BoardState implements IBoardState {
+  constructor(private board: IBoard) {}
 
   getBoard() {
     return this.board.map(row => [...row]);

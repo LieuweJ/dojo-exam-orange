@@ -1,18 +1,25 @@
 import { Game, PlayersByMarker } from '../src/game';
-import { Board, IBoardClass, IBoard, MARKER_O, MARKER_X, ColumnIndex } from '../src/model/board';
+import { BoardState, IBoardState, IBoard, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
 import { IOutputPresenter } from '../src/presenter/output/boardPresenter';
 import { IColumnInputHandler } from '../src/handlers/columnInputHandler';
 import { Player } from '../src/model/player';
 
 describe('A game of orange-in-a-row can be played', () => {
-  let board: IBoardClass;
+  let board: IBoardState;
   let boardPresenterSpy: jest.Mocked<IOutputPresenter<IBoard>>;
   let helpPresenterSpy: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
   let columnInputHandlerSpy: jest.Mocked<IColumnInputHandler>;
 
   beforeEach(() => {
-    board = new Board();
+    board = new BoardState([
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ]);
 
     boardPresenterSpy = {
       present: jest.fn(),

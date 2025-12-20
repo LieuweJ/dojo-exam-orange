@@ -1,9 +1,9 @@
-import { ColumnInputHandler } from '../../handlers/columnInputHandler';
-import { IInputAdapter } from '../../adapters/terminalInputAdapter';
-import { EMPTY_CELL, IBoard } from '../../model/board';
-import { AvailableColumnValidator } from '../../validators/availableColumnValidator';
-import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
-import { Player } from '../../model/player';
+import { ColumnInputHandler } from '../../src/handlers/columnInputHandler';
+import { IInputAdapter } from '../../src/adapters/terminalInputAdapter';
+import { EMPTY_CELL, IBoard } from '../../src/model/boardState';
+import { AvailableColumnValidator } from '../../src/validators/availableColumnValidator';
+import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
+import { Player } from '../../src/model/player';
 
 describe('ColumnInputHandler', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;

@@ -1,4 +1,4 @@
-import { ColumnIndex, IBoard, Move } from '../model/board';
+import { ColumnIndex, IBoard, Move } from '../model/boardState';
 import { IInputAdapter } from '../adapters/terminalInputAdapter';
 import { IValidator } from '../validators/availableColumnValidator';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';

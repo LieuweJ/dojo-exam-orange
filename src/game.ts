@@ -1,4 +1,4 @@
-import { IBoard, IBoardClass, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/board';
+import { IBoard, IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
 import { IOutputPresenter } from './presenter/output/boardPresenter';
 import { IColumnInputHandler } from './handlers/columnInputHandler';
 import { Player } from './model/player';
@@ -15,7 +15,7 @@ export class Game implements IGame {
 
   constructor(
     players: PlayersByMarker,
-    private readonly board: IBoardClass,
+    private readonly board: IBoardState,
     private readonly boardPresenter: IOutputPresenter<IBoard>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly columnInputHandler: IColumnInputHandler
