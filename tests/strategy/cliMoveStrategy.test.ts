@@ -1,6 +1,6 @@
 import { CliMoveStrategy } from '../../src/strategy/cliMoveStrategy';
 import { IInputAdapter } from '../../src/adapters/terminalInputAdapter';
-import { EMPTY_CELL, IBoard } from '../../src/model/boardState';
+import { EMPTY_CELL, IBoard, MARKER_X, PlayerBoardMarker } from '../../src/model/boardState';
 import { AvailableColumnValidator } from '../../src/validators/availableColumnValidator';
 import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
 import { Player } from '../../src/model/player';
@@ -22,33 +22,49 @@ describe('CliMoveStrategy', () => {
     moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator());
   });
 
-  test('returns the column number when a valid column is entered', async () => {
+  test('returns a move with the given marker when a valid column is entered', async () => {
+    const givenMarker: PlayerBoardMarker = MARKER_X;
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL]
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const column = await moveStrategy.createNextMove(board, new Player('Bob'));
+    const move = await moveStrategy.createNextMove(board, new Player('Bob'), givenMarker);
 
-    expect(column).toBe(1);
-    expect(inputAdapter.ask).toHaveBeenCalledWith('It is Bob\'s turn.\nChoose column (1-3):');
+    expect(move).toStrictEqual({ column: 1, marker: givenMarker });
+  });
+
+  test('returns the column number when a valid column is entered', async () => {
+    const board: IBoard = [
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ];
+
+    inputAdapter.ask.mockResolvedValueOnce('2');
+
+    const move = await moveStrategy.createNextMove(board, new Player('Bob'), MARKER_X);
+
+    expect(move).toStrictEqual({ column: 1, marker: MARKER_X });
+    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
   });
 
   test('displays error when input is invalid', async () => {
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL]
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
 
     inputAdapter.ask.mockResolvedValueOnce('5');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, new Player('Bob'));
+    await moveStrategy.createNextMove(board, new Player('Bob'), MARKER_X);
 
-    expect(inputAdapter.ask).toHaveBeenCalledWith('It is Bob\'s turn.\nChoose column (1-3):');
-    expect(outputAdapter.render).toHaveBeenCalledWith('Column 5 is full or invalid. Please choose another column.');
-    expect(inputAdapter.ask).toHaveBeenCalledWith('It is Bob\'s turn.\nChoose column (1-3):');
+    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
+    expect(outputAdapter.render).toHaveBeenCalledWith(
+      'Column 5 is full or invalid. Please choose another column.'
+    );
+    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
   });
 });

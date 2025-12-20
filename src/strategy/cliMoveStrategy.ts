@@ -1,11 +1,11 @@
-import { ColumnIndex, IBoard, Move } from '../model/boardState';
+import { ColumnIndex, IBoard, Move, PlayerBoardMarker } from '../model/boardState';
 import { IInputAdapter } from '../adapters/terminalInputAdapter';
 import { IValidator } from '../validators/availableColumnValidator';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { Player } from '../model/player';
 
 export type IMoveStrategy = {
-  createNextMove(board: IBoard, player: Player): Promise<ColumnIndex>;
+  createNextMove(board: IBoard, player: Player, marker: PlayerBoardMarker): Promise<Move>;
 }
 
 export class CliMoveStrategy implements IMoveStrategy {
@@ -15,7 +15,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly validator: IValidator<number, IBoard, ColumnIndex>
   ) {}
 
-  async createNextMove(board: IBoard, player: Player): Promise<ColumnIndex> {
+  async createNextMove(board: IBoard, player: Player, marker: PlayerBoardMarker): Promise<Move> {
     while (true) {
       const min = 1;
       const max = board[0].length;
@@ -29,7 +29,10 @@ export class CliMoveStrategy implements IMoveStrategy {
         continue;
       }
 
-      return column;
+      return {
+        column,
+        marker,
+      }
     }
   }
 

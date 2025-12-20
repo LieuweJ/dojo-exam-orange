@@ -60,7 +60,10 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
-    columnInputHandlerSpy.createNextMove.mockResolvedValue(col(4));
+    columnInputHandlerSpy.createNextMove.mockResolvedValue({
+      column: col(4),
+      marker: MARKER_X
+    });
 
     await game.play();
 
@@ -72,8 +75,14 @@ describe('A game of orange-in-a-row can be played', () => {
 
   test('Board displays coins with correct colors for each player', async () => {
     columnInputHandlerSpy.createNextMove
-      .mockResolvedValueOnce(col(4))
-      .mockResolvedValueOnce(col(3));
+      .mockResolvedValueOnce({
+        column: col(4),
+        marker: MARKER_X
+      })
+      .mockResolvedValueOnce({
+        column: col(3),
+        marker: MARKER_O
+      });
 
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.ONGOING })
@@ -95,9 +104,18 @@ describe('A game of orange-in-a-row can be played', () => {
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
     columnInputHandlerSpy.createNextMove
-      .mockResolvedValueOnce(col(4))
-      .mockResolvedValueOnce(col(3))
-      .mockResolvedValueOnce(col(1));
+      .mockResolvedValueOnce({
+        column: col(4),
+        marker: MARKER_X
+      })
+      .mockResolvedValueOnce({
+        column: col(3),
+        marker: MARKER_X
+      })
+      .mockResolvedValueOnce({
+        column: col(4),
+        marker: MARKER_O
+      });
 
     await game.play();
 
@@ -117,7 +135,10 @@ describe('A game of orange-in-a-row can be played', () => {
       .mockReturnValueOnce({ type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [] });
 
     columnInputHandlerSpy.createNextMove
-      .mockResolvedValueOnce(col(4));
+      .mockResolvedValueOnce({
+        column: col(4),
+        marker: MARKER_X
+      });
 
     await game.play();
 

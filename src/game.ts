@@ -54,13 +54,13 @@ export class Game implements IGame {
   private async playTurn() {
     this.boardPresenter.present(this.board.getBoard());
 
-    this.board.addMove({
-      column: await this.columnInputHandler.createNextMove(
+    this.board.addMove(
+      await this.columnInputHandler.createNextMove(
         this.board.getBoard(),
-        this.players[this.currentPlayerMarker]
-      ),
-      marker: this.currentPlayerMarker,
-    });
+        this.players[this.currentPlayerMarker],
+        this.currentPlayerMarker
+      )
+    );
   }
 
   private switchPlayer() {
