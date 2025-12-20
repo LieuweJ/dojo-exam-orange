@@ -29,7 +29,7 @@ const DIRECTIONS: Direction[] = [
   { deltaRow: 1, deltaCol: -1 },  // ↗
 ];
 
-type IGameOutcomeStrategy = {
+export type IGameOutcomeStrategy = {
   determine(board: IBoard): GameOutcome;
 }
 

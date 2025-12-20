@@ -2,6 +2,7 @@ import { IBoard, IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './mo
 import { IOutputPresenter } from './presenter/output/boardPresenter';
 import { IColumnInputHandler } from './handlers/columnInputHandler';
 import { Player } from './model/player';
+import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/gameOutcomeStrategy';
 
 export type IGame = {
   play(): void;
@@ -18,7 +19,8 @@ export class Game implements IGame {
     private readonly board: IBoardState,
     private readonly boardPresenter: IOutputPresenter<IBoard>,
     private readonly helpPresenter: IOutputPresenter<void>,
-    private readonly columnInputHandler: IColumnInputHandler
+    private readonly columnInputHandler: IColumnInputHandler,
+    private readonly outcomeStrategy: IGameOutcomeStrategy,
   ) {
     if (!players[MARKER_X]) {
       throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
@@ -34,11 +36,19 @@ export class Game implements IGame {
   public async play() {
     this.helpPresenter.present();
 
-    await this.playTurn();
-    this.currentPlayerMarker =
-      this.currentPlayerMarker === MARKER_X ? MARKER_O : MARKER_X;
-    await this.playTurn();
-    this.boardPresenter.present(this.board.getBoard());
+    while (true) {
+      await this.playTurn();
+
+      const outcome = this.outcomeStrategy.determine(this.board.getBoard());
+
+      if (outcome.type !== GAME_OUTCOME.ONGOING) {
+        this.boardPresenter.present(this.board.getBoard());
+        // later: outcome presenter
+        return;
+      }
+
+      this.switchPlayer();
+    }
   }
 
   private async playTurn() {
@@ -51,5 +61,10 @@ export class Game implements IGame {
       ),
       marker: this.currentPlayerMarker,
     });
+  }
+
+  private switchPlayer() {
+    this.currentPlayerMarker =
+      this.currentPlayerMarker === MARKER_X ? MARKER_O : MARKER_X;
   }
 }
