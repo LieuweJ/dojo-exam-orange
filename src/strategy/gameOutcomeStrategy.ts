@@ -1,0 +1,129 @@
+import { PlayerBoardMarker, IBoard, EMPTY_CELL } from '../model/boardState';
+
+export const GAME_OUTCOME = {
+  ONGOING: 'ONGOING',
+  DRAW: 'DRAW',
+  WIN: 'WIN',
+} as const;
+
+type GameOutComeDraw = { type: typeof GAME_OUTCOME.DRAW }
+type GameOutcomeOngoing = { type: typeof GAME_OUTCOME.ONGOING }
+type GameOutComeWin = {
+  type: typeof GAME_OUTCOME.WIN;
+  winner: PlayerBoardMarker;
+  winningPositions: BoardPosition[];
+}
+
+export type GameOutcome =
+  | GameOutComeDraw
+  | GameOutcomeOngoing
+  | GameOutComeWin
+
+export type BoardPosition = { row: number; col: number; };
+type Direction = { deltaRow: number; deltaCol: number; };
+
+const DIRECTIONS: Direction[] = [
+  { deltaRow: 0, deltaCol: 1 },   // →
+  { deltaRow: 1, deltaCol: 0 },   // ↓
+  { deltaRow: 1, deltaCol: 1 },   // ↘
+  { deltaRow: 1, deltaCol: -1 },  // ↗
+];
+
+type IGameOutcomeStrategy = {
+  determine(board: IBoard): GameOutcome;
+}
+
+type WinConditions = {
+  connectionLength: number
+}
+
+export class GameOutcomeStrategy implements IGameOutcomeStrategy {
+  constructor(private readonly winConditions: WinConditions) {}
+
+  determine(board: IBoard): GameOutcome {
+    const winningOutcome = this.findWinningOutcome(board);
+
+    if (winningOutcome) {
+      return winningOutcome;
+    }
+
+    if (this.isDraw(board)) {
+      return { type: GAME_OUTCOME.DRAW };
+    }
+
+    return { type: GAME_OUTCOME.ONGOING };
+  }
+
+  private findWinningOutcome(board: IBoard): GameOutComeWin | null {
+    const rows = board.length;
+    const cols = board[0]?.length ?? 0;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const cell = board[row][col];
+
+        if (cell === EMPTY_CELL) continue;
+
+        for (const direction of DIRECTIONS) {
+          const winningPositions = this.hasLine(
+            board,
+            { row, col },
+            direction,
+            cell
+          );
+
+          if (winningPositions) {
+            return {
+              type: GAME_OUTCOME.WIN,
+              winner: cell,
+              winningPositions,
+            };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private hasLine(
+    board: IBoard,
+    start: BoardPosition,
+    direction: Direction,
+    marker: PlayerBoardMarker
+  ): BoardPosition[] | null {
+    const positions: BoardPosition[] = [start];
+
+    for (let i = 1; i < this.winConditions.connectionLength; i++) {
+      const row = start.row + direction.deltaRow * i;
+      const col = start.col + direction.deltaCol * i;
+
+      if (
+        row < 0 ||
+        row >= board.length ||
+        col < 0 ||
+        col >= board[0].length ||
+        board[row][col] !== marker
+      ) {
+        return null;
+      }
+
+      positions.push({ row, col });
+    }
+
+    return positions;
+  }
+
+
+  private isDraw(board: IBoard): boolean {
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell === EMPTY_CELL) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+}

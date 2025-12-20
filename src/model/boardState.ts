@@ -1,6 +1,6 @@
 export const EMPTY_CELL = Symbol('.');
-export const MARKER_X = Symbol('x');
-export const MARKER_O = Symbol('o');
+export const MARKER_X  = Symbol('x');
+export const MARKER_O  = Symbol('o');
 
 export type I_EMPTY_CELL = typeof EMPTY_CELL;
 export type I_MARKER_X = typeof MARKER_X;
