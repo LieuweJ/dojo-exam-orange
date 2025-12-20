@@ -1,13 +1,13 @@
 import { Game } from './game';
 import { BoardState, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from './model/boardState';
 import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
-import { BoardPresenter } from './presenter/output/boardPresenter';
-import { RulesPresenter } from './presenter/output/rulesPresenter';
+import { BoardPresenter } from './presenter/boardPresenter';
+import { RulesPresenter } from './presenter/rulesPresenter';
 import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
-import { CliMoveStrategy } from './strategy/cliMoveStrategy';
+import { CliMoveStrategy } from './strategy/player/cliMoveStrategy';
 import { AvailableColumnValidator } from './validators/availableColumnValidator';
 import { Player } from './model/player';
-import { GameOutcomeStrategy } from './strategy/gameOutcomeStrategy';
+import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 
 const RULES_FILE = 'src/docs/rules-of-play.md';
 
@@ -24,12 +24,15 @@ const emptyBoard: IBoard = [
 ];
 
 async function main() {
+  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator());
   const game = new Game(
-    {[MARKER_O]: new Player('Player 2'), [MARKER_X]: new Player('Player 1')},
+    {
+      [MARKER_O]: new Player('Player 2', cliStrategy),
+      [MARKER_X]: new Player('Player 1', cliStrategy)
+    },
     new BoardState(emptyBoard),
     new BoardPresenter(outputAdapter),
     new RulesPresenter(outputAdapter, RULES_FILE),
-    new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator()),
     new GameOutcomeStrategy({ connectionLength: 4 })
   );
 

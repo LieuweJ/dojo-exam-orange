@@ -1,4 +1,5 @@
 import readline from 'node:readline';
+
 export interface IInputAdapter {
   ask(question: string): Promise<string>;
 }

@@ -1,10 +1,10 @@
-import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
-import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../model/boardState';
+import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
+import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../model/boardState';
 
 const BOARD_CELL_TO_UI = new Map<BoardCell, string>([
   [EMPTY_CELL, '·'],
-  [MARKER_X, '●'], // filled circle
-  [MARKER_O, '○'], // open circle
+  [MARKER_X, '●'],
+  [MARKER_O, '○'],
 ]);
 
 export type IOutputPresenter<T> = {

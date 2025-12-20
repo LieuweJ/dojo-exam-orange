@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
+import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IOutputPresenter } from './boardPresenter';
 
 export class RulesPresenter implements IOutputPresenter<void> {

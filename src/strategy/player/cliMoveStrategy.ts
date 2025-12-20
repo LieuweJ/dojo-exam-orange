@@ -1,11 +1,10 @@
-import { ColumnIndex, IBoard, Move, PlayerBoardMarker } from '../model/boardState';
-import { IInputAdapter } from '../adapters/terminalInputAdapter';
-import { IValidator } from '../validators/availableColumnValidator';
-import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { Player } from '../model/player';
+import { ColumnIndex, IBoard, Move, PlayerBoardMarker } from '../../model/boardState';
+import { IInputAdapter } from '../../adapters/terminalInputAdapter';
+import { IValidator } from '../../validators/availableColumnValidator';
+import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
 
 export type IMoveStrategy = {
-  createNextMove(board: IBoard, player: Player, marker: PlayerBoardMarker): Promise<Move>;
+  createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move>;
 }
 
 export class CliMoveStrategy implements IMoveStrategy {
@@ -15,11 +14,11 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly validator: IValidator<number, IBoard, ColumnIndex>
   ) {}
 
-  async createNextMove(board: IBoard, player: Player, marker: PlayerBoardMarker): Promise<Move> {
+  async createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move> {
     while (true) {
       const min = 1;
       const max = board[0].length;
-      const raw = await this.input.ask(`It is ${player.getScreenName()}'s turn.\nChoose column (${min}-${max}):`);
+      const raw = await this.input.ask(`It is ${displayName}'s turn.\nChoose column (${min}-${max}):`);
 
       const column = this.mapToColumn(raw);
 

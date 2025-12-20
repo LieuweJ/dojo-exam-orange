@@ -1,4 +1,4 @@
-import { PlayerBoardMarker, IBoard, EMPTY_CELL } from '../model/boardState';
+import { PlayerBoardMarker, IBoard, EMPTY_CELL } from '../../model/boardState';
 
 export const GAME_OUTCOME = {
   ONGOING: 'ONGOING',

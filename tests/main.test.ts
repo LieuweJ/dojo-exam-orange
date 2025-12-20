@@ -1,16 +1,16 @@
 import { Game, PlayersByMarker } from '../src/game';
 import { BoardState, IBoardState, IBoard, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
-import { IOutputPresenter } from '../src/presenter/output/boardPresenter';
-import { IMoveStrategy } from '../src/strategy/cliMoveStrategy';
+import { IOutputPresenter } from '../src/presenter/boardPresenter';
+import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
 import { Player } from '../src/model/player';
-import { GAME_OUTCOME, IGameOutcomeStrategy } from '../src/strategy/gameOutcomeStrategy';
+import { GAME_OUTCOME, IGameOutcomeStrategy } from '../src/strategy/game/gameOutcomeStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
   let boardPresenterSpy: jest.Mocked<IOutputPresenter<IBoard>>;
   let helpPresenterSpy: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
-  let columnInputHandlerSpy: jest.Mocked<IMoveStrategy>;
+  let moveStrategy: jest.Mocked<IMoveStrategy>;
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
 
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    columnInputHandlerSpy = {
+    moveStrategy = {
       createNextMove: jest.fn(),
     };
 
@@ -41,13 +41,12 @@ describe('A game of orange-in-a-row can be played', () => {
 
     game = new Game(
       {
-        [MARKER_X]: new Player('Alice'),
-        [MARKER_O]: new Player('Bob'),
+        [MARKER_X]: new Player('Alice', moveStrategy),
+        [MARKER_O]: new Player('Bob', moveStrategy),
       },
       board,
       boardPresenterSpy,
       helpPresenterSpy,
-      columnInputHandlerSpy,
       gameOutcomeStrategy
     );
   });
@@ -60,7 +59,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
-    columnInputHandlerSpy.createNextMove.mockResolvedValue({
+    moveStrategy.createNextMove.mockResolvedValue({
       column: col(4),
       marker: MARKER_X
     });
@@ -74,7 +73,7 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('Board displays coins with correct colors for each player', async () => {
-    columnInputHandlerSpy.createNextMove
+    moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
         marker: MARKER_X
@@ -103,7 +102,7 @@ describe('A game of orange-in-a-row can be played', () => {
       .mockReturnValueOnce({ type: GAME_OUTCOME.ONGOING })
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
-    columnInputHandlerSpy.createNextMove
+    moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
         marker: MARKER_X
@@ -119,22 +118,18 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(columnInputHandlerSpy.createNextMove).toHaveBeenCalledTimes(3);
+    expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(3);
 
-    const firstCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[0][1];
-    const secondCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[1][1];
-    const thirdCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[2][1];
-
-    expect(firstCallPlayer.getScreenName()).toBe('Alice');
-    expect(secondCallPlayer.getScreenName()).toBe('Bob');
-    expect(thirdCallPlayer.getScreenName()).toBe('Alice');
+    expect(moveStrategy.createNextMove.mock.calls[0][1]).toBe(MARKER_X);
+    expect(moveStrategy.createNextMove.mock.calls[1][1]).toBe(MARKER_O);
+    expect(moveStrategy.createNextMove.mock.calls[2][1]).toBe(MARKER_X);
   });
 
   test('game stops when a winning outcome is returned', async () => {
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [] });
 
-    columnInputHandlerSpy.createNextMove
+    moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
         marker: MARKER_X
@@ -149,19 +144,18 @@ describe('A game of orange-in-a-row can be played', () => {
       board.getBoard()
     );
 
-    expect(columnInputHandlerSpy.createNextMove).toHaveBeenCalledTimes(1);
+    expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(1);
   });
 
   test('throws when player for MARKER_X is missing', () => {
     expect(() => {
       new Game(
         {
-          [MARKER_O]: new Player('Bob'),
+          [MARKER_O]: new Player('Bob', moveStrategy),
         } as PlayersByMarker,
         board,
         boardPresenterSpy,
         helpPresenterSpy,
-        columnInputHandlerSpy,
         gameOutcomeStrategy
       );
     }).toThrow(
@@ -173,12 +167,11 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(() => {
       new Game(
         {
-          [MARKER_X]: new Player('Alice'),
+          [MARKER_X]: new Player('Alice', moveStrategy),
         } as PlayersByMarker,
         board,
         boardPresenterSpy,
         helpPresenterSpy,
-        columnInputHandlerSpy,
         gameOutcomeStrategy
       );
     }).toThrow(
