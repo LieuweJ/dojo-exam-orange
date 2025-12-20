@@ -1,7 +1,7 @@
 import { Game, PlayersByMarker } from '../src/game';
 import { BoardState, IBoardState, IBoard, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
 import { IOutputPresenter } from '../src/presenter/output/boardPresenter';
-import { IColumnInputHandler } from '../src/handlers/columnInputHandler';
+import { IMoveStrategy } from '../src/strategy/cliMoveStrategy';
 import { Player } from '../src/model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from '../src/strategy/gameOutcomeStrategy';
 
@@ -10,7 +10,7 @@ describe('A game of orange-in-a-row can be played', () => {
   let boardPresenterSpy: jest.Mocked<IOutputPresenter<IBoard>>;
   let helpPresenterSpy: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
-  let columnInputHandlerSpy: jest.Mocked<IColumnInputHandler>;
+  let columnInputHandlerSpy: jest.Mocked<IMoveStrategy>;
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('A game of orange-in-a-row can be played', () => {
     };
 
     columnInputHandlerSpy = {
-      askFor: jest.fn(),
+      createNextMove: jest.fn(),
     };
 
     gameOutcomeStrategy = {
@@ -60,7 +60,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
-    columnInputHandlerSpy.askFor.mockResolvedValue(col(4));
+    columnInputHandlerSpy.createNextMove.mockResolvedValue(col(4));
 
     await game.play();
 
@@ -71,7 +71,7 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('Board displays coins with correct colors for each player', async () => {
-    columnInputHandlerSpy.askFor
+    columnInputHandlerSpy.createNextMove
       .mockResolvedValueOnce(col(4))
       .mockResolvedValueOnce(col(3));
 
@@ -94,18 +94,18 @@ describe('A game of orange-in-a-row can be played', () => {
       .mockReturnValueOnce({ type: GAME_OUTCOME.ONGOING })
       .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
-    columnInputHandlerSpy.askFor
+    columnInputHandlerSpy.createNextMove
       .mockResolvedValueOnce(col(4))
       .mockResolvedValueOnce(col(3))
       .mockResolvedValueOnce(col(1));
 
     await game.play();
 
-    expect(columnInputHandlerSpy.askFor).toHaveBeenCalledTimes(3);
+    expect(columnInputHandlerSpy.createNextMove).toHaveBeenCalledTimes(3);
 
-    const firstCallPlayer = columnInputHandlerSpy.askFor.mock.calls[0][1];
-    const secondCallPlayer = columnInputHandlerSpy.askFor.mock.calls[1][1];
-    const thirdCallPlayer = columnInputHandlerSpy.askFor.mock.calls[2][1];
+    const firstCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[0][1];
+    const secondCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[1][1];
+    const thirdCallPlayer = columnInputHandlerSpy.createNextMove.mock.calls[2][1];
 
     expect(firstCallPlayer.getScreenName()).toBe('Alice');
     expect(secondCallPlayer.getScreenName()).toBe('Bob');
@@ -116,7 +116,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine
       .mockReturnValueOnce({ type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [] });
 
-    columnInputHandlerSpy.askFor
+    columnInputHandlerSpy.createNextMove
       .mockResolvedValueOnce(col(4));
 
     await game.play();
@@ -128,7 +128,7 @@ describe('A game of orange-in-a-row can be played', () => {
       board.getBoard()
     );
 
-    expect(columnInputHandlerSpy.askFor).toHaveBeenCalledTimes(1);
+    expect(columnInputHandlerSpy.createNextMove).toHaveBeenCalledTimes(1);
   });
 
   test('throws when player for MARKER_X is missing', () => {

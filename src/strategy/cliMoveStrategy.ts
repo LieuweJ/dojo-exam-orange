@@ -4,18 +4,18 @@ import { IValidator } from '../validators/availableColumnValidator';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { Player } from '../model/player';
 
-export type IColumnInputHandler = {
-  askFor(board: IBoard, player: Player): Promise<ColumnIndex>;
+export type IMoveStrategy = {
+  createNextMove(board: IBoard, player: Player): Promise<ColumnIndex>;
 }
 
-export class ColumnInputHandler implements IColumnInputHandler {
+export class CliMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
     private readonly validator: IValidator<number, IBoard, ColumnIndex>
   ) {}
 
-  async askFor(board: IBoard, player: Player): Promise<ColumnIndex> {
+  async createNextMove(board: IBoard, player: Player): Promise<ColumnIndex> {
     while (true) {
       const min = 1;
       const max = board[0].length;

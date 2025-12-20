@@ -1,6 +1,6 @@
 import { IBoard, IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
 import { IOutputPresenter } from './presenter/output/boardPresenter';
-import { IColumnInputHandler } from './handlers/columnInputHandler';
+import { IMoveStrategy } from './strategy/cliMoveStrategy';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/gameOutcomeStrategy';
 
@@ -19,7 +19,7 @@ export class Game implements IGame {
     private readonly board: IBoardState,
     private readonly boardPresenter: IOutputPresenter<IBoard>,
     private readonly helpPresenter: IOutputPresenter<void>,
-    private readonly columnInputHandler: IColumnInputHandler,
+    private readonly columnInputHandler: IMoveStrategy,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
   ) {
     if (!players[MARKER_X]) {
@@ -55,7 +55,7 @@ export class Game implements IGame {
     this.boardPresenter.present(this.board.getBoard());
 
     this.board.addMove({
-      column: await this.columnInputHandler.askFor(
+      column: await this.columnInputHandler.createNextMove(
         this.board.getBoard(),
         this.players[this.currentPlayerMarker]
       ),
