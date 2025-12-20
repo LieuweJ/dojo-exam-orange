@@ -2,6 +2,7 @@ import { ColumnIndex, IBoard, Move, PlayerBoardMarker } from '../../model/boardS
 import { IInputAdapter } from '../../adapters/terminalInputAdapter';
 import { IValidator } from '../../validators/availableColumnValidator';
 import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
+import { BOARD_CELL_TO_UI } from '../../presenter/boardPresenter';
 
 export type IMoveStrategy = {
   createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move>;
@@ -18,7 +19,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     while (true) {
       const min = 1;
       const max = board[0].length;
-      const raw = await this.input.ask(`It is ${displayName}'s turn.\nChoose column (${min}-${max}):`);
+      const raw = await this.input.ask(`It is ${displayName}'s turn.\nChoose column (${min}-${max}) for ${BOARD_CELL_TO_UI.get(marker)} : `);
 
       const column = this.mapToColumn(raw);
 

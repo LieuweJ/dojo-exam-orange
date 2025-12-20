@@ -35,7 +35,7 @@ describe('CliMoveStrategy', () => {
     expect(move).toStrictEqual({ column: 1, marker: givenMarker });
   });
 
-  test('returns the column number when a valid column is entered', async () => {
+  test('sends the the correct question to the user', async () => {
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
@@ -46,7 +46,7 @@ describe('CliMoveStrategy', () => {
     const move = await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
 
     expect(move).toStrictEqual({ column: 1, marker: MARKER_X });
-    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
+    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3) for ● : ");
   });
 
   test('displays error when input is invalid', async () => {
@@ -60,10 +60,9 @@ describe('CliMoveStrategy', () => {
 
     await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
 
-    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
+    expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
       'Column 5 is full or invalid. Please choose another column.'
     );
-    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3):");
   });
 });
