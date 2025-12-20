@@ -8,6 +8,7 @@ import { CliMoveStrategy } from './strategy/player/cliMoveStrategy';
 import { AvailableColumnValidator } from './validators/availableColumnValidator';
 import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
+import { GameResultPresenter } from './presenter/gameResultPresenter';
 
 const RULES_FILE = 'src/docs/rules-of-play.md';
 
@@ -25,15 +26,18 @@ const emptyBoard: IBoard = [
 
 async function main() {
   const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator());
+  const boardPresenter = new BoardPresenter(outputAdapter);
+
   const game = new Game(
     {
       [MARKER_O]: new Player('Player 2', cliStrategy),
       [MARKER_X]: new Player('Player 1', cliStrategy)
     },
     new BoardState(emptyBoard),
-    new BoardPresenter(outputAdapter),
+    boardPresenter,
     new RulesPresenter(outputAdapter, RULES_FILE),
-    new GameOutcomeStrategy({ connectionLength: 4 })
+    new GameOutcomeStrategy({ connectionLength: 4 }),
+    new GameResultPresenter(boardPresenter, outputAdapter)
   );
 
   try {

@@ -21,10 +21,30 @@ describe('BoardPresenter', () => {
       [MARKER_O, MARKER_X],
     ];
 
-    presenter.present(board);
+    presenter.present({ board });
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
       `| · | · |\n| · | ● |\n| ○ | ● |\n|---|---|\n| 1 | 2 |\n`
+    );
+  });
+
+  test('Board displays highlights', () => {
+    const highlightPositions = [
+      {row: 0, col: 1},
+      { row: 2, col: 0 },
+      { row: 2, col: 1 }
+    ];
+
+    const board: IBoard = [
+      [MARKER_O, EMPTY_CELL],
+      [EMPTY_CELL, MARKER_X],
+      [MARKER_O, MARKER_X],
+    ];
+
+    presenter.present({ board, highlightPositions});
+
+    expect(outputAdapter.render).toHaveBeenCalledWith(
+      `| ○ |[·]|\n| · | ● |\n|[○]|[●]|\n|---|---|\n| 1 | 2 |\n`
     );
   });
 });

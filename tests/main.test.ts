@@ -1,17 +1,20 @@
 import { Game, PlayersByMarker } from '../src/game';
-import { BoardState, IBoardState, IBoard, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
-import { IOutputPresenter } from '../src/presenter/boardPresenter';
+import { BoardState, IBoardState, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
+import { BoardPresentArgs, IOutputPresenter } from '../src/presenter/boardPresenter';
 import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
 import { Player } from '../src/model/player';
-import { GAME_OUTCOME, IGameOutcomeStrategy } from '../src/strategy/game/gameOutcomeStrategy';
+import { GAME_OUTCOME, GameOutcome, IGameOutcomeStrategy } from '../src/strategy/game/gameOutcomeStrategy';
+import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
-  let boardPresenterSpy: jest.Mocked<IOutputPresenter<IBoard>>;
+  let boardPresenterSpy: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
   let helpPresenterSpy: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
   let moveStrategy: jest.Mocked<IMoveStrategy>;
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
+  let gameResultPresenterSpy: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
+  let players: PlayersByMarker;
 
   beforeEach(() => {
     board = new BoardState([
@@ -39,15 +42,22 @@ describe('A game of orange-in-a-row can be played', () => {
       determine: jest.fn(),
     };
 
+    gameResultPresenterSpy = {
+      present: jest.fn(),
+    };
+
+    players = {
+      [MARKER_X]: new Player('Alice', moveStrategy),
+      [MARKER_O]: new Player('Bob', moveStrategy),
+    }
+
     game = new Game(
-      {
-        [MARKER_X]: new Player('Alice', moveStrategy),
-        [MARKER_O]: new Player('Bob', moveStrategy),
-      },
+      players,
       board,
       boardPresenterSpy,
       helpPresenterSpy,
-      gameOutcomeStrategy
+      gameOutcomeStrategy,
+      gameResultPresenterSpy
     );
   });
 
@@ -67,9 +77,6 @@ describe('A game of orange-in-a-row can be played', () => {
     await game.play();
 
     expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
-    expect(boardPresenterSpy.present).toHaveBeenCalledWith(
-      board.getBoard(),
-    );
   });
 
   test('Board displays coins with correct colors for each player', async () => {
@@ -90,9 +97,11 @@ describe('A game of orange-in-a-row can be played', () => {
     await game.play();
 
     expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
-    expect(boardPresenterSpy.present).toHaveBeenCalledTimes(3);
-    expect(boardPresenterSpy.present).toHaveBeenLastCalledWith(
-      board.getBoard(),
+    expect(boardPresenterSpy.present).toHaveBeenCalledTimes(2);
+    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        board: board.getBoard(),
+      })
     );
   });
 
@@ -126,8 +135,10 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('game stops when a winning outcome is returned', async () => {
+    const outcome: GameOutcome = { type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [{col: 4, row: 0}] };
+
     gameOutcomeStrategy.determine
-      .mockReturnValueOnce({ type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [] });
+      .mockReturnValueOnce(outcome);
 
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
@@ -137,14 +148,9 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
-
-    expect(boardPresenterSpy.present).toHaveBeenCalledTimes(2);
-    expect(boardPresenterSpy.present).toHaveBeenLastCalledWith(
-      board.getBoard()
+    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith(
+      { board: board.getBoard(), outcome, players },
     );
-
-    expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(1);
   });
 
   test('throws when player for MARKER_X is missing', () => {
@@ -156,7 +162,8 @@ describe('A game of orange-in-a-row can be played', () => {
         board,
         boardPresenterSpy,
         helpPresenterSpy,
-        gameOutcomeStrategy
+        gameOutcomeStrategy,
+        gameResultPresenterSpy
       );
     }).toThrow(
       new Error(`Player for marker ${MARKER_X.toString()} is missing.`)
@@ -172,7 +179,8 @@ describe('A game of orange-in-a-row can be played', () => {
         board,
         boardPresenterSpy,
         helpPresenterSpy,
-        gameOutcomeStrategy
+        gameOutcomeStrategy,
+        gameResultPresenterSpy
       );
     }).toThrow(
       new Error(`Player for marker ${MARKER_O.toString()} is missing.`)

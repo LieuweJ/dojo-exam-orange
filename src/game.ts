@@ -1,7 +1,8 @@
 import { IBoard, IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
-import { IOutputPresenter } from './presenter/boardPresenter';
+import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
+import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
 
 export type IGame = {
   play(): void;
@@ -16,9 +17,10 @@ export class Game implements IGame {
   constructor(
     players: PlayersByMarker,
     private readonly board: IBoardState,
-    private readonly boardPresenter: IOutputPresenter<IBoard>,
+    private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
+    private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>
   ) {
     if (!players[MARKER_X]) {
       throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
@@ -40,8 +42,12 @@ export class Game implements IGame {
       const outcome = this.outcomeStrategy.determine(this.board.getBoard());
 
       if (outcome.type !== GAME_OUTCOME.ONGOING) {
-        this.boardPresenter.present(this.board.getBoard());
-        // later: outcome presenter
+        this.resultPresenter.present({
+          board: this.board.getBoard(),
+          players: this.players,
+          outcome
+        });
+
         return;
       }
 
@@ -50,7 +56,7 @@ export class Game implements IGame {
   }
 
   private async playTurn() {
-    this.boardPresenter.present(this.board.getBoard());
+    this.boardPresenter.present({ board: this.board.getBoard() });
 
     this.board.addMove(
       await this.players[this.currentPlayerMarker].getNextMove(
