@@ -10,7 +10,7 @@ import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
 
-const RULES_FILE = 'src/docs/rules-of-play.md';
+const RULES_FILE = 'docs/rules-of-play.md';
 
 const outputAdapter = new TerminalOutputAdapter();
 const inputAdapter = new TerminalInputAdapter();

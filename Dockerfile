@@ -19,7 +19,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/src/docs ./src/docs
+COPY --from=build /app/docs ./docs
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 
