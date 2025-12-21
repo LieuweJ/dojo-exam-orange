@@ -1,7 +1,7 @@
 import { IBoard } from '../model/boardState';
 import { GAME_OUTCOME, GameOutcome } from '../strategy/game/gameOutcomeStrategy';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { BOARD_CELL_TO_UI, BoardPresenter, IOutputPresenter } from './boardPresenter';
+import { BOARD_CELL_TO_UI, BoardPresentArgs, BoardPresenter, IOutputPresenter } from './boardPresenter';
 import { PlayersByMarker } from '../game';
 
 export type GameResultPresenterArgs = {
@@ -12,7 +12,7 @@ export type GameResultPresenterArgs = {
 
 export class GameResultPresenter implements IOutputPresenter<GameResultPresenterArgs> {
   constructor(
-    private readonly boardPresenter: BoardPresenter,
+    private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly output: IOutputAdapter
   ) {}
 

@@ -156,9 +156,10 @@ describe('A game of orange-in-a-row can be played', () => {
   test('throws when player for MARKER_X is missing', () => {
     expect(() => {
       new Game(
+        // @ts-ignore - Necessary to test missing player
         {
           [MARKER_O]: new Player('Bob', moveStrategy),
-        } as PlayersByMarker,
+        },
         board,
         boardPresenterSpy,
         helpPresenterSpy,
@@ -173,9 +174,10 @@ describe('A game of orange-in-a-row can be played', () => {
   test('throws when player for MARKER_O is missing', () => {
     expect(() => {
       new Game(
+        // @ts-ignore - Necessary to test missing player
         {
           [MARKER_X]: new Player('Alice', moveStrategy),
-        } as PlayersByMarker,
+        },
         board,
         boardPresenterSpy,
         helpPresenterSpy,
@@ -189,4 +191,4 @@ describe('A game of orange-in-a-row can be played', () => {
 
 });
 
-export const col = (n: number) => n as ColumnIndex;
+export const col = (n: number) => n;

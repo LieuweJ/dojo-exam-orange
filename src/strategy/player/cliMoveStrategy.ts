@@ -17,9 +17,7 @@ export class CliMoveStrategy implements IMoveStrategy {
 
   async createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move> {
     while (true) {
-      const min = 1;
-      const max = board[0].length;
-      const raw = await this.input.ask(`It is ${displayName}'s turn.\nChoose column (${min}-${max}) for ${BOARD_CELL_TO_UI.get(marker)} : `);
+      const raw = await this.input.ask(`It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${BOARD_CELL_TO_UI.get(marker)} : `);
 
       const column = this.mapToColumn(raw);
 

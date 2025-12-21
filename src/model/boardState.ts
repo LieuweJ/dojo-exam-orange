@@ -9,7 +9,7 @@ export type PlayerBoardMarker = Exclude<BoardCell, I_EMPTY_CELL>;
 
 export type BoardCell = I_EMPTY_CELL | I_MARKER_X | I_MARKER_O;
 export type ColumnIndex = number & { readonly __brand: 'ColumnIndex' };
-export type Move = {column: ColumnIndex, marker: PlayerBoardMarker;}
+export type Move = {column: number, marker: PlayerBoardMarker;}
 
 export type IBoard = BoardCell[][];
 
