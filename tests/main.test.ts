@@ -1,5 +1,12 @@
 import { Game, PlayersByMarker } from '../src/game';
-import { BoardState, IBoardState, MARKER_O, MARKER_X, EMPTY_CELL } from '../src/model/boardState';
+import {
+  BoardState,
+  EMPTY_CELL,
+  IBoardState,
+  MARKER_O,
+  MARKER_X,
+  Move,
+} from '../src/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../src/presenter/boardPresenter';
 import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
 import { Player } from '../src/model/player';
@@ -9,16 +16,21 @@ import {
   IGameOutcomeStrategy,
 } from '../src/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
+import { IncorrectMove, IRuleChecker, RULES_VIOLATIONS, RuleViolation } from '../src/model/rules';
+import { MoveForBoard } from '../src/strategy/game/proposedMoveStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
-  let boardPresenterSpy: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
-  let helpPresenterSpy: jest.Mocked<IOutputPresenter<void>>;
+  let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
+  let helpPresenter: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
   let moveStrategy: jest.Mocked<IMoveStrategy>;
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
-  let gameResultPresenterSpy: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
+  let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
   let players: PlayersByMarker;
+  let xViolationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
+  let oViolationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
+  let moveValidator: jest.Mocked<IRuleChecker<MoveForBoard>>;
 
   beforeEach(() => {
     board = new BoardState([
@@ -30,11 +42,11 @@ describe('A game of orange-in-a-row can be played', () => {
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ]);
 
-    boardPresenterSpy = {
+    boardPresenter = {
       present: jest.fn(),
     };
 
-    helpPresenterSpy = {
+    helpPresenter = {
       present: jest.fn(),
     };
 
@@ -46,22 +58,35 @@ describe('A game of orange-in-a-row can be played', () => {
       determine: jest.fn(),
     };
 
-    gameResultPresenterSpy = {
+    gameResultPresenter = {
       present: jest.fn(),
     };
 
+    xViolationsPresenter = {
+      present: jest.fn(),
+    };
+
+    oViolationsPresenter = {
+      present: jest.fn(),
+    };
+
+    moveValidator = {
+      check: jest.fn(),
+    };
+
     players = {
-      [MARKER_X]: new Player('Alice', moveStrategy),
-      [MARKER_O]: new Player('Bob', moveStrategy),
+      [MARKER_X]: new Player('Alice', moveStrategy, xViolationsPresenter),
+      [MARKER_O]: new Player('Bob', moveStrategy, oViolationsPresenter),
     };
 
     game = new Game(
       players,
       board,
-      boardPresenterSpy,
-      helpPresenterSpy,
+      boardPresenter,
+      helpPresenter,
       gameOutcomeStrategy,
-      gameResultPresenterSpy
+      gameResultPresenter,
+      moveValidator
     );
   });
 
@@ -79,7 +104,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
+    expect(helpPresenter.present).toHaveBeenCalledTimes(1);
   });
 
   test('Board displays coins with correct colors for each player', async () => {
@@ -99,9 +124,9 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(helpPresenterSpy.present).toHaveBeenCalledTimes(1);
-    expect(boardPresenterSpy.present).toHaveBeenCalledTimes(2);
-    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith(
+    expect(helpPresenter.present).toHaveBeenCalledTimes(1);
+    expect(boardPresenter.present).toHaveBeenCalledTimes(2);
+    expect(gameResultPresenter.present).toHaveBeenLastCalledWith(
       expect.objectContaining({
         board: board.getBoard(),
       })
@@ -153,7 +178,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith({
+    expect(gameResultPresenter.present).toHaveBeenLastCalledWith({
       board: board.getBoard(),
       outcome,
       players,
@@ -165,13 +190,14 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         {
-          [MARKER_O]: new Player('Bob', moveStrategy),
+          [MARKER_O]: new Player('Bob', moveStrategy, oViolationsPresenter),
         },
         board,
-        boardPresenterSpy,
-        helpPresenterSpy,
+        boardPresenter,
+        helpPresenter,
         gameOutcomeStrategy,
-        gameResultPresenterSpy
+        gameResultPresenter,
+        moveValidator
       );
     }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
   });
@@ -181,15 +207,41 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         {
-          [MARKER_X]: new Player('Alice', moveStrategy),
+          [MARKER_X]: new Player('Alice', moveStrategy, xViolationsPresenter),
         },
         board,
-        boardPresenterSpy,
-        helpPresenterSpy,
+        boardPresenter,
+        helpPresenter,
         gameOutcomeStrategy,
-        gameResultPresenterSpy
+        gameResultPresenter,
+        moveValidator
       );
     }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
+  });
+
+  test('player is notified when an invalid move is proposed', async () => {
+    const invalidMove: Move = { column: col(10), marker: MARKER_X };
+    const validMove: Move = { column: col(3), marker: MARKER_X };
+
+    moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
+
+    const violation: RuleViolation = RULES_VIOLATIONS.INVALID_MOVE;
+
+    moveValidator.check.mockReturnValueOnce([violation]).mockReturnValueOnce(null);
+
+    gameOutcomeStrategy.determine.mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
+
+    await game.play();
+
+    expect(xViolationsPresenter.present).toHaveBeenCalledTimes(1);
+    expect(xViolationsPresenter.present).toHaveBeenCalledWith({
+      move: invalidMove,
+      violations: [violation],
+    });
+
+    expect(oViolationsPresenter.present).not.toHaveBeenCalled();
+
+    expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(2);
   });
 });
 

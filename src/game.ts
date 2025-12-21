@@ -1,8 +1,10 @@
-import { IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
+import { IBoardState, MARKER_O, MARKER_X, Move, PlayerBoardMarker } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
+import { IRuleChecker } from './model/rules';
+import { MoveForBoard } from './strategy/game/proposedMoveStrategy';
 
 export type IGame = {
   play(): void;
@@ -20,7 +22,8 @@ export class Game implements IGame {
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
-    private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>
+    private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
+    private readonly moveValidator: IRuleChecker<MoveForBoard>
   ) {
     if (!players[MARKER_X]) {
       throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
@@ -58,12 +61,27 @@ export class Game implements IGame {
   private async playTurn() {
     this.boardPresenter.present({ board: this.board.getBoard() });
 
-    this.board.addMove(
-      await this.players[this.currentPlayerMarker].getNextMove(
+    let proposedMove: Move;
+
+    while (true) {
+      proposedMove = await this.players[this.currentPlayerMarker].getNextMove(
         this.board.getBoard(),
         this.currentPlayerMarker
-      )
-    );
+      );
+
+      const violations = this.moveValidator.check({
+        move: proposedMove,
+        board: this.board.getBoard(),
+      });
+
+      if (!violations) {
+        break;
+      }
+
+      this.players[this.currentPlayerMarker].notifyInvalidMove({ move: proposedMove, violations });
+    }
+
+    this.board.addMove(proposedMove);
   }
 
   private switchPlayer() {

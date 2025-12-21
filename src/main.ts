@@ -9,6 +9,9 @@ import { InputOutputValidator } from './validators/inputOutputValidator';
 import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
+import { VIOLATION_MESSAGES, ViolationsPresenter } from './presenter/violationsPresenter';
+import { ProposedMoveStrategy } from './strategy/game/proposedMoveStrategy';
+import { MoveValidator } from './validators/moveValidator';
 
 const RULES_FILE = 'docs/rules-of-play.md';
 
@@ -27,17 +30,19 @@ const emptyBoard: IBoard = [
 async function main() {
   const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new InputOutputValidator());
   const boardPresenter = new BoardPresenter(outputAdapter);
+  const violationsPresenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
 
   const game = new Game(
     {
-      [MARKER_O]: new Player('Player 2', cliStrategy),
-      [MARKER_X]: new Player('Player 1', cliStrategy),
+      [MARKER_O]: new Player('Player 2', cliStrategy, violationsPresenter),
+      [MARKER_X]: new Player('Player 1', cliStrategy, violationsPresenter),
     },
     new BoardState(emptyBoard),
     boardPresenter,
     new RulesPresenter(outputAdapter, RULES_FILE),
     new GameOutcomeStrategy({ connectionLength: 4 }),
-    new GameResultPresenter(boardPresenter, outputAdapter)
+    new GameResultPresenter(boardPresenter, outputAdapter),
+    new ProposedMoveStrategy(new MoveValidator())
   );
 
   try {
