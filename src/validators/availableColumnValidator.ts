@@ -1,4 +1,4 @@
-import { ColumnIndex, EMPTY_CELL, IBoard } from '../model/boardState';
+import { EMPTY_CELL, IBoard } from '../model/boardState';
 
 export type IValidator<Input, Against> = {
   isValid(input: Input, against: Against): boolean;

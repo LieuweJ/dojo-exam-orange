@@ -46,7 +46,9 @@ describe('CliMoveStrategy', () => {
     const move = await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
 
     expect(move).toStrictEqual({ column: 1, marker: MARKER_X });
-    expect(inputAdapter.ask).toHaveBeenCalledWith("It is Bob's turn.\nChoose column (1-3) for ● : ");
+    expect(inputAdapter.ask).toHaveBeenCalledWith(
+      "It is Bob's turn.\nChoose column (1-3) for ● : "
+    );
   });
 
   test('displays error when input is invalid', async () => {

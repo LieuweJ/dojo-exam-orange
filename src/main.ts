@@ -25,13 +25,17 @@ const emptyBoard: IBoard = [
 ];
 
 async function main() {
-  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator());
+  const cliStrategy = new CliMoveStrategy(
+    inputAdapter,
+    outputAdapter,
+    new AvailableColumnValidator()
+  );
   const boardPresenter = new BoardPresenter(outputAdapter);
 
   const game = new Game(
     {
       [MARKER_O]: new Player('Player 2', cliStrategy),
-      [MARKER_X]: new Player('Player 1', cliStrategy)
+      [MARKER_X]: new Player('Player 1', cliStrategy),
     },
     new BoardState(emptyBoard),
     boardPresenter,

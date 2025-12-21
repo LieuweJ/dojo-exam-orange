@@ -1,4 +1,4 @@
-import { IBoard, IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
+import { IBoardState, MARKER_O, MARKER_X, PlayerBoardMarker } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
@@ -45,7 +45,7 @@ export class Game implements IGame {
         this.resultPresenter.present({
           board: this.board.getBoard(),
           players: this.players,
-          outcome
+          outcome,
         });
 
         return;
@@ -67,7 +67,6 @@ export class Game implements IGame {
   }
 
   private switchPlayer() {
-    this.currentPlayerMarker =
-      this.currentPlayerMarker === MARKER_X ? MARKER_O : MARKER_X;
+    this.currentPlayerMarker = this.currentPlayerMarker === MARKER_X ? MARKER_O : MARKER_X;
   }
 }

@@ -2,12 +2,11 @@ import { EMPTY_CELL, MARKER_X, MARKER_O, IBoard, BoardCell } from '../../src/mod
 import { GAME_OUTCOME, GameOutcomeStrategy } from '../../src/strategy/game/gameOutcomeStrategy';
 
 const E: BoardCell = EMPTY_CELL;
-const X: BoardCell  = MARKER_X;
-const O: BoardCell  = MARKER_O;
+const X: BoardCell = MARKER_X;
+const O: BoardCell = MARKER_O;
 
 describe('GameOutcomeStrategy', () => {
-  const createStrategy = () =>
-    new GameOutcomeStrategy({ connectionLength: 4 });
+  const createStrategy = () => new GameOutcomeStrategy({ connectionLength: 4 });
 
   describe('ONGOING', () => {
     it('returns ONGOING when no player has won and the board is not full', () => {

@@ -15,11 +15,7 @@ describe('RulesPresenter', () => {
 
     rulesFilePath = path.join(__dirname, 'test-rules.md');
 
-    fs.writeFileSync(
-      rulesFilePath,
-      '# Test Rules\n\nThese are the rules.',
-      'utf-8',
-    );
+    fs.writeFileSync(rulesFilePath, '# Test Rules\n\nThese are the rules.', 'utf-8');
 
     presenter = new RulesPresenter(outputAdapter, rulesFilePath);
   });
@@ -32,9 +28,7 @@ describe('RulesPresenter', () => {
   test('renders the rules of play', () => {
     presenter.present();
 
-    expect(outputAdapter.render).toHaveBeenCalledWith(
-      '# Test Rules\n\nThese are the rules.',
-    );
+    expect(outputAdapter.render).toHaveBeenCalledWith('# Test Rules\n\nThese are the rules.');
   });
 
   test('renders an error message when rules file cannot be loaded', () => {
@@ -44,8 +38,18 @@ describe('RulesPresenter', () => {
 
     presenter.present();
 
+    expect(outputAdapter.render).toHaveBeenCalledWith('Error: Unable to load the rules of play. Unknown error when trying to read the file.');
+  });
+
+  test('renders a generic error message when fs throws a non-Error value', () => {
+    jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+      throw new Error('My Boom!'); // non-Error throw
+    });
+
+    presenter.present();
+
     expect(outputAdapter.render).toHaveBeenCalledWith(
-      'Error: Unable to load the rules of play.',
+      'Error: Unable to load the rules of play. My Boom!'
     );
   });
 });

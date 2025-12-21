@@ -1,9 +1,13 @@
 import { Game, PlayersByMarker } from '../src/game';
-import { BoardState, IBoardState, MARKER_O, MARKER_X, ColumnIndex, EMPTY_CELL } from '../src/model/boardState';
+import { BoardState, IBoardState, MARKER_O, MARKER_X, EMPTY_CELL } from '../src/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../src/presenter/boardPresenter';
 import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
 import { Player } from '../src/model/player';
-import { GAME_OUTCOME, GameOutcome, IGameOutcomeStrategy } from '../src/strategy/game/gameOutcomeStrategy';
+import {
+  GAME_OUTCOME,
+  GameOutcome,
+  IGameOutcomeStrategy,
+} from '../src/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
 
 describe('A game of orange-in-a-row can be played', () => {
@@ -49,7 +53,7 @@ describe('A game of orange-in-a-row can be played', () => {
     players = {
       [MARKER_X]: new Player('Alice', moveStrategy),
       [MARKER_O]: new Player('Bob', moveStrategy),
-    }
+    };
 
     game = new Game(
       players,
@@ -66,12 +70,11 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('new game presents the rules and the initial board', async () => {
-    gameOutcomeStrategy.determine
-      .mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
+    gameOutcomeStrategy.determine.mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
     moveStrategy.createNextMove.mockResolvedValue({
       column: col(4),
-      marker: MARKER_X
+      marker: MARKER_X,
     });
 
     await game.play();
@@ -83,11 +86,11 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_X
+        marker: MARKER_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: MARKER_O
+        marker: MARKER_O,
       });
 
     gameOutcomeStrategy.determine
@@ -114,15 +117,15 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_X
+        marker: MARKER_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: MARKER_X
+        marker: MARKER_X,
       })
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_O
+        marker: MARKER_O,
       });
 
     await game.play();
@@ -135,28 +138,32 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('game stops when a winning outcome is returned', async () => {
-    const outcome: GameOutcome = { type: GAME_OUTCOME.WIN, winner: MARKER_X, winningPositions: [{col: 4, row: 0}] };
+    const outcome: GameOutcome = {
+      type: GAME_OUTCOME.WIN,
+      winner: MARKER_X,
+      winningPositions: [{ col: 4, row: 0 }],
+    };
 
-    gameOutcomeStrategy.determine
-      .mockReturnValueOnce(outcome);
+    gameOutcomeStrategy.determine.mockReturnValueOnce(outcome);
 
-    moveStrategy.createNextMove
-      .mockResolvedValueOnce({
-        column: col(4),
-        marker: MARKER_X
-      });
+    moveStrategy.createNextMove.mockResolvedValueOnce({
+      column: col(4),
+      marker: MARKER_X,
+    });
 
     await game.play();
 
-    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith(
-      { board: board.getBoard(), outcome, players },
-    );
+    expect(gameResultPresenterSpy.present).toHaveBeenLastCalledWith({
+      board: board.getBoard(),
+      outcome,
+      players,
+    });
   });
 
   test('throws when player for MARKER_X is missing', () => {
     expect(() => {
       new Game(
-        // @ts-ignore - Necessary to test missing player
+        // @ts-expect-error - Necessary to test missing player
         {
           [MARKER_O]: new Player('Bob', moveStrategy),
         },
@@ -166,15 +173,13 @@ describe('A game of orange-in-a-row can be played', () => {
         gameOutcomeStrategy,
         gameResultPresenterSpy
       );
-    }).toThrow(
-      new Error(`Player for marker ${MARKER_X.toString()} is missing.`)
-    );
+    }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
   });
 
   test('throws when player for MARKER_O is missing', () => {
     expect(() => {
       new Game(
-        // @ts-ignore - Necessary to test missing player
+        // @ts-expect-error - Necessary to test missing player
         {
           [MARKER_X]: new Player('Alice', moveStrategy),
         },
@@ -184,11 +189,8 @@ describe('A game of orange-in-a-row can be played', () => {
         gameOutcomeStrategy,
         gameResultPresenterSpy
       );
-    }).toThrow(
-      new Error(`Player for marker ${MARKER_O.toString()} is missing.`)
-    );
+    }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
   });
-
 });
 
 export const col = (n: number) => n;

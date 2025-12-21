@@ -20,7 +20,7 @@ export type IOutputPresenter<T> = {
 export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   constructor(private outputAdapter: IOutputAdapter) {}
 
-  public present({board, highlightPositions= []}: BoardPresentArgs): void {
+  public present({ board, highlightPositions = [] }: BoardPresentArgs): void {
     const highlightSet = this.toHighlightSet(highlightPositions);
     const columnCount = board[0].length;
 

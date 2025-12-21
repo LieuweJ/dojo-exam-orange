@@ -1,6 +1,6 @@
 export const EMPTY_CELL = Symbol('.');
-export const MARKER_X  = Symbol('x');
-export const MARKER_O  = Symbol('o');
+export const MARKER_X = Symbol('x');
+export const MARKER_O = Symbol('o');
 
 export type I_EMPTY_CELL = typeof EMPTY_CELL;
 export type I_MARKER_X = typeof MARKER_X;
@@ -9,20 +9,20 @@ export type PlayerBoardMarker = Exclude<BoardCell, I_EMPTY_CELL>;
 
 export type BoardCell = I_EMPTY_CELL | I_MARKER_X | I_MARKER_O;
 export type ColumnIndex = number & { readonly __brand: 'ColumnIndex' };
-export type Move = {column: number, marker: PlayerBoardMarker;}
+export type Move = { column: number; marker: PlayerBoardMarker };
 
 export type IBoard = BoardCell[][];
 
 export type IBoardState = {
   getBoard(): IBoard;
   addMove(move: Move): void;
-}
+};
 
 export class BoardState implements IBoardState {
   constructor(private board: IBoard) {}
 
   getBoard() {
-    return this.board.map(row => [...row]);
+    return this.board.map((row) => [...row]);
   }
 
   addMove({ column, marker }: Move) {

@@ -1,9 +1,8 @@
 import { GameResultPresenter } from '../../src/presenter/gameResultPresenter';
-import { BoardPresentArgs, BoardPresenter, IOutputPresenter } from '../../src/presenter/boardPresenter';
+import { BoardPresentArgs, IOutputPresenter } from '../../src/presenter/boardPresenter';
 import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
 import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../src/model/boardState';
 import { GAME_OUTCOME } from '../../src/strategy/game/gameOutcomeStrategy';
-import { PlayersByMarker } from '../../src/game';
 import { Player } from '../../src/model/player';
 import { IMoveStrategy } from '../../src/strategy/player/cliMoveStrategy';
 
@@ -13,7 +12,7 @@ describe('GameResultPresenter', () => {
   let presenter: GameResultPresenter;
   let player1: Player;
   let player2: Player;
-  let playerStrategy: IMoveStrategy
+  let playerStrategy: IMoveStrategy;
 
   beforeEach(() => {
     playerStrategy = {
@@ -29,14 +28,14 @@ describe('GameResultPresenter', () => {
 
     boardPresenter = {
       present: jest.fn(),
-    }
+    };
 
     presenter = new GameResultPresenter(boardPresenter, outputAdapter);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-  })
+  });
 
   test('renders winning board with highlights and winner message', () => {
     const board: IBoard = [
@@ -71,9 +70,7 @@ describe('GameResultPresenter', () => {
       ],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith(
-      'Alice (●) wins!'
-    );
+    expect(outputAdapter.render).toHaveBeenCalledWith('Alice (●) wins!');
   });
 
   test('renders final board and draw message', () => {
@@ -97,8 +94,6 @@ describe('GameResultPresenter', () => {
       board,
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith(
-      "It's a draw."
-    );
+    expect(outputAdapter.render).toHaveBeenCalledWith("It's a draw.");
   });
 });

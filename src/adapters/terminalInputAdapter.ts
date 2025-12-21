@@ -11,8 +11,8 @@ export class TerminalInputAdapter implements IInputAdapter {
   });
 
   ask(question: string): Promise<string> {
-    return new Promise(resolve => {
-      this.readLine.question(question, answer => {
+    return new Promise((resolve) => {
+      this.readLine.question(question, (answer) => {
         resolve(answer.trim());
       });
     });

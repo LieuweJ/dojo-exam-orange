@@ -30,9 +30,9 @@ describe('BoardPresenter', () => {
 
   test('Board displays highlights', () => {
     const highlightPositions = [
-      {row: 0, col: 1},
+      { row: 0, col: 1 },
       { row: 2, col: 0 },
-      { row: 2, col: 1 }
+      { row: 2, col: 1 },
     ];
 
     const board: IBoard = [
@@ -41,7 +41,7 @@ describe('BoardPresenter', () => {
       [MARKER_O, MARKER_X],
     ];
 
-    presenter.present({ board, highlightPositions});
+    presenter.present({ board, highlightPositions });
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
       `| ○ |[·]|\n| · | ● |\n|[○]|[●]|\n|---|---|\n| 1 | 2 |\n`

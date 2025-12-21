@@ -6,36 +6,33 @@ export const GAME_OUTCOME = {
   WIN: 'WIN',
 } as const;
 
-type GameOutComeDraw = { type: typeof GAME_OUTCOME.DRAW }
-type GameOutcomeOngoing = { type: typeof GAME_OUTCOME.ONGOING }
+type GameOutComeDraw = { type: typeof GAME_OUTCOME.DRAW };
+type GameOutcomeOngoing = { type: typeof GAME_OUTCOME.ONGOING };
 type GameOutComeWin = {
   type: typeof GAME_OUTCOME.WIN;
   winner: PlayerBoardMarker;
   winningPositions: BoardPosition[];
-}
+};
 
-export type GameOutcome =
-  | GameOutComeDraw
-  | GameOutcomeOngoing
-  | GameOutComeWin
+export type GameOutcome = GameOutComeDraw | GameOutcomeOngoing | GameOutComeWin;
 
-export type BoardPosition = { row: number; col: number; };
-type Direction = { deltaRow: number; deltaCol: number; };
+export type BoardPosition = { row: number; col: number };
+type Direction = { deltaRow: number; deltaCol: number };
 
 const DIRECTIONS: Direction[] = [
-  { deltaRow: 0, deltaCol: 1 },   // →
-  { deltaRow: 1, deltaCol: 0 },   // ↓
-  { deltaRow: 1, deltaCol: 1 },   // ↘
-  { deltaRow: 1, deltaCol: -1 },  // ↗
+  { deltaRow: 0, deltaCol: 1 }, // →
+  { deltaRow: 1, deltaCol: 0 }, // ↓
+  { deltaRow: 1, deltaCol: 1 }, // ↘
+  { deltaRow: 1, deltaCol: -1 }, // ↗
 ];
 
 export type IGameOutcomeStrategy = {
   determine(board: IBoard): GameOutcome;
-}
+};
 
 type WinConditions = {
-  connectionLength: number
-}
+  connectionLength: number;
+};
 
 export class GameOutcomeStrategy implements IGameOutcomeStrategy {
   constructor(private readonly winConditions: WinConditions) {}
@@ -65,12 +62,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
         if (cell === EMPTY_CELL) continue;
 
         for (const direction of DIRECTIONS) {
-          const winningPositions = this.hasLine(
-            board,
-            { row, col },
-            direction,
-            cell
-          );
+          const winningPositions = this.hasLine(board, { row, col }, direction, cell);
 
           if (winningPositions) {
             return {
@@ -113,7 +105,6 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
 
     return positions;
   }
-
 
   private isDraw(board: IBoard): boolean {
     for (const row of board) {

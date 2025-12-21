@@ -11,7 +11,7 @@ describe('Output adapter', () => {
 
   afterEach(() => {
     spy.mockRestore();
-  })
+  });
 
   test('renders a message to the console', () => {
     output.render('hello world');

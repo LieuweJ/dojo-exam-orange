@@ -1,4 +1,10 @@
-import { BoardState, MARKER_X, MARKER_O, ColumnIndex, EMPTY_CELL } from '../../src/model/boardState';
+import {
+  BoardState,
+  MARKER_X,
+  MARKER_O,
+  ColumnIndex,
+  EMPTY_CELL,
+} from '../../src/model/boardState';
 
 describe('Board.addMove', () => {
   let board: BoardState;

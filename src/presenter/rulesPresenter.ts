@@ -13,14 +13,16 @@ export class RulesPresenter implements IOutputPresenter<void> {
     const rulesPath = path.resolve(process.cwd(), this.filePath);
 
     try {
-      const rules = fs.readFileSync(
-        rulesPath,
-        'utf-8',
-      );
+      const rules = fs.readFileSync(rulesPath, 'utf-8');
 
       this.output.render(rules);
     } catch (error) {
-      this.output.render('Error: Unable to load the rules of play.');
+      let errorMessage = 'Unknown error when trying to read the file.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      this.output.render(`Error: Unable to load the rules of play. ${errorMessage}`);
     }
   }
 }
