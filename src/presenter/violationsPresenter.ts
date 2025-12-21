@@ -17,10 +17,10 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
 
     let violationString = '- unknown violation';
     if (violationMessages.length > 0) {
-      violationString = violationMessages.join('\n- ');
+      violationString = `- ${violationMessages.join('\n- ')}`;
     }
 
-    const outputMessage = `Invalid move: ${BOARD_CELL_TO_UI.get(move.marker)} at column: ${move.column}:\n- ${violationString}`;
+    const outputMessage = `Invalid move: ${BOARD_CELL_TO_UI.get(move.marker)} at column ${move.column}:\n${violationString}`;
 
     this.output.render(outputMessage);
   }
