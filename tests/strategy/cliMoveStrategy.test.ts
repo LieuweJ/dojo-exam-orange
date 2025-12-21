@@ -1,7 +1,7 @@
 import { CliMoveStrategy } from '../../src/strategy/player/cliMoveStrategy';
 import { IInputAdapter } from '../../src/adapters/terminalInputAdapter';
 import { EMPTY_CELL, IBoard, MARKER_X, PlayerBoardMarker } from '../../src/model/boardState';
-import { AvailableColumnValidator } from '../../src/validators/availableColumnValidator';
+import { InputOutputValidator } from '../../src/validators/inputOutputValidator';
 import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
 
 describe('CliMoveStrategy', () => {
@@ -18,7 +18,7 @@ describe('CliMoveStrategy', () => {
       render: jest.fn(),
     };
 
-    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new AvailableColumnValidator());
+    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new InputOutputValidator());
   });
 
   test('returns a move with the given marker when a valid column is entered', async () => {
@@ -57,14 +57,14 @@ describe('CliMoveStrategy', () => {
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
 
-    inputAdapter.ask.mockResolvedValueOnce('5');
+    inputAdapter.ask.mockResolvedValueOnce('-5');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
     await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
-      'Column 5 is full or invalid. Please choose another column.'
+      'Column -5 is invalid. Please choose another column.'
     );
   });
 });

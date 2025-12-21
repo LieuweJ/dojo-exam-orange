@@ -1,6 +1,6 @@
 import { IBoard, Move, PlayerBoardMarker } from '../../model/boardState';
 import { IInputAdapter } from '../../adapters/terminalInputAdapter';
-import { IValidator } from '../../validators/availableColumnValidator';
+import { IValidator } from '../../validators/inputOutputValidator';
 import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
 import { BOARD_CELL_TO_UI } from '../../presenter/boardPresenter';
 
@@ -12,7 +12,7 @@ export class CliMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
-    private readonly validator: IValidator<number, IBoard>
+    private readonly validator: IValidator<string, void>
   ) {}
 
   async createNextMove(
@@ -25,16 +25,14 @@ export class CliMoveStrategy implements IMoveStrategy {
         `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${BOARD_CELL_TO_UI.get(marker)} : `
       );
 
-      const column = this.mapToColumn(raw);
-
-      if (!this.validator.isValid(column, board)) {
-        this.output.render(`Column ${raw} is full or invalid. Please choose another column.`);
+      if (!this.validator.isValid(raw)) {
+        this.output.render(`Column ${raw} is invalid. Please choose another column.`);
 
         continue;
       }
 
       return {
-        column,
+        column: this.mapToColumn(raw),
         marker,
       };
     }

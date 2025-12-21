@@ -5,7 +5,7 @@ import { BoardPresenter } from './presenter/boardPresenter';
 import { RulesPresenter } from './presenter/rulesPresenter';
 import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
 import { CliMoveStrategy } from './strategy/player/cliMoveStrategy';
-import { AvailableColumnValidator } from './validators/availableColumnValidator';
+import { InputOutputValidator } from './validators/inputOutputValidator';
 import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
@@ -25,11 +25,7 @@ const emptyBoard: IBoard = [
 ];
 
 async function main() {
-  const cliStrategy = new CliMoveStrategy(
-    inputAdapter,
-    outputAdapter,
-    new AvailableColumnValidator()
-  );
+  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new InputOutputValidator());
   const boardPresenter = new BoardPresenter(outputAdapter);
 
   const game = new Game(
