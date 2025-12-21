@@ -1,4 +1,3 @@
-// terminalInputAdapter.test.ts
 import readline from 'node:readline';
 import { TerminalInputAdapter } from '../../src/adapters/terminalInputAdapter';
 
