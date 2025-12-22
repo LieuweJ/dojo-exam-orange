@@ -1,9 +1,9 @@
 import { ProposedMove, RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../../../model/rules';
 
-export class ValidPlacementStrategy implements RuleStrategy<ProposedMove> {
+export class ValidPlayerTurnStrategy implements RuleStrategy<ProposedMove> {
   check({ move, constraints }: ProposedMove): RuleViolation[] | null {
-    if (!constraints.canAddMove(move)) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+    if (!constraints.isCurrentPlayer(move.marker)) {
+      return [RULES_VIOLATIONS.INVALID_PLAYER_TURN];
     }
 
     return null;

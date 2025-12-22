@@ -1,12 +1,11 @@
 import { Game } from '../src/game';
 import {
+  BoardConstraint,
   BoardState,
   EMPTY_CELL,
-  IBoardConstraints,
   IBoardState,
   MARKER_O,
   MARKER_X,
-  Move,
 } from '../src/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../src/presenter/boardPresenter';
 import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
@@ -17,12 +16,18 @@ import {
   IGameOutcomeStrategy,
 } from '../src/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
-import { IncorrectMove, RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../src/model/rules';
-import { ProposedMove } from '../src/strategy/game/rules/validPlacementStrategy';
+import {
+  IncorrectMove,
+  Move,
+  ProposedMove,
+  RULES_VIOLATIONS,
+  RuleStrategy,
+  RuleViolation,
+} from '../src/model/rules';
 import { PlayersByMarker, TurnState } from '../src/model/turnState';
 
 describe('A game of orange-in-a-row can be played', () => {
-  let board: IBoardState & IBoardConstraints;
+  let board: IBoardState & BoardConstraint;
   let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
   let helpPresenter: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;
@@ -225,7 +230,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 
-    const violation: RuleViolation = RULES_VIOLATIONS.INVALID_MOVE;
+    const violation: RuleViolation = RULES_VIOLATIONS.INVALID_PLACEMENT;
 
     moveValidator.check.mockReturnValueOnce([violation]).mockReturnValueOnce(null);
 

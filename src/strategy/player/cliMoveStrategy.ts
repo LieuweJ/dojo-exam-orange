@@ -1,8 +1,9 @@
-import { IBoard, Move, PlayerBoardMarker } from '../../model/boardState';
+import { IBoard, PlayerBoardMarker } from '../../model/boardState';
 import { IInputAdapter } from '../../adapters/terminalInputAdapter';
 import { IValidator } from '../../validators/inputOutputValidator';
 import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
 import { BOARD_CELL_TO_UI } from '../../presenter/boardPresenter';
+import { Move } from '../../model/rules';
 
 export type IMoveStrategy = {
   createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move>;

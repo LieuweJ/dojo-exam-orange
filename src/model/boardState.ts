@@ -1,3 +1,5 @@
+import { Move } from './rules';
+
 export const EMPTY_CELL = Symbol('.');
 export const MARKER_X = Symbol('x');
 export const MARKER_O = Symbol('o');
@@ -9,7 +11,6 @@ export type PlayerBoardMarker = Exclude<BoardCell, I_EMPTY_CELL>;
 
 export type BoardCell = I_EMPTY_CELL | I_MARKER_X | I_MARKER_O;
 export type ColumnIndex = number & { readonly __brand: 'ColumnIndex' };
-export type Move = { column: number; marker: PlayerBoardMarker };
 
 export type IBoard = BoardCell[][];
 
@@ -18,11 +19,11 @@ export type IBoardState = {
   addMove(move: Move): void;
 };
 
-export type IBoardConstraints = {
+export type BoardConstraint = {
   canAddMove(move: Move): boolean;
 };
 
-export class BoardState implements IBoardState, IBoardConstraints {
+export class BoardState implements IBoardState, BoardConstraint {
   constructor(private board: IBoard) {}
 
   getBoard() {

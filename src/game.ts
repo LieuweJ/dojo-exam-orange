@@ -1,9 +1,8 @@
-import { IBoardConstraints, IBoardState, Move } from './model/boardState';
+import { BoardConstraint, IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
-import { IncorrectMove, RuleStrategy } from './model/rules';
-import { ProposedMove } from './strategy/game/rules/validPlacementStrategy';
+import { IncorrectMove, Move, ProposedMove, RuleStrategy } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
 
 export type IGame = {
@@ -13,7 +12,7 @@ export type IGame = {
 export class Game implements IGame {
   constructor(
     private readonly turnState: ITurnState & TurnConstraint,
-    private readonly board: IBoardState & IBoardConstraints,
+    private readonly board: IBoardState & BoardConstraint,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
@@ -59,7 +58,7 @@ export class Game implements IGame {
 
       const violations = this.moveChecker.check({
         move: proposedMove,
-        constraints: this.board,
+        constraints: { ...this.board, ...this.turnState },
       });
 
       if (!violations) {

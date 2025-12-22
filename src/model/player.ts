@@ -1,5 +1,6 @@
-import { IBoard, Move, PlayerBoardMarker } from './boardState';
+import { IBoard, PlayerBoardMarker } from './boardState';
 import { IMoveStrategy } from '../strategy/player/cliMoveStrategy';
+import { Move } from './rules';
 
 interface IPlayer {
   getScreenName(): string;

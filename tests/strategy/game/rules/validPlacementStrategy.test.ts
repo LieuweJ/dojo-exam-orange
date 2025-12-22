@@ -1,9 +1,6 @@
-import {
-  MoveConstraints,
-  ValidPlacementStrategy,
-} from '../../src/strategy/game/rules/validPlacementStrategy';
-import { MARKER_O, MARKER_X, Move } from '../../src/model/boardState';
-import { RuleViolation } from '../../src/model/rules';
+import { ValidPlacementStrategy } from '../../../../src/strategy/game/rules/validPlacementStrategy';
+import { MARKER_O, MARKER_X } from '../../../../src/model/boardState';
+import { Move, MoveConstraints, RuleViolation } from '../../../../src/model/rules';
 
 describe('ValidPlacementStrategy', () => {
   let constraints: jest.Mocked<MoveConstraints>;
@@ -11,6 +8,7 @@ describe('ValidPlacementStrategy', () => {
   beforeEach(() => {
     constraints = {
       canAddMove: jest.fn(),
+      isCurrentPlayer: jest.fn(),
     };
   });
 
@@ -28,7 +26,7 @@ describe('ValidPlacementStrategy', () => {
     const result = strategy.check({ move, constraints });
 
     expect(constraints.canAddMove).toHaveBeenCalledWith(move);
-    expect(result).toEqual(['INVALID_MOVE'] as RuleViolation[]);
+    expect(result).toEqual(['INVALID_PLACEMENT'] as RuleViolation[]);
   });
 
   test('returns null when validator reports move as valid', () => {

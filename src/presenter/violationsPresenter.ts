@@ -3,7 +3,8 @@ import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IncorrectMove, RuleViolation } from '../model/rules';
 
 export const VIOLATION_MESSAGES: Record<RuleViolation, string> = {
-  INVALID_MOVE: 'The move cannot be placed on the board.',
+  INVALID_PLACEMENT: 'The move cannot be placed on the board.',
+  INVALID_PLAYER_TURN: "It's not the player's turn to make a move.",
 };
 
 export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {

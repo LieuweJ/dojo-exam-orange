@@ -1,5 +1,5 @@
-import { EMPTY_CELL, MARKER_X, MARKER_O, IBoard, BoardCell } from '../../src/model/boardState';
-import { GAME_OUTCOME, GameOutcomeStrategy } from '../../src/strategy/game/gameOutcomeStrategy';
+import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/model/boardState';
+import { GAME_OUTCOME, GameOutcomeStrategy } from '../../../src/strategy/game/gameOutcomeStrategy';
 
 const E: BoardCell = EMPTY_CELL;
 const X: BoardCell = MARKER_X;

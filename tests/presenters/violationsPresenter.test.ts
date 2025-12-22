@@ -24,21 +24,22 @@ describe('ViolationsPresenter', () => {
         marker: MARKER_X,
         column: 2,
       },
-      violations: [RULES_VIOLATIONS.INVALID_MOVE],
+      violations: [RULES_VIOLATIONS.INVALID_PLACEMENT],
     };
 
     presenter.present(incorrectMove);
 
     const expectedMessage =
       `Invalid move: ${BOARD_CELL_TO_UI.get(MARKER_X)} at column 2:\n` +
-      `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_MOVE]}`;
+      `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
   });
 
   test('renders multiple violation messages separated by new lines', () => {
     const presenter = new ViolationsPresenter(outputAdapter, {
-      INVALID_MOVE: 'Invalid move',
+      INVALID_PLACEMENT: 'Invalid move',
+      INVALID_PLAYER_TURN: 'Invalid player turn',
       // intentionally adding a second violation for test clarity
       // (this keeps the test future-proof)
       OTHER: 'Some other violation',
@@ -49,7 +50,7 @@ describe('ViolationsPresenter', () => {
         marker: MARKER_O,
         column: 1,
       },
-      violations: ['INVALID_MOVE', 'OTHER'] as RuleViolation[],
+      violations: ['INVALID_PLACEMENT', 'OTHER'] as RuleViolation[],
     };
 
     presenter.present(incorrectMove);
