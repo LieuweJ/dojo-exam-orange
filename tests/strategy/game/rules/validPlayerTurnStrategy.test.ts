@@ -8,7 +8,7 @@ describe('ValidPlayerTurnStrategy', () => {
   beforeEach(() => {
     constraints = {
       canAddMove: jest.fn(),
-      isCurrentPlayer: jest.fn(),
+      isCurrentPlayerMarker: jest.fn(),
     };
   });
 
@@ -21,11 +21,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    constraints.isCurrentPlayer.mockReturnValueOnce(false);
+    constraints.isCurrentPlayerMarker.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, constraints });
 
-    expect(constraints.isCurrentPlayer).toHaveBeenCalledWith(move.marker);
+    expect(constraints.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
     expect(result).toEqual(['INVALID_PLAYER_TURN'] as RuleViolation[]);
   });
 
@@ -33,11 +33,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    constraints.isCurrentPlayer.mockReturnValueOnce(true);
+    constraints.isCurrentPlayerMarker.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, constraints });
 
-    expect(constraints.isCurrentPlayer).toHaveBeenCalledWith(move.marker);
+    expect(constraints.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
     expect(result).toBeNull();
   });
 });

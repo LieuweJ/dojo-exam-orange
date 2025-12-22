@@ -44,6 +44,9 @@ export class BoardState implements IBoardState, BoardConstraint {
   }
 
   canAddMove({ column }: Move): boolean {
-    return this.board[0][column] === EMPTY_CELL;
+    const isInteger = Number.isInteger(column);
+    const isInBounds = column >= 0 && column < this.board[0].length;
+
+    return isInteger && isInBounds && this.board[0][column] === EMPTY_CELL;
   }
 }

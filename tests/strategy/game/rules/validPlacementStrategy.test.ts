@@ -8,7 +8,7 @@ describe('ValidPlacementStrategy', () => {
   beforeEach(() => {
     constraints = {
       canAddMove: jest.fn(),
-      isCurrentPlayer: jest.fn(),
+      isCurrentPlayerMarker: jest.fn(),
     };
   });
 

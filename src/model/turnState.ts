@@ -11,10 +11,10 @@ export type ITurnState = {
 };
 
 export type TurnConstraint = {
-  isCurrentPlayer(marker: PlayerBoardMarker): boolean;
+  isCurrentPlayerMarker(marker: PlayerBoardMarker): boolean;
 };
 
-export class TurnState implements ITurnState {
+export class TurnState implements ITurnState, TurnConstraint {
   currentPlayerMarker: PlayerBoardMarker = MARKER_X;
   players: PlayersByMarker;
 
@@ -31,7 +31,7 @@ export class TurnState implements ITurnState {
   }
 
   nextPlayer(): void {
-    this.currentPlayerMarker = this.isCurrentPlayer(MARKER_X) ? MARKER_O : MARKER_X;
+    this.currentPlayerMarker = this.isCurrentPlayerMarker(MARKER_X) ? MARKER_O : MARKER_X;
   }
 
   getPlayers(): PlayersByMarker {
@@ -46,7 +46,7 @@ export class TurnState implements ITurnState {
     return this.currentPlayerMarker;
   };
 
-  isCurrentPlayer = (marker: PlayerBoardMarker): boolean => {
+  isCurrentPlayerMarker = (marker: PlayerBoardMarker): boolean => {
     return this.currentPlayerMarker === marker;
   };
 }
