@@ -17,8 +17,8 @@ import {
   IGameOutcomeStrategy,
 } from '../src/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
-import { IncorrectMove, IRuleChecker, RULES_VIOLATIONS, RuleViolation } from '../src/model/rules';
-import { MoveForBoard } from '../src/strategy/game/proposedMoveStrategy';
+import { IncorrectMove, RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../src/model/rules';
+import { ProposedMove } from '../src/strategy/game/rules/validPlacementStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & IBoardConstraints;
@@ -30,7 +30,7 @@ describe('A game of orange-in-a-row can be played', () => {
   let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
   let players: PlayersByMarker;
   let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
-  let moveValidator: jest.Mocked<IRuleChecker<MoveForBoard>>;
+  let moveValidator: jest.Mocked<RuleStrategy<ProposedMove>>;
 
   beforeEach(() => {
     board = new BoardState([

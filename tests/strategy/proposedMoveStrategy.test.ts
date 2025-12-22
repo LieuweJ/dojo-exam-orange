@@ -1,20 +1,18 @@
-import { ProposedMoveStrategy } from '../../src/strategy/game/proposedMoveStrategy';
-import { IValidator } from '../../src/validators/inputOutputValidator';
 import {
-  BoardState,
-  IBoardConstraints,
-  MARKER_O,
-  MARKER_X,
-  Move,
-} from '../../src/model/boardState';
+  MoveConstraints,
+  ValidPlacementStrategy,
+} from '../../src/strategy/game/rules/validPlacementStrategy';
+import { MARKER_O, MARKER_X, Move } from '../../src/model/boardState';
 import { RuleViolation } from '../../src/model/rules';
 
-describe('ProposedMoveStrategy', () => {
-  const isValidMock = jest.fn();
+describe('ValidPlacementStrategy', () => {
+  let constraints: jest.Mocked<MoveConstraints>;
 
-  const validator: IValidator<Move, IBoardConstraints> = {
-    isValid: isValidMock,
-  };
+  beforeEach(() => {
+    constraints = {
+      canAddMove: jest.fn(),
+    };
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -22,30 +20,26 @@ describe('ProposedMoveStrategy', () => {
   });
 
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
-    const strategy = new ProposedMoveStrategy(validator);
+    const strategy = new ValidPlacementStrategy();
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    const constraints = new BoardState([[]]);
-
-    isValidMock.mockReturnValue(false);
+    constraints.canAddMove.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, constraints });
 
-    expect(isValidMock).toHaveBeenCalledWith(move, constraints);
+    expect(constraints.canAddMove).toHaveBeenCalledWith(move);
     expect(result).toEqual(['INVALID_MOVE'] as RuleViolation[]);
   });
 
   test('returns null when validator reports move as valid', () => {
-    const strategy = new ProposedMoveStrategy(validator);
+    const strategy = new ValidPlacementStrategy();
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    const constraints = new BoardState([[]]);
-
-    isValidMock.mockReturnValue(true);
+    constraints.canAddMove.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, constraints });
 
-    expect(isValidMock).toHaveBeenCalledWith(move, constraints);
+    expect(constraints.canAddMove).toHaveBeenCalledWith(move);
     expect(result).toBeNull();
   });
 });

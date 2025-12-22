@@ -10,8 +10,7 @@ import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
 import { VIOLATION_MESSAGES, ViolationsPresenter } from './presenter/violationsPresenter';
-import { ProposedMoveStrategy } from './strategy/game/proposedMoveStrategy';
-import { MoveValidator } from './validators/moveValidator';
+import { ValidPlacementStrategy } from './strategy/game/rules/validPlacementStrategy';
 
 const RULES_FILE = 'docs/rules-of-play.md';
 
@@ -42,7 +41,7 @@ async function main() {
     new RulesPresenter(outputAdapter, RULES_FILE),
     new GameOutcomeStrategy({ connectionLength: 4 }),
     new GameResultPresenter(boardPresenter, outputAdapter),
-    new ProposedMoveStrategy(new MoveValidator()),
+    new ValidPlacementStrategy(),
     violationsPresenter
   );
 

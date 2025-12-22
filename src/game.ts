@@ -10,8 +10,8 @@ import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
-import { IncorrectMove, IRuleChecker } from './model/rules';
-import { MoveForBoard } from './strategy/game/proposedMoveStrategy';
+import { IncorrectMove, RuleStrategy } from './model/rules';
+import { ProposedMove } from './strategy/game/rules/validPlacementStrategy';
 
 export type IGame = {
   play(): void;
@@ -30,7 +30,7 @@ export class Game implements IGame {
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
-    private readonly moveChecker: IRuleChecker<MoveForBoard>,
+    private readonly moveChecker: RuleStrategy<ProposedMove>,
     private readonly violationPresenter: IOutputPresenter<IncorrectMove>
   ) {
     if (!players[MARKER_X]) {

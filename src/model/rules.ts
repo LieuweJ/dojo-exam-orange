@@ -11,6 +11,6 @@ export type IncorrectMove = {
   violations: RuleViolation[];
 };
 
-export type IRuleChecker<Input> = {
+export type RuleStrategy<Input> = {
   check(input: Input): RuleViolation[] | null;
 };
