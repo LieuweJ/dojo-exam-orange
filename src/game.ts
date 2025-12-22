@@ -1,4 +1,11 @@
-import { IBoardState, MARKER_O, MARKER_X, Move, PlayerBoardMarker } from './model/boardState';
+import {
+  IBoardConstraints,
+  IBoardState,
+  MARKER_O,
+  MARKER_X,
+  Move,
+  PlayerBoardMarker,
+} from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
@@ -18,12 +25,12 @@ export class Game implements IGame {
 
   constructor(
     players: PlayersByMarker,
-    private readonly board: IBoardState,
+    private readonly board: IBoardState & IBoardConstraints,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
-    private readonly moveValidator: IRuleChecker<MoveForBoard>
+    private readonly moveChecker: IRuleChecker<MoveForBoard>
   ) {
     if (!players[MARKER_X]) {
       throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
@@ -69,9 +76,9 @@ export class Game implements IGame {
         this.currentPlayerMarker
       );
 
-      const violations = this.moveValidator.check({
+      const violations = this.moveChecker.check({
         move: proposedMove,
-        board: this.board.getBoard(),
+        constraints: this.board,
       });
 
       if (!violations) {

@@ -1,9 +1,9 @@
 import { IValidator } from './inputOutputValidator';
-import { EMPTY_CELL, IBoard, Move } from '../model/boardState';
+import { Move } from '../model/boardState';
+import { MoveConstraints } from '../strategy/game/proposedMoveStrategy';
 
-export class MoveValidator implements IValidator<Move, IBoard> {
-  isValid(move: Move, board: IBoard): boolean {
-    const column = board[0][move.column];
-    return column === EMPTY_CELL;
+export class MoveValidator implements IValidator<Move, MoveConstraints> {
+  isValid(move: Move, constraints: MoveConstraints): boolean {
+    return constraints.canAddMove(move);
   }
 }

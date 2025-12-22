@@ -1,12 +1,18 @@
 import { ProposedMoveStrategy } from '../../src/strategy/game/proposedMoveStrategy';
 import { IValidator } from '../../src/validators/inputOutputValidator';
-import { IBoard, MARKER_O, MARKER_X, Move } from '../../src/model/boardState';
+import {
+  BoardState,
+  IBoardConstraints,
+  MARKER_O,
+  MARKER_X,
+  Move,
+} from '../../src/model/boardState';
 import { RuleViolation } from '../../src/model/rules';
 
 describe('ProposedMoveStrategy', () => {
   const isValidMock = jest.fn();
 
-  const validator: IValidator<Move, IBoard> = {
+  const validator: IValidator<Move, IBoardConstraints> = {
     isValid: isValidMock,
   };
 
@@ -19,13 +25,13 @@ describe('ProposedMoveStrategy', () => {
     const strategy = new ProposedMoveStrategy(validator);
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    const board = {} as IBoard;
+    const constraints = new BoardState([[]]);
 
     isValidMock.mockReturnValue(false);
 
-    const result = strategy.check({ move, board });
+    const result = strategy.check({ move, constraints });
 
-    expect(isValidMock).toHaveBeenCalledWith(move, board);
+    expect(isValidMock).toHaveBeenCalledWith(move, constraints);
     expect(result).toEqual(['INVALID_MOVE'] as RuleViolation[]);
   });
 
@@ -33,13 +39,13 @@ describe('ProposedMoveStrategy', () => {
     const strategy = new ProposedMoveStrategy(validator);
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    const board = {} as IBoard;
+    const constraints = new BoardState([[]]);
 
     isValidMock.mockReturnValue(true);
 
-    const result = strategy.check({ move, board });
+    const result = strategy.check({ move, constraints });
 
-    expect(isValidMock).toHaveBeenCalledWith(move, board);
+    expect(isValidMock).toHaveBeenCalledWith(move, constraints);
     expect(result).toBeNull();
   });
 });

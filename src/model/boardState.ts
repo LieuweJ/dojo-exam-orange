@@ -18,7 +18,11 @@ export type IBoardState = {
   addMove(move: Move): void;
 };
 
-export class BoardState implements IBoardState {
+export type IBoardConstraints = {
+  canAddMove(move: Move): boolean;
+};
+
+export class BoardState implements IBoardState, IBoardConstraints {
   constructor(private board: IBoard) {}
 
   getBoard() {
@@ -26,13 +30,19 @@ export class BoardState implements IBoardState {
   }
 
   addMove({ column, marker }: Move) {
+    if (!this.canAddMove({ column, marker })) {
+      throw new Error(`Cannot add move to column ${column}.`);
+    }
+
     for (let row = this.board.length - 1; row >= 0; row--) {
       if (this.board[row][column] === EMPTY_CELL) {
         this.board[row][column] = marker;
         return;
       }
     }
+  }
 
-    throw new Error(`Board column ${column} is full or invalid.`);
+  canAddMove({ column }: Move): boolean {
+    return this.board[0][column] === EMPTY_CELL;
   }
 }

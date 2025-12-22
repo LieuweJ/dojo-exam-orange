@@ -1,9 +1,9 @@
 import {
   BoardState,
-  MARKER_X,
-  MARKER_O,
   ColumnIndex,
   EMPTY_CELL,
+  MARKER_O,
+  MARKER_X,
 } from '../../src/model/boardState';
 
 describe('Board.addMove', () => {
@@ -43,13 +43,13 @@ describe('Board.addMove', () => {
 
     expect(() => {
       board.addMove({ column: col(2), marker: MARKER_O });
-    }).toThrow('Board column 2 is full or invalid.');
+    }).toThrow('Cannot add move to column 2.');
   });
 
   it('throws when column is not on the board', () => {
     expect(() => {
       board.addMove({ column: col(99), marker: MARKER_O });
-    }).toThrow('Board column 99 is full or invalid.');
+    }).toThrow('Cannot add move to column 99.');
   });
 });
 

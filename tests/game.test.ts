@@ -2,6 +2,7 @@ import { Game, PlayersByMarker } from '../src/game';
 import {
   BoardState,
   EMPTY_CELL,
+  IBoardConstraints,
   IBoardState,
   MARKER_O,
   MARKER_X,
@@ -20,7 +21,7 @@ import { IncorrectMove, IRuleChecker, RULES_VIOLATIONS, RuleViolation } from '..
 import { MoveForBoard } from '../src/strategy/game/proposedMoveStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
-  let board: IBoardState;
+  let board: IBoardState & IBoardConstraints;
   let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
   let helpPresenter: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;

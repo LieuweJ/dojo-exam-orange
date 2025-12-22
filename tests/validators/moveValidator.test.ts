@@ -1,5 +1,12 @@
 import { MoveValidator } from '../../src/validators/moveValidator';
-import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X, Move } from '../../src/model/boardState';
+import {
+  BoardState,
+  EMPTY_CELL,
+  IBoard,
+  MARKER_O,
+  MARKER_X,
+  Move,
+} from '../../src/model/boardState';
 
 describe('MoveValidator', () => {
   afterEach(() => {
@@ -12,12 +19,14 @@ describe('MoveValidator', () => {
 
     const board: IBoard = [[EMPTY_CELL, EMPTY_CELL, EMPTY_CELL]] as IBoard;
 
+    const constraints = new BoardState(board);
+
     const move: Move = {
       marker: MARKER_X,
       column: 1,
     } as Move;
 
-    const result = validator.isValid(move, board);
+    const result = validator.isValid(move, constraints);
 
     expect(result).toBe(true);
   });
@@ -26,13 +35,14 @@ describe('MoveValidator', () => {
     const validator = new MoveValidator();
 
     const board: IBoard = [['X', EMPTY_CELL, EMPTY_CELL]] as IBoard;
+    const constraints = new BoardState(board);
 
     const move: Move = {
       marker: MARKER_O,
       column: 0,
     } as Move;
 
-    const result = validator.isValid(move, board);
+    const result = validator.isValid(move, constraints);
 
     expect(result).toBe(false);
   });
