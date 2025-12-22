@@ -29,8 +29,7 @@ describe('A game of orange-in-a-row can be played', () => {
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
   let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
   let players: PlayersByMarker;
-  let xViolationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
-  let oViolationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
+  let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
   let moveValidator: jest.Mocked<IRuleChecker<MoveForBoard>>;
 
   beforeEach(() => {
@@ -63,11 +62,7 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    xViolationsPresenter = {
-      present: jest.fn(),
-    };
-
-    oViolationsPresenter = {
+    violationsPresenter = {
       present: jest.fn(),
     };
 
@@ -76,8 +71,8 @@ describe('A game of orange-in-a-row can be played', () => {
     };
 
     players = {
-      [MARKER_X]: new Player('Alice', moveStrategy, xViolationsPresenter),
-      [MARKER_O]: new Player('Bob', moveStrategy, oViolationsPresenter),
+      [MARKER_X]: new Player('Alice', moveStrategy),
+      [MARKER_O]: new Player('Bob', moveStrategy),
     };
 
     game = new Game(
@@ -87,7 +82,8 @@ describe('A game of orange-in-a-row can be played', () => {
       helpPresenter,
       gameOutcomeStrategy,
       gameResultPresenter,
-      moveValidator
+      moveValidator,
+      violationsPresenter
     );
   });
 
@@ -191,14 +187,15 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         {
-          [MARKER_O]: new Player('Bob', moveStrategy, oViolationsPresenter),
+          [MARKER_O]: new Player('Bob', moveStrategy),
         },
         board,
         boardPresenter,
         helpPresenter,
         gameOutcomeStrategy,
         gameResultPresenter,
-        moveValidator
+        moveValidator,
+        violationsPresenter
       );
     }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
   });
@@ -208,14 +205,15 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         {
-          [MARKER_X]: new Player('Alice', moveStrategy, xViolationsPresenter),
+          [MARKER_X]: new Player('Alice', moveStrategy),
         },
         board,
         boardPresenter,
         helpPresenter,
         gameOutcomeStrategy,
         gameResultPresenter,
-        moveValidator
+        moveValidator,
+        violationsPresenter
       );
     }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
   });
@@ -234,13 +232,11 @@ describe('A game of orange-in-a-row can be played', () => {
 
     await game.play();
 
-    expect(xViolationsPresenter.present).toHaveBeenCalledTimes(1);
-    expect(xViolationsPresenter.present).toHaveBeenCalledWith({
+    expect(violationsPresenter.present).toHaveBeenCalledTimes(1);
+    expect(violationsPresenter.present).toHaveBeenCalledWith({
       move: invalidMove,
       violations: [violation],
     });
-
-    expect(oViolationsPresenter.present).not.toHaveBeenCalled();
 
     expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(2);
   });

@@ -10,7 +10,7 @@ import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
-import { IRuleChecker } from './model/rules';
+import { IncorrectMove, IRuleChecker } from './model/rules';
 import { MoveForBoard } from './strategy/game/proposedMoveStrategy';
 
 export type IGame = {
@@ -30,7 +30,8 @@ export class Game implements IGame {
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
-    private readonly moveChecker: IRuleChecker<MoveForBoard>
+    private readonly moveChecker: IRuleChecker<MoveForBoard>,
+    private readonly violationPresenter: IOutputPresenter<IncorrectMove>
   ) {
     if (!players[MARKER_X]) {
       throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
@@ -85,7 +86,7 @@ export class Game implements IGame {
         break;
       }
 
-      this.players[this.currentPlayerMarker].notifyInvalidMove({ move: proposedMove, violations });
+      this.violationPresenter.present({ move: proposedMove, violations });
     }
 
     this.board.addMove(proposedMove);

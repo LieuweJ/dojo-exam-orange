@@ -34,15 +34,16 @@ async function main() {
 
   const game = new Game(
     {
-      [MARKER_O]: new Player('Player 2', cliStrategy, violationsPresenter),
-      [MARKER_X]: new Player('Player 1', cliStrategy, violationsPresenter),
+      [MARKER_O]: new Player('Player 2', cliStrategy),
+      [MARKER_X]: new Player('Player 1', cliStrategy),
     },
     new BoardState(emptyBoard),
     boardPresenter,
     new RulesPresenter(outputAdapter, RULES_FILE),
     new GameOutcomeStrategy({ connectionLength: 4 }),
     new GameResultPresenter(boardPresenter, outputAdapter),
-    new ProposedMoveStrategy(new MoveValidator())
+    new ProposedMoveStrategy(new MoveValidator()),
+    violationsPresenter
   );
 
   try {

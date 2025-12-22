@@ -5,7 +5,6 @@ import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../src/model/boardSta
 import { GAME_OUTCOME } from '../../src/strategy/game/gameOutcomeStrategy';
 import { Player } from '../../src/model/player';
 import { IMoveStrategy } from '../../src/strategy/player/cliMoveStrategy';
-import { IncorrectMove } from '../../src/model/rules';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -14,19 +13,14 @@ describe('GameResultPresenter', () => {
   let player1: Player;
   let player2: Player;
   let playerStrategy: IMoveStrategy;
-  let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
 
   beforeEach(() => {
     playerStrategy = {
       createNextMove: jest.fn(),
     };
 
-    violationsPresenter = {
-      present: jest.fn(),
-    };
-
-    player1 = new Player('Alice', playerStrategy, violationsPresenter);
-    player2 = new Player('Bob', playerStrategy, violationsPresenter);
+    player1 = new Player('Alice', playerStrategy);
+    player2 = new Player('Bob', playerStrategy);
 
     outputAdapter = {
       render: jest.fn(),
