@@ -14,8 +14,8 @@ export type IncorrectMove = {
   violations: RuleViolation[];
 };
 
-export type RuleStrategy<Input> = {
-  check(input: Input): RuleViolation[] | null;
+export type RuleStrategy = {
+  check(input: ProposedMove): RuleViolation[] | null;
 };
 
 export type MoveConstraints = BoardConstraint & TurnConstraint;

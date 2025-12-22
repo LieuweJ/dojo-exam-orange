@@ -2,8 +2,9 @@ import { BoardConstraint, IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
-import { IncorrectMove, Move, ProposedMove, RuleStrategy } from './model/rules';
+import { IncorrectMove, Move } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
+import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 
 export type IGame = {
   play(): void;
@@ -17,7 +18,7 @@ export class Game implements IGame {
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
-    private readonly moveChecker: RuleStrategy<ProposedMove>,
+    private readonly rulesChecker: IRulesChainHandler,
     private readonly violationPresenter: IOutputPresenter<IncorrectMove>
   ) {}
 
@@ -56,7 +57,7 @@ export class Game implements IGame {
         this.turnState.getCurrentPlayerMarker()
       );
 
-      const violations = this.moveChecker.check({
+      const violations = this.rulesChecker.check({
         move: proposedMove,
         constraints: { ...this.board, ...this.turnState },
       });

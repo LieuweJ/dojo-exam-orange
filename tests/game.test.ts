@@ -19,12 +19,12 @@ import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
 import {
   IncorrectMove,
   Move,
-  ProposedMove,
   RULES_VIOLATIONS,
   RuleStrategy,
   RuleViolation,
 } from '../src/model/rules';
 import { PlayersByMarker, TurnState } from '../src/model/turnState';
+import { RulesChainHandler } from '../src/strategy/game/rules/rulesChainHandler';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & BoardConstraint;
@@ -36,7 +36,7 @@ describe('A game of orange-in-a-row can be played', () => {
   let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
   let players: PlayersByMarker;
   let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
-  let moveValidator: jest.Mocked<RuleStrategy<ProposedMove>>;
+  let violationStrategy: jest.Mocked<RuleStrategy>;
 
   beforeEach(() => {
     board = new BoardState([
@@ -68,12 +68,12 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    violationsPresenter = {
-      present: jest.fn(),
+    violationStrategy = {
+      check: jest.fn(),
     };
 
-    moveValidator = {
-      check: jest.fn(),
+    violationsPresenter = {
+      present: jest.fn(),
     };
 
     players = {
@@ -88,7 +88,7 @@ describe('A game of orange-in-a-row can be played', () => {
       helpPresenter,
       gameOutcomeStrategy,
       gameResultPresenter,
-      moveValidator,
+      new RulesChainHandler([violationStrategy]),
       violationsPresenter
     );
   });
@@ -200,7 +200,7 @@ describe('A game of orange-in-a-row can be played', () => {
         helpPresenter,
         gameOutcomeStrategy,
         gameResultPresenter,
-        moveValidator,
+        new RulesChainHandler([violationStrategy]),
         violationsPresenter
       );
     }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
@@ -218,7 +218,7 @@ describe('A game of orange-in-a-row can be played', () => {
         helpPresenter,
         gameOutcomeStrategy,
         gameResultPresenter,
-        moveValidator,
+        new RulesChainHandler([violationStrategy]),
         violationsPresenter
       );
     }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
@@ -232,7 +232,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     const violation: RuleViolation = RULES_VIOLATIONS.INVALID_PLACEMENT;
 
-    moveValidator.check.mockReturnValueOnce([violation]).mockReturnValueOnce(null);
+    violationStrategy.check.mockReturnValueOnce([violation]).mockReturnValueOnce(null);
 
     gameOutcomeStrategy.determine.mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
