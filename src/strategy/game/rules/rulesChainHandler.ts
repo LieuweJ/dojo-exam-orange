@@ -7,11 +7,11 @@ export type IRulesChainHandler = {
 export class RulesChainHandler implements IRulesChainHandler {
   constructor(private readonly strategies: RuleStrategy[]) {}
 
-  public check({ move, constraints }: ProposedMove): RuleViolation[] | null {
+  public check(proposedMove: ProposedMove): RuleViolation[] | null {
     const violations: RuleViolation[] = [];
 
     for (const strategy of this.strategies) {
-      const result = strategy.check({ move, constraints });
+      const result = strategy.check(proposedMove);
 
       if (result) {
         violations.push(...result);

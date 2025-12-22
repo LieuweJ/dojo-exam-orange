@@ -14,7 +14,7 @@ export type IGame = {
 export class Game implements IGame {
   constructor(
     private readonly turnState: ITurnState & TurnConstraint,
-    private readonly board: IBoardState & BoardConstraint,
+    private readonly boardState: IBoardState & BoardConstraint,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,
@@ -30,11 +30,11 @@ export class Game implements IGame {
     while (true) {
       await this.playTurn();
 
-      const outcome = this.outcomeStrategy.determine(this.board.getBoard());
+      const outcome = this.outcomeStrategy.determine(this.boardState.getBoard());
 
       if (this.gameLifeCycleStrategy.isGameOver(outcome)) {
         this.resultPresenter.present({
-          board: this.board.getBoard(),
+          board: this.boardState.getBoard(),
           players: this.turnState.getPlayers(),
           outcome,
         });
@@ -47,7 +47,7 @@ export class Game implements IGame {
   }
 
   private async playTurn() {
-    this.boardPresenter.present({ board: this.board.getBoard() });
+    this.boardPresenter.present({ board: this.boardState.getBoard() });
 
     let proposedMove: Move;
 
@@ -55,13 +55,16 @@ export class Game implements IGame {
       const currentPlayer = this.turnState.getCurrentPlayer();
 
       proposedMove = await currentPlayer.getNextMove(
-        this.board.getBoard(),
+        this.boardState.getBoard(),
         this.turnState.getCurrentPlayerMarker()
       );
 
       const violations = this.rulesChecker.check({
         move: proposedMove,
-        constraints: { ...this.board, ...this.turnState },
+        moveContext: {
+          board: this.boardState,
+          turn: this.turnState,
+        },
       });
 
       if (!violations) {
@@ -71,6 +74,6 @@ export class Game implements IGame {
       this.violationPresenter.present({ move: proposedMove, violations });
     }
 
-    this.board.addMove(proposedMove);
+    this.boardState.addMove(proposedMove);
   }
 }

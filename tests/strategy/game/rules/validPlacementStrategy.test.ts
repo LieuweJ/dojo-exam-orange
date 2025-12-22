@@ -1,14 +1,25 @@
 import { ValidPlacementStrategy } from '../../../../src/strategy/game/rules/validPlacementStrategy';
-import { MARKER_O, MARKER_X } from '../../../../src/model/boardState';
-import { Move, MoveConstraints, RuleViolation } from '../../../../src/model/rules';
+import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../src/model/boardState';
+import { Move, RuleViolation } from '../../../../src/model/rules';
 
 describe('ValidPlacementStrategy', () => {
-  let constraints: jest.Mocked<MoveConstraints>;
+  let constraints: {
+    board: {
+      canAddMove: jest.Mock<boolean, [Move]>;
+    };
+    turn: {
+      isCurrentPlayerMarker: jest.Mock<boolean, [PlayerBoardMarker]>;
+    };
+  };
 
   beforeEach(() => {
     constraints = {
-      canAddMove: jest.fn(),
-      isCurrentPlayerMarker: jest.fn(),
+      board: {
+        canAddMove: jest.fn(),
+      },
+      turn: {
+        isCurrentPlayerMarker: jest.fn(),
+      },
     };
   });
 
@@ -21,11 +32,11 @@ describe('ValidPlacementStrategy', () => {
     const strategy = new ValidPlacementStrategy();
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    constraints.canAddMove.mockReturnValueOnce(false);
+    constraints.board.canAddMove.mockReturnValueOnce(false);
 
-    const result = strategy.check({ move, constraints });
+    const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.canAddMove).toHaveBeenCalledWith(move);
+    expect(constraints.board.canAddMove).toHaveBeenCalledWith(move);
     expect(result).toEqual(['INVALID_PLACEMENT'] as RuleViolation[]);
   });
 
@@ -33,11 +44,11 @@ describe('ValidPlacementStrategy', () => {
     const strategy = new ValidPlacementStrategy();
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    constraints.canAddMove.mockReturnValueOnce(true);
+    constraints.board.canAddMove.mockReturnValueOnce(true);
 
-    const result = strategy.check({ move, constraints });
+    const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.canAddMove).toHaveBeenCalledWith(move);
+    expect(constraints.board.canAddMove).toHaveBeenCalledWith(move);
     expect(result).toBeNull();
   });
 });

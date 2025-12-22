@@ -1,14 +1,25 @@
-import { MARKER_O, MARKER_X } from '../../../../src/model/boardState';
-import { Move, MoveConstraints, RuleViolation } from '../../../../src/model/rules';
+import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../src/model/boardState';
+import { Move, RuleViolation } from '../../../../src/model/rules';
 import { ValidPlayerTurnStrategy } from '../../../../src/strategy/game/rules/validPlayerTurnStrategy';
 
 describe('ValidPlayerTurnStrategy', () => {
-  let constraints: jest.Mocked<MoveConstraints>;
+  let constraints: {
+    board: {
+      canAddMove: jest.Mock<boolean, [Move]>;
+    };
+    turn: {
+      isCurrentPlayerMarker: jest.Mock<boolean, [PlayerBoardMarker]>;
+    };
+  };
 
   beforeEach(() => {
     constraints = {
-      canAddMove: jest.fn(),
-      isCurrentPlayerMarker: jest.fn(),
+      board: {
+        canAddMove: jest.fn(),
+      },
+      turn: {
+        isCurrentPlayerMarker: jest.fn(),
+      },
     };
   });
 
@@ -21,11 +32,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    constraints.isCurrentPlayerMarker.mockReturnValueOnce(false);
+    constraints.turn.isCurrentPlayerMarker.mockReturnValueOnce(false);
 
-    const result = strategy.check({ move, constraints });
+    const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
     expect(result).toEqual(['INVALID_PLAYER_TURN'] as RuleViolation[]);
   });
 
@@ -33,11 +44,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    constraints.isCurrentPlayerMarker.mockReturnValueOnce(true);
+    constraints.turn.isCurrentPlayerMarker.mockReturnValueOnce(true);
 
-    const result = strategy.check({ move, constraints });
+    const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
     expect(result).toBeNull();
   });
 });

@@ -18,5 +18,5 @@ export type RuleStrategy = {
   check(input: ProposedMove): RuleViolation[] | null;
 };
 
-export type MoveConstraints = BoardConstraint & TurnConstraint;
-export type ProposedMove = { move: Move; constraints: MoveConstraints };
+export type MoveContext = { board: BoardConstraint; turn: TurnConstraint };
+export type ProposedMove = { move: Move; moveContext: MoveContext };
