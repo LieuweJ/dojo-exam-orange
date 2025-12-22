@@ -2,10 +2,9 @@ import { Game } from './game';
 import { BoardState, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from './model/boardState';
 import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
 import { BoardPresenter } from './presenter/boardPresenter';
-import { RulesPresenter } from './presenter/rulesPresenter';
+import { HelpPresenter } from './presenter/helpPresenter';
 import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
 import { CliMoveStrategy } from './strategy/player/cliMoveStrategy';
-import { InputOutputValidator } from './validators/inputOutputValidator';
 import { Player } from './model/player';
 import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
@@ -30,7 +29,7 @@ const emptyBoard: IBoard = [
 ];
 
 async function main() {
-  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new InputOutputValidator());
+  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter);
   const boardPresenter = new BoardPresenter(outputAdapter);
   const violationsPresenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
 
@@ -41,7 +40,7 @@ async function main() {
     }),
     new BoardState(emptyBoard),
     boardPresenter,
-    new RulesPresenter(outputAdapter, RULES_FILE),
+    new HelpPresenter(outputAdapter, RULES_FILE),
     new GameOutcomeStrategy({ connectionLength: 4 }),
     new GameResultPresenter(boardPresenter, outputAdapter),
     new RulesChainHandler([new ValidPlacementStrategy(), new ValidPlayerTurnStrategy()]),

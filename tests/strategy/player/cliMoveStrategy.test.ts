@@ -1,7 +1,6 @@
 import { CliMoveStrategy } from '../../../src/strategy/player/cliMoveStrategy';
 import { IInputAdapter } from '../../../src/adapters/terminalInputAdapter';
 import { EMPTY_CELL, IBoard, MARKER_X, PlayerBoardMarker } from '../../../src/model/boardState';
-import { InputOutputValidator } from '../../../src/validators/inputOutputValidator';
 import { IOutputAdapter } from '../../../src/adapters/terminalOutputAdapter';
 
 describe('CliMoveStrategy', () => {
@@ -18,7 +17,7 @@ describe('CliMoveStrategy', () => {
       render: jest.fn(),
     };
 
-    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, new InputOutputValidator());
+    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter);
   });
 
   test('returns a move with the given marker when a valid column is entered', async () => {

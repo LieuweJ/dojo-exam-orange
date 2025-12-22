@@ -3,7 +3,7 @@ import path from 'path';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IOutputPresenter } from './boardPresenter';
 
-export class RulesPresenter implements IOutputPresenter<void> {
+export class HelpPresenter implements IOutputPresenter<void> {
   constructor(
     private readonly output: IOutputAdapter,
     private readonly filePath: string

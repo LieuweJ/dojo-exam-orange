@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { RulesPresenter } from '../../src/presenter/rulesPresenter';
+import { HelpPresenter } from '../../src/presenter/helpPresenter';
 import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
 
 describe('RulesPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
-  let presenter: RulesPresenter;
+  let presenter: HelpPresenter;
   let rulesFilePath: string;
 
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe('RulesPresenter', () => {
 
     fs.writeFileSync(rulesFilePath, '# Test Rules\n\nThese are the rules.', 'utf-8');
 
-    presenter = new RulesPresenter(outputAdapter, rulesFilePath);
+    presenter = new HelpPresenter(outputAdapter, rulesFilePath);
   });
 
   afterEach(() => {
@@ -34,11 +34,13 @@ describe('RulesPresenter', () => {
   test('renders an error message when rules file cannot be loaded', () => {
     const nonExistingPath = 'does-not-exist.md';
 
-    const presenter = new RulesPresenter(outputAdapter, nonExistingPath);
+    const presenter = new HelpPresenter(outputAdapter, nonExistingPath);
 
     presenter.present();
 
-    expect(outputAdapter.render).toHaveBeenCalledWith('Error: Unable to load the rules of play. Unknown error when trying to read the file.');
+    expect(outputAdapter.render).toHaveBeenCalledWith(
+      'Error: Unable to load the rules of play. Unknown error when trying to read the file.'
+    );
   });
 
   test('renders a generic error message when fs throws a non-Error value', () => {
