@@ -13,6 +13,7 @@ import { ValidPlacementStrategy } from './strategy/game/rules/validPlacementStra
 import { TurnState } from './model/turnState';
 import { RulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 import { ValidPlayerTurnStrategy } from './strategy/game/rules/validPlayerTurnStrategy';
+import { GameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
 
 const RULES_FILE = 'docs/rules-of-play.md';
 
@@ -44,7 +45,8 @@ async function main() {
     new GameOutcomeStrategy({ connectionLength: 4 }),
     new GameResultPresenter(boardPresenter, outputAdapter),
     new RulesChainHandler([new ValidPlacementStrategy(), new ValidPlayerTurnStrategy()]),
-    violationsPresenter
+    violationsPresenter,
+    new GameLifecycleStrategy()
   );
 
   try {

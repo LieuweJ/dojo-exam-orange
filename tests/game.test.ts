@@ -25,6 +25,7 @@ import {
 } from '../src/model/rules';
 import { PlayersByMarker, TurnState } from '../src/model/turnState';
 import { RulesChainHandler } from '../src/strategy/game/rules/rulesChainHandler';
+import { GameLifecycleStrategy } from '../src/strategy/game/gameLifecycleStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & BoardConstraint;
@@ -89,7 +90,8 @@ describe('A game of orange-in-a-row can be played', () => {
       gameOutcomeStrategy,
       gameResultPresenter,
       new RulesChainHandler([violationStrategy]),
-      violationsPresenter
+      violationsPresenter,
+      new GameLifecycleStrategy()
     );
   });
 
@@ -201,7 +203,8 @@ describe('A game of orange-in-a-row can be played', () => {
         gameOutcomeStrategy,
         gameResultPresenter,
         new RulesChainHandler([violationStrategy]),
-        violationsPresenter
+        violationsPresenter,
+        new GameLifecycleStrategy()
       );
     }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
   });
@@ -219,7 +222,8 @@ describe('A game of orange-in-a-row can be played', () => {
         gameOutcomeStrategy,
         gameResultPresenter,
         new RulesChainHandler([violationStrategy]),
-        violationsPresenter
+        violationsPresenter,
+        new GameLifecycleStrategy()
       );
     }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
   });

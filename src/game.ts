@@ -1,10 +1,11 @@
 import { BoardConstraint, IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
-import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
+import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
 import { IncorrectMove, Move } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
 import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
+import { IGameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
 
 export type IGame = {
   play(): void;
@@ -19,7 +20,8 @@ export class Game implements IGame {
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
     private readonly rulesChecker: IRulesChainHandler,
-    private readonly violationPresenter: IOutputPresenter<IncorrectMove>
+    private readonly violationPresenter: IOutputPresenter<IncorrectMove>,
+    private readonly gameLifeCycleStrategy: IGameLifecycleStrategy
   ) {}
 
   public async play() {
@@ -30,7 +32,7 @@ export class Game implements IGame {
 
       const outcome = this.outcomeStrategy.determine(this.board.getBoard());
 
-      if (outcome.type !== GAME_OUTCOME.ONGOING) {
+      if (this.gameLifeCycleStrategy.isGameOver(outcome)) {
         this.resultPresenter.present({
           board: this.board.getBoard(),
           players: this.turnState.getPlayers(),
