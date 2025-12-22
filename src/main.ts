@@ -1,52 +1,30 @@
+import { createOrangeInARowComposition } from './composition/orangeInARowComposition';
 import { Game } from './game';
-import { BoardState, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from './model/boardState';
-import { TerminalOutputAdapter } from './adapters/terminalOutputAdapter';
-import { BoardPresenter } from './presenter/boardPresenter';
-import { HelpPresenter } from './presenter/helpPresenter';
-import { TerminalInputAdapter } from './adapters/terminalInputAdapter';
-import { CliMoveStrategy } from './strategy/player/cliMoveStrategy';
-import { Player } from './model/player';
-import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
-import { GameResultPresenter } from './presenter/gameResultPresenter';
-import { VIOLATION_MESSAGES, ViolationsPresenter } from './presenter/violationsPresenter';
-import { ValidPlacementStrategy } from './strategy/game/rules/validPlacementStrategy';
-import { TurnState } from './model/turnState';
-import { RulesChainHandler } from './strategy/game/rules/rulesChainHandler';
-import { ValidPlayerTurnStrategy } from './strategy/game/rules/validPlayerTurnStrategy';
-import { GameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
-
-const RULES_FILE = 'docs/rules-of-play.md';
-
-const outputAdapter = new TerminalOutputAdapter();
-const inputAdapter = new TerminalInputAdapter();
-
-const emptyBoard: IBoard = [
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-  [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-];
 
 async function main() {
-  const cliStrategy = new CliMoveStrategy(inputAdapter, outputAdapter);
-  const boardPresenter = new BoardPresenter(outputAdapter);
-  const violationsPresenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
+  const {
+    inputAdapter,
+    boardState,
+    turnState,
+    boardPresenter,
+    helpPresenter,
+    outcomeStrategy,
+    resultPresenter,
+    rulesChecker,
+    violationPresenter,
+    lifecycleStrategy,
+  } = createOrangeInARowComposition();
 
   const game = new Game(
-    new TurnState({
-      [MARKER_O]: new Player('Player 2', cliStrategy),
-      [MARKER_X]: new Player('Player 1', cliStrategy),
-    }),
-    new BoardState(emptyBoard),
+    turnState,
+    boardState,
     boardPresenter,
-    new HelpPresenter(outputAdapter, RULES_FILE),
-    new GameOutcomeStrategy({ connectionLength: 4 }),
-    new GameResultPresenter(boardPresenter, outputAdapter),
-    new RulesChainHandler([new ValidPlacementStrategy(), new ValidPlayerTurnStrategy()]),
-    violationsPresenter,
-    new GameLifecycleStrategy()
+    helpPresenter,
+    outcomeStrategy,
+    resultPresenter,
+    rulesChecker,
+    violationPresenter,
+    lifecycleStrategy
   );
 
   try {
