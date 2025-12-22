@@ -1,4 +1,4 @@
-import { Game, PlayersByMarker } from '../src/game';
+import { Game } from '../src/game';
 import {
   BoardState,
   EMPTY_CELL,
@@ -19,6 +19,7 @@ import {
 import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
 import { IncorrectMove, RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../src/model/rules';
 import { ProposedMove } from '../src/strategy/game/rules/validPlacementStrategy';
+import { PlayersByMarker, TurnState } from '../src/model/turnState';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & IBoardConstraints;
@@ -76,7 +77,7 @@ describe('A game of orange-in-a-row can be played', () => {
     };
 
     game = new Game(
-      players,
+      new TurnState(players),
       board,
       boardPresenter,
       helpPresenter,
@@ -186,9 +187,9 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(() => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
-        {
+        new TurnState({
           [MARKER_O]: new Player('Bob', moveStrategy),
-        },
+        }),
         board,
         boardPresenter,
         helpPresenter,
@@ -204,9 +205,9 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(() => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
-        {
+        new TurnState({
           [MARKER_X]: new Player('Alice', moveStrategy),
-        },
+        }),
         board,
         boardPresenter,
         helpPresenter,

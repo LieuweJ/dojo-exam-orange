@@ -11,6 +11,7 @@ import { GameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenter } from './presenter/gameResultPresenter';
 import { VIOLATION_MESSAGES, ViolationsPresenter } from './presenter/violationsPresenter';
 import { ValidPlacementStrategy } from './strategy/game/rules/validPlacementStrategy';
+import { TurnState } from './model/turnState';
 
 const RULES_FILE = 'docs/rules-of-play.md';
 
@@ -32,10 +33,10 @@ async function main() {
   const violationsPresenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
 
   const game = new Game(
-    {
+    new TurnState({
       [MARKER_O]: new Player('Player 2', cliStrategy),
       [MARKER_X]: new Player('Player 1', cliStrategy),
-    },
+    }),
     new BoardState(emptyBoard),
     boardPresenter,
     new RulesPresenter(outputAdapter, RULES_FILE),

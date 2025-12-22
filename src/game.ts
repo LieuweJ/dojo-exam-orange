@@ -1,30 +1,18 @@
-import {
-  IBoardConstraints,
-  IBoardState,
-  MARKER_O,
-  MARKER_X,
-  Move,
-  PlayerBoardMarker,
-} from './model/boardState';
+import { IBoardConstraints, IBoardState, Move } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
-import { Player } from './model/player';
 import { GAME_OUTCOME, IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
 import { IncorrectMove, RuleStrategy } from './model/rules';
 import { ProposedMove } from './strategy/game/rules/validPlacementStrategy';
+import { ITurnState, TurnConstraint } from './model/turnState';
 
 export type IGame = {
   play(): void;
 };
 
-export type PlayersByMarker = Record<PlayerBoardMarker, Player>;
-
 export class Game implements IGame {
-  currentPlayerMarker: PlayerBoardMarker = MARKER_X;
-  players: PlayersByMarker;
-
   constructor(
-    players: PlayersByMarker,
+    private readonly turnState: ITurnState & TurnConstraint,
     private readonly board: IBoardState & IBoardConstraints,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
@@ -32,17 +20,7 @@ export class Game implements IGame {
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
     private readonly moveChecker: RuleStrategy<ProposedMove>,
     private readonly violationPresenter: IOutputPresenter<IncorrectMove>
-  ) {
-    if (!players[MARKER_X]) {
-      throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
-    }
-
-    if (!players[MARKER_O]) {
-      throw new Error(`Player for marker ${MARKER_O.toString()} is missing.`);
-    }
-
-    this.players = players;
-  }
+  ) {}
 
   public async play() {
     this.helpPresenter.present();
@@ -55,14 +33,14 @@ export class Game implements IGame {
       if (outcome.type !== GAME_OUTCOME.ONGOING) {
         this.resultPresenter.present({
           board: this.board.getBoard(),
-          players: this.players,
+          players: this.turnState.getPlayers(),
           outcome,
         });
 
         return;
       }
 
-      this.switchPlayer();
+      this.turnState.nextPlayer();
     }
   }
 
@@ -72,9 +50,11 @@ export class Game implements IGame {
     let proposedMove: Move;
 
     while (true) {
-      proposedMove = await this.players[this.currentPlayerMarker].getNextMove(
+      const currentPlayer = this.turnState.getCurrentPlayer();
+
+      proposedMove = await currentPlayer.getNextMove(
         this.board.getBoard(),
-        this.currentPlayerMarker
+        this.turnState.getCurrentPlayerMarker()
       );
 
       const violations = this.moveChecker.check({
@@ -90,9 +70,5 @@ export class Game implements IGame {
     }
 
     this.board.addMove(proposedMove);
-  }
-
-  private switchPlayer() {
-    this.currentPlayerMarker = this.currentPlayerMarker === MARKER_X ? MARKER_O : MARKER_X;
   }
 }

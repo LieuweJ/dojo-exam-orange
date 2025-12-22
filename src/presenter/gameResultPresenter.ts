@@ -2,7 +2,8 @@ import { IBoard } from '../model/boardState';
 import { GAME_OUTCOME, GameOutcome } from '../strategy/game/gameOutcomeStrategy';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { BOARD_CELL_TO_UI, BoardPresentArgs, IOutputPresenter } from './boardPresenter';
-import { PlayersByMarker } from '../game';
+
+import { PlayersByMarker } from '../model/turnState';
 
 export type GameResultPresenterArgs = {
   board: IBoard;
