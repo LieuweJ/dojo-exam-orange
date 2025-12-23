@@ -55,12 +55,10 @@ const HELP_FILE = 'docs/rules-of-play.md';
 
 export const PIECE_X: Piece = {
   boardValue: Symbol('x'),
-  displayName: '●',
 };
 
 export const PIECE_O: Piece = {
   boardValue: Symbol('o'),
-  displayName: '○',
 };
 
 export const ORANGE_IN_A_ROW_BOARD_UI = new Map<BoardCell, string>([

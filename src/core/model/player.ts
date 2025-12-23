@@ -6,7 +6,6 @@ export type NonEmptyArray<T> = [T, ...T[]];
 
 export type Piece = {
   boardValue: symbol;
-  displayName: string;
 };
 
 export type Pieces = NonEmptyArray<Piece>;
