@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { HelpPresenter } from '../../src/presenter/helpPresenter';
-import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
+import { HelpPresenter } from '../../../src/core/presenter/helpPresenter';
+import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 
 describe('RulesPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;

@@ -1,5 +1,5 @@
 import { createOrangeInARowComposition } from './composition/orangeInARowComposition';
-import { Game } from './game';
+import { Game } from './core/game';
 
 async function main() {
   const {

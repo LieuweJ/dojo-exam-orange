@@ -1,7 +1,12 @@
-import { CliMoveStrategy } from '../../../src/strategy/player/cliMoveStrategy';
-import { IInputAdapter } from '../../../src/adapters/terminalInputAdapter';
-import { EMPTY_CELL, IBoard, MARKER_X, PlayerBoardMarker } from '../../../src/model/boardState';
-import { IOutputAdapter } from '../../../src/adapters/terminalOutputAdapter';
+import { CliMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
+import { IInputAdapter } from '../../../../src/core/adapters/terminalInputAdapter';
+import {
+  EMPTY_CELL,
+  IBoard,
+  MARKER_X,
+  PlayerBoardMarker,
+} from '../../../../src/core/model/boardState';
+import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;

@@ -1,10 +1,10 @@
-import { GameResultPresenter } from '../../src/presenter/gameResultPresenter';
-import { BoardPresentArgs, IOutputPresenter } from '../../src/presenter/boardPresenter';
-import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
-import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../src/model/boardState';
-import { GAME_OUTCOME } from '../../src/strategy/game/gameOutcomeStrategy';
-import { Player } from '../../src/model/player';
-import { IMoveStrategy } from '../../src/strategy/player/cliMoveStrategy';
+import { GameResultPresenter } from '../../../src/core/presenter/gameResultPresenter';
+import { BoardPresentArgs, IOutputPresenter } from '../../../src/core/presenter/boardPresenter';
+import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
+import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { GAME_OUTCOME } from '../../../src/core/strategy/game/gameOutcomeStrategy';
+import { Player } from '../../../src/core/model/player';
+import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;

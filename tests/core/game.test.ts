@@ -1,4 +1,4 @@
-import { Game } from '../src/game';
+import { Game } from '../../src/core/game';
 import {
   BoardConstraint,
   BoardState,
@@ -6,26 +6,26 @@ import {
   IBoardState,
   MARKER_O,
   MARKER_X,
-} from '../src/model/boardState';
-import { BoardPresentArgs, IOutputPresenter } from '../src/presenter/boardPresenter';
-import { IMoveStrategy } from '../src/strategy/player/cliMoveStrategy';
-import { Player } from '../src/model/player';
+} from '../../src/core/model/boardState';
+import { BoardPresentArgs, IOutputPresenter } from '../../src/core/presenter/boardPresenter';
+import { IMoveStrategy } from '../../src/core/strategy/player/cliMoveStrategy';
+import { Player } from '../../src/core/model/player';
 import {
   GAME_OUTCOME,
   GameOutcome,
   IGameOutcomeStrategy,
-} from '../src/strategy/game/gameOutcomeStrategy';
-import { GameResultPresenterArgs } from '../src/presenter/gameResultPresenter';
+} from '../../src/core/strategy/game/gameOutcomeStrategy';
+import { GameResultPresenterArgs } from '../../src/core/presenter/gameResultPresenter';
 import {
   IncorrectMove,
   Move,
   RULES_VIOLATIONS,
   RuleStrategy,
   RuleViolation,
-} from '../src/model/rules';
-import { PlayersByMarker, TurnState } from '../src/model/turnState';
-import { RulesChainHandler } from '../src/strategy/game/rules/rulesChainHandler';
-import { GameLifecycleStrategy } from '../src/strategy/game/gameLifecycleStrategy';
+} from '../../src/core/model/rules';
+import { PlayersByMarker, TurnState } from '../../src/core/model/turnState';
+import { RulesChainHandler } from '../../src/core/strategy/game/rules/rulesChainHandler';
+import { GameLifecycleStrategy } from '../../src/core/strategy/game/gameLifecycleStrategy';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & BoardConstraint;

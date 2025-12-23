@@ -1,4 +1,4 @@
-import { TerminalOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
+import { TerminalOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 
 describe('Output adapter', () => {
   let spy: jest.SpyInstance;

@@ -1,8 +1,11 @@
-import { IOutputAdapter } from '../../src/adapters/terminalOutputAdapter';
-import { VIOLATION_MESSAGES, ViolationsPresenter } from '../../src/presenter/violationsPresenter';
-import { IncorrectMove, RULES_VIOLATIONS, RuleViolation } from '../../src/model/rules';
-import { BOARD_CELL_TO_UI } from '../../src/presenter/boardPresenter';
-import { MARKER_O, MARKER_X } from '../../src/model/boardState';
+import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
+import {
+  VIOLATION_MESSAGES,
+  ViolationsPresenter,
+} from '../../../src/core/presenter/violationsPresenter';
+import { IncorrectMove, RULES_VIOLATIONS, RuleViolation } from '../../../src/core/model/rules';
+import { BOARD_CELL_TO_UI } from '../../../src/core/presenter/boardPresenter';
+import { MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();

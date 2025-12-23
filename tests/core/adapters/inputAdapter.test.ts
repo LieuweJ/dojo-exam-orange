@@ -1,5 +1,5 @@
 import readline from 'node:readline';
-import { TerminalInputAdapter } from '../../src/adapters/terminalInputAdapter';
+import { TerminalInputAdapter } from '../../../src/core/adapters/terminalInputAdapter';
 
 jest.mock('node:readline');
 

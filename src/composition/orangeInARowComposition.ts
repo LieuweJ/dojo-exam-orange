@@ -7,25 +7,38 @@ import {
   IBoardState,
   MARKER_O,
   MARKER_X,
-} from '../model/boardState';
-import { ITurnState, TurnConstraint, TurnState } from '../model/turnState';
-import { BoardPresentArgs, BoardPresenter, IOutputPresenter } from '../presenter/boardPresenter';
-import { GameOutcomeStrategy, IGameOutcomeStrategy } from '../strategy/game/gameOutcomeStrategy';
-import { GameResultPresenter, GameResultPresenterArgs } from '../presenter/gameResultPresenter';
-import { IRulesChainHandler, RulesChainHandler } from '../strategy/game/rules/rulesChainHandler';
-import { IncorrectMove } from '../model/rules';
+} from '../core/model/boardState';
+import { ITurnState, TurnConstraint, TurnState } from '../core/model/turnState';
+import {
+  BoardPresentArgs,
+  BoardPresenter,
+  IOutputPresenter,
+} from '../core/presenter/boardPresenter';
+import {
+  GameOutcomeStrategy,
+  IGameOutcomeStrategy,
+} from '../core/strategy/game/gameOutcomeStrategy';
+import {
+  GameResultPresenter,
+  GameResultPresenterArgs,
+} from '../core/presenter/gameResultPresenter';
+import {
+  IRulesChainHandler,
+  RulesChainHandler,
+} from '../core/strategy/game/rules/rulesChainHandler';
+import { IncorrectMove } from '../core/model/rules';
 import {
   GameLifecycleStrategy,
   IGameLifecycleStrategy,
-} from '../strategy/game/gameLifecycleStrategy';
-import { TerminalInputAdapter } from '../adapters/terminalInputAdapter';
-import { TerminalOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
-import { Player } from '../model/player';
-import { HelpPresenter } from '../presenter/helpPresenter';
-import { ValidPlacementStrategy } from '../strategy/game/rules/validPlacementStrategy';
-import { ValidPlayerTurnStrategy } from '../strategy/game/rules/validPlayerTurnStrategy';
-import { VIOLATION_MESSAGES, ViolationsPresenter } from '../presenter/violationsPresenter';
+} from '../core/strategy/game/gameLifecycleStrategy';
+import { TerminalInputAdapter } from '../core/adapters/terminalInputAdapter';
+import { TerminalOutputAdapter } from '../core/adapters/terminalOutputAdapter';
+import { CliMoveStrategy } from '../core/strategy/player/cliMoveStrategy';
+import { Player } from '../core/model/player';
+import { HelpPresenter } from '../core/presenter/helpPresenter';
+import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
+import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
+import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;

@@ -1,6 +1,6 @@
-import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../src/model/boardState';
-import { Move, RuleViolation } from '../../../../src/model/rules';
-import { ValidPlayerTurnStrategy } from '../../../../src/strategy/game/rules/validPlayerTurnStrategy';
+import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../../src/core/model/boardState';
+import { Move, RuleViolation } from '../../../../../src/core/model/rules';
+import { ValidPlayerTurnStrategy } from '../../../../../src/core/strategy/game/rules/validPlayerTurnStrategy';
 
 describe('ValidPlayerTurnStrategy', () => {
   let constraints: {

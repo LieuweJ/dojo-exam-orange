@@ -1,6 +1,6 @@
-import { ValidPlacementStrategy } from '../../../../src/strategy/game/rules/validPlacementStrategy';
-import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../src/model/boardState';
-import { Move, RuleViolation } from '../../../../src/model/rules';
+import { ValidPlacementStrategy } from '../../../../../src/core/strategy/game/rules/validPlacementStrategy';
+import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../../src/core/model/boardState';
+import { Move, RuleViolation } from '../../../../../src/core/model/rules';
 
 describe('ValidPlacementStrategy', () => {
   let constraints: {

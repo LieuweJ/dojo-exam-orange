@@ -4,7 +4,7 @@ import {
   EMPTY_CELL,
   MARKER_O,
   MARKER_X,
-} from '../../src/model/boardState';
+} from '../../../src/core/model/boardState';
 
 describe('Board.addMove', () => {
   let board: BoardState;
