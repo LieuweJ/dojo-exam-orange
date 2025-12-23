@@ -1,10 +1,11 @@
-import { BoardCell, IBoard, PlayerBoardMarker } from '../../model/boardState';
+import { BoardCell, IBoard } from '../../model/boardState';
 import { IInputAdapter } from '../../adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../adapters/terminalOutputAdapter';
 import { Move } from '../../model/rules';
+import { Pieces } from '../../model/player';
 
 export type IMoveStrategy = {
-  createNextMove(board: IBoard, marker: PlayerBoardMarker, displayName: string): Promise<Move>;
+  createNextMove(board: IBoard, pieces: Pieces, displayName: string): Promise<Move>;
 };
 
 export class CliMoveStrategy implements IMoveStrategy {
@@ -14,14 +15,11 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly boardCellToUi: Map<BoardCell, string>
   ) {}
 
-  async createNextMove(
-    board: IBoard,
-    marker: PlayerBoardMarker,
-    displayName: string
-  ): Promise<Move> {
+  async createNextMove(board: IBoard, pieces: Pieces, displayName: string): Promise<Move> {
+    const defaultPiece = pieces[0];
     while (true) {
       const raw = await this.input.ask(
-        `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(marker)} : `
+        `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(defaultPiece)} : `
       );
 
       if (!this.isValid(raw)) {
@@ -32,7 +30,7 @@ export class CliMoveStrategy implements IMoveStrategy {
 
       return {
         column: this.mapToColumn(raw),
-        marker,
+        marker: defaultPiece,
       };
     }
   }

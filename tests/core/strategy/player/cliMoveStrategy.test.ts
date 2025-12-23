@@ -36,7 +36,7 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, givenMarker, 'Alice');
+    const move = await moveStrategy.createNextMove(board, [givenMarker], 'Alice');
 
     expect(move).toStrictEqual({ column: 1, marker: givenMarker });
   });
@@ -49,7 +49,7 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
+    const move = await moveStrategy.createNextMove(board, [MARKER_X], 'Bob');
 
     expect(move).toStrictEqual({ column: 1, marker: MARKER_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
@@ -66,7 +66,7 @@ describe('CliMoveStrategy', () => {
     inputAdapter.ask.mockResolvedValueOnce('-5');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, MARKER_X, 'Bob');
+    await moveStrategy.createNextMove(board, [MARKER_X], 'Bob');
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(

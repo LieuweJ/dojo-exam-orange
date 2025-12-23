@@ -79,8 +79,8 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    playerX = new Player('Alice', moveStrategy, MARKER_X);
-    playerO = new Player('Bob', moveStrategy, MARKER_O);
+    playerX = new Player('Alice', moveStrategy, [MARKER_X]);
+    playerO = new Player('Bob', moveStrategy, [MARKER_O]);
 
     players = [playerX, playerO];
 
@@ -164,9 +164,9 @@ describe('A game of orange-in-a-row can be played', () => {
 
     expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(3);
 
-    expect(moveStrategy.createNextMove.mock.calls[0][1]).toBe(MARKER_X);
-    expect(moveStrategy.createNextMove.mock.calls[1][1]).toBe(MARKER_O);
-    expect(moveStrategy.createNextMove.mock.calls[2][1]).toBe(MARKER_X);
+    expect(moveStrategy.createNextMove.mock.calls[0][1]).toStrictEqual([MARKER_X]);
+    expect(moveStrategy.createNextMove.mock.calls[1][1]).toStrictEqual([MARKER_O]);
+    expect(moveStrategy.createNextMove.mock.calls[2][1]).toStrictEqual([MARKER_X]);
   });
 
   test('game stops when a winning outcome is returned', async () => {
@@ -194,7 +194,7 @@ describe('A game of orange-in-a-row can be played', () => {
   test('throws when players are missing.', () => {
     expect(() => {
       new Game(
-        new TurnState({ players: [new Player('Bob', moveStrategy, MARKER_O)] }),
+        new TurnState({ players: [new Player('Bob', moveStrategy, [MARKER_O])] }),
         board,
         boardPresenter,
         helpPresenter,

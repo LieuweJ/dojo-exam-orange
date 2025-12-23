@@ -2,6 +2,10 @@ import { IBoard, PlayerBoardMarker } from './boardState';
 import { IMoveStrategy } from '../strategy/player/cliMoveStrategy';
 import { Move } from './rules';
 
+export type NonEmptyArray<T> = [T, ...T[]];
+
+export type Pieces = NonEmptyArray<PlayerBoardMarker>;
+
 interface IPlayer {
   getScreenName(): string;
 
@@ -14,7 +18,7 @@ export class Player implements IPlayer {
   constructor(
     private readonly name: string,
     private readonly strategy: IMoveStrategy,
-    private readonly piece: PlayerBoardMarker
+    private readonly pieces: Pieces
   ) {}
 
   getScreenName(): string {
@@ -22,10 +26,10 @@ export class Player implements IPlayer {
   }
 
   getNextMove(board: IBoard): Promise<Move> {
-    return this.strategy.createNextMove(board, this.piece, this.getScreenName());
+    return this.strategy.createNextMove(board, this.pieces, this.getScreenName());
   }
 
   hasPiece(piece: PlayerBoardMarker): boolean {
-    return this.piece === piece;
+    return this.pieces.includes(piece);
   }
 }

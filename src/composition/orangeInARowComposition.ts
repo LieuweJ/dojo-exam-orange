@@ -84,8 +84,8 @@ export function createOrangeInARowComposition(): GameComposition {
     inputAdapter: input,
     turnState: new TurnState({
       players: [
-        new Player('Player 1', cliMoveStrategy, MARKER_X),
-        new Player('Player 2', cliMoveStrategy, MARKER_O),
+        new Player('Player 1', cliMoveStrategy, [MARKER_X]),
+        new Player('Player 2', cliMoveStrategy, [MARKER_O]),
       ],
     }),
     boardState: new BoardState(emptyBoard),

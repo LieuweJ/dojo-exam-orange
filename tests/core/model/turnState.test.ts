@@ -1,6 +1,6 @@
-import { IBoard, MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../src/core/model/boardState';
+import { IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
 import { TurnState } from '../../../src/core/model/turnState';
-import { Player } from '../../../src/core/model/player';
+import { Pieces, Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
 import { Move } from '../../../src/core/model/rules';
 
@@ -13,13 +13,14 @@ describe('Board.addMove', () => {
   let players: Player[];
 
   beforeEach(() => {
-    const createNextMove = jest.fn<Promise<Move>, [IBoard, PlayerBoardMarker, string]>();
+    const createNextMove = jest.fn<Promise<Move>, [IBoard, Pieces, string]>();
+
     playerStrategy = {
       createNextMove,
     };
 
-    playerO = new Player('Player O', playerStrategy, MARKER_O);
-    playerX = new Player('Player X', playerStrategy, MARKER_X);
+    playerO = new Player('Player O', playerStrategy, [MARKER_O]);
+    playerX = new Player('Player X', playerStrategy, [MARKER_X]);
 
     players = [playerX, playerO];
 
