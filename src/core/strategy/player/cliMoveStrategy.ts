@@ -30,7 +30,7 @@ export class CliMoveStrategy implements IMoveStrategy {
 
       return {
         column: this.mapToColumn(raw),
-        marker: defaultPiece,
+        piece: defaultPiece,
       };
     }
   }

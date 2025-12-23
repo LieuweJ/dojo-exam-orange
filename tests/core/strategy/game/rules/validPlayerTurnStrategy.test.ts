@@ -32,24 +32,24 @@ describe('ValidPlayerTurnStrategy', () => {
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
-    const move: Move = { marker: PIECE_X, column: 1 };
+    const move: Move = { piece: PIECE_X, column: 1 };
     constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.piece);
     expect(result).toEqual(['INVALID_PLAYER_TURN'] as RuleViolation[]);
   });
 
   test('returns null when validator reports move as valid', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
-    const move: Move = { marker: PIECE_O, column: 3 };
+    const move: Move = { piece: PIECE_O, column: 3 };
     constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.piece);
     expect(result).toBeNull();
   });
 });

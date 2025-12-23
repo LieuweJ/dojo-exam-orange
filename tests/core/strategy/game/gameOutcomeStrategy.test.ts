@@ -143,7 +143,7 @@ describe('GameOutcomeStrategy', () => {
       });
     });
 
-    it('throws an error if no player matches the winning marker', () => {
+    it('throws an error if winning combination cannot be matched to a player', () => {
       const board: IBoard = [
         [X, X, X, X],
         [E, E, E, E],

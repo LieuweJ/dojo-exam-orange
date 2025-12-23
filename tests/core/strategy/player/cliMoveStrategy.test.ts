@@ -26,8 +26,8 @@ describe('CliMoveStrategy', () => {
     moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
   });
 
-  test('returns a move with the given marker when a valid column is entered', async () => {
-    const givenMarker: Piece = PIECE_X;
+  test('returns a move with the given piece when a valid column is entered', async () => {
+    const givenPiece: Piece = PIECE_X;
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
@@ -35,9 +35,9 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, [givenMarker], 'Alice');
+    const move = await moveStrategy.createNextMove(board, [givenPiece], 'Alice');
 
-    expect(move).toStrictEqual({ column: 1, marker: givenMarker });
+    expect(move).toStrictEqual({ column: 1, piece: givenPiece });
   });
 
   test('sends the the correct question to the user', async () => {
@@ -50,7 +50,7 @@ describe('CliMoveStrategy', () => {
 
     const move = await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
 
-    expect(move).toStrictEqual({ column: 1, marker: PIECE_X });
+    expect(move).toStrictEqual({ column: 1, piece: PIECE_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
       "It is Bob's turn.\nChoose column (1-3) for ● : "
     );

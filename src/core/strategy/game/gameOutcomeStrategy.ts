@@ -95,7 +95,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     board: IBoard,
     start: BoardPosition,
     direction: Direction,
-    marker: Piece
+    piece: Piece
   ): BoardPosition[] | null {
     const positions: BoardPosition[] = [start];
 
@@ -108,7 +108,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
         row >= board.length ||
         col < 0 ||
         col >= board[0].length ||
-        board[row][col] !== marker
+        board[row][col] !== piece
       ) {
         return null;
       }

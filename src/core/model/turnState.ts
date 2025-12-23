@@ -7,7 +7,7 @@ export type ITurnState = {
 };
 
 export type TurnConstraint = {
-  currentPlayerOwnsPiece(marker: Piece): boolean;
+  currentPlayerOwnsPiece(piece: Piece): boolean;
 };
 
 export class TurnState implements ITurnState, TurnConstraint {
@@ -34,7 +34,7 @@ export class TurnState implements ITurnState, TurnConstraint {
     return this.players[this.playersPointer];
   };
 
-  currentPlayerOwnsPiece = (marker: Piece): boolean => {
-    return this.players[this.playersPointer].hasPiece(marker);
+  currentPlayerOwnsPiece = (piece: Piece): boolean => {
+    return this.players[this.playersPointer].hasPiece(piece);
   };
 }

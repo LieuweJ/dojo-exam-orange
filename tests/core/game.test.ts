@@ -105,7 +105,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValue({
       column: col(4),
-      marker: PIECE_X,
+      piece: PIECE_X,
     });
 
     await game.play();
@@ -117,11 +117,11 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: PIECE_X,
+        piece: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: PIECE_O,
+        piece: PIECE_O,
       });
 
     gameOutcomeStrategy.determine
@@ -148,15 +148,15 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: PIECE_X,
+        piece: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: PIECE_X,
+        piece: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(4),
-        marker: PIECE_O,
+        piece: PIECE_O,
       });
 
     await game.play();
@@ -179,7 +179,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValueOnce({
       column: col(4),
-      marker: PIECE_X,
+      piece: PIECE_X,
     });
 
     await game.play();
@@ -207,8 +207,8 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('player is notified when an invalid move is proposed', async () => {
-    const invalidMove: Move = { column: col(10), marker: PIECE_X };
-    const validMove: Move = { column: col(3), marker: PIECE_X };
+    const invalidMove: Move = { column: col(10), piece: PIECE_X };
+    const validMove: Move = { column: col(3), piece: PIECE_X };
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 

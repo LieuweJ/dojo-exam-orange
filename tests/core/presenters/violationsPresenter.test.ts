@@ -31,7 +31,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: PIECE_X,
+        piece: PIECE_X,
         column: 2,
       },
       violations: [RULES_VIOLATIONS.INVALID_PLACEMENT],
@@ -61,7 +61,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: PIECE_O,
+        piece: PIECE_O,
         column: 1,
       },
       violations: ['INVALID_PLACEMENT', 'OTHER'] as RuleViolation[],
@@ -85,7 +85,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: PIECE_X,
+        piece: PIECE_X,
         column: 0,
       },
       violations: [],
