@@ -3,7 +3,7 @@ import {
   GAME_OUTCOME,
   GameOutcomeStrategy,
 } from '../../../../src/core/strategy/game/gameOutcomeStrategy';
-import { Pieces, Player } from '../../../../src/core/model/player';
+import { Piece, Pieces, Player } from '../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
 import { Move } from '../../../../src/core/model/rules';
 import { PIECE_O, PIECE_X } from '../../../../src/composition/orangeInARowComposition';
@@ -144,20 +144,19 @@ describe('GameOutcomeStrategy', () => {
     });
 
     it('throws an error if winning combination cannot be matched to a player', () => {
-      const board: IBoard = [
-        [X, X, X, X],
-        [E, E, E, E],
-        [E, E, E, E],
-        [E, E, E, E],
-      ];
+      const U: Piece = {
+        boardValue: Symbol('Piece which does not belong to any player.'),
+      };
 
-      const invalidPlayers: Player[] = [
-        // Intentionally using invalid player piece for testing
-        new Player('Player Y', playerStrategy, ['Y'] as unknown as Pieces),
+      const board: IBoard = [
+        [U, U, U, U],
+        [E, E, E, E],
+        [E, E, E, E],
+        [E, E, E, E],
       ];
 
       expect(() => {
-        createStrategy().determine(board, invalidPlayers);
+        createStrategy().determine(board, players);
       }).toThrow('No player can be matched to the winning combination.');
     });
 
