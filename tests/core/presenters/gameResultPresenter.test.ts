@@ -20,8 +20,8 @@ describe('GameResultPresenter', () => {
       createNextMove: jest.fn(),
     };
 
-    player1 = new Player('Alice', playerStrategy);
-    player2 = new Player('Bob', playerStrategy);
+    player1 = new Player('Alice', playerStrategy, MARKER_X);
+    player2 = new Player('Bob', playerStrategy, MARKER_O);
 
     outputAdapter = {
       render: jest.fn(),

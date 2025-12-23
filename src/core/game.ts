@@ -54,10 +54,7 @@ export class Game implements IGame {
     while (true) {
       const currentPlayer = this.turnState.getCurrentPlayer();
 
-      proposedMove = await currentPlayer.getNextMove(
-        this.boardState.getBoard(),
-        this.turnState.getCurrentPlayerMarker()
-      );
+      proposedMove = await currentPlayer.getNextMove(this.boardState.getBoard());
 
       const violations = this.rulesChecker.check({
         move: proposedMove,

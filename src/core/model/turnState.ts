@@ -6,7 +6,6 @@ export type PlayersByMarker = Record<PlayerBoardMarker, Player>;
 export type ITurnState = {
   nextPlayer: () => void;
   getCurrentPlayer(): Player;
-  getCurrentPlayerMarker: () => PlayerBoardMarker;
   getPlayers(): PlayersByMarker;
 };
 
@@ -40,10 +39,6 @@ export class TurnState implements ITurnState, TurnConstraint {
 
   getCurrentPlayer = (): Player => {
     return this.players[this.currentPlayerMarker];
-  };
-
-  getCurrentPlayerMarker = (): PlayerBoardMarker => {
-    return this.currentPlayerMarker;
   };
 
   isCurrentPlayerMarker = (marker: PlayerBoardMarker): boolean => {

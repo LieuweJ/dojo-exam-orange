@@ -78,8 +78,8 @@ describe('A game of orange-in-a-row can be played', () => {
     };
 
     players = {
-      [MARKER_X]: new Player('Alice', moveStrategy),
-      [MARKER_O]: new Player('Bob', moveStrategy),
+      [MARKER_X]: new Player('Alice', moveStrategy, MARKER_X),
+      [MARKER_O]: new Player('Bob', moveStrategy, MARKER_O),
     };
 
     game = new Game(
@@ -195,7 +195,7 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         new TurnState({
-          [MARKER_O]: new Player('Bob', moveStrategy),
+          [MARKER_O]: new Player('Bob', moveStrategy, MARKER_O),
         }),
         board,
         boardPresenter,
@@ -214,7 +214,7 @@ describe('A game of orange-in-a-row can be played', () => {
       new Game(
         // @ts-expect-error - Necessary to test missing player
         new TurnState({
-          [MARKER_X]: new Player('Alice', moveStrategy),
+          [MARKER_X]: new Player('Alice', moveStrategy, MARKER_O),
         }),
         board,
         boardPresenter,
