@@ -4,8 +4,11 @@ import {
   ViolationsPresenter,
 } from '../../../src/core/presenter/violationsPresenter';
 import { IncorrectMove, RULES_VIOLATIONS, RuleViolation } from '../../../src/core/model/rules';
-import { MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
-import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
+import {
+  ORANGE_IN_A_ROW_BOARD_UI,
+  PIECE_O,
+  PIECE_X,
+} from '../../../src/composition/orangeInARowComposition';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();
@@ -28,7 +31,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: MARKER_X,
+        marker: PIECE_X,
         column: 2,
       },
       violations: [RULES_VIOLATIONS.INVALID_PLACEMENT],
@@ -37,7 +40,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_X)} at column 2:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 2:\n` +
       `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -58,7 +61,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: MARKER_O,
+        marker: PIECE_O,
         column: 1,
       },
       violations: ['INVALID_PLACEMENT', 'OTHER'] as RuleViolation[],
@@ -67,7 +70,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_O)} at column 1:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_O)} at column 1:\n` +
       `- Invalid move\n- Some other violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -82,7 +85,7 @@ describe('ViolationsPresenter', () => {
 
     const incorrectMove: IncorrectMove = {
       move: {
-        marker: MARKER_X,
+        marker: PIECE_X,
         column: 0,
       },
       violations: [],
@@ -91,7 +94,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_X)} at column 0:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 0:\n` +
       `- unknown violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);

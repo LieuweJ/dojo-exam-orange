@@ -1,5 +1,5 @@
-import { EMPTY_CELL, IBoard, PlayerBoardMarker } from '../../model/boardState';
-import { Player } from '../../model/player';
+import { EMPTY_CELL, IBoard } from '../../model/boardState';
+import { Piece, Player } from '../../model/player';
 
 export const GAME_OUTCOME = {
   ONGOING: 'ONGOING',
@@ -81,7 +81,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     return null;
   }
 
-  private findWinner(cell: PlayerBoardMarker, players: Player[]): Player {
+  private findWinner(cell: Piece, players: Player[]): Player {
     for (const player of players) {
       if (player.hasPiece(cell)) {
         return player;
@@ -95,7 +95,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     board: IBoard,
     start: BoardPosition,
     direction: Direction,
-    marker: PlayerBoardMarker
+    marker: Piece
   ): BoardPosition[] | null {
     const positions: BoardPosition[] = [start];
 

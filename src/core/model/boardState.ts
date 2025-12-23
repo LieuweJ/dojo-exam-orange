@@ -1,15 +1,9 @@
 import { Move } from './rules';
+import { Piece } from './player';
 
 export const EMPTY_CELL = Symbol('.');
-export const MARKER_X = Symbol('x');
-export const MARKER_O = Symbol('o');
 
-export type I_EMPTY_CELL = typeof EMPTY_CELL;
-export type I_MARKER_X = typeof MARKER_X;
-export type I_MARKER_O = typeof MARKER_O;
-export type PlayerBoardMarker = Exclude<BoardCell, I_EMPTY_CELL>;
-
-export type BoardCell = I_EMPTY_CELL | I_MARKER_X | I_MARKER_O;
+export type BoardCell = typeof EMPTY_CELL | Piece;
 
 export type IBoard = BoardCell[][];
 

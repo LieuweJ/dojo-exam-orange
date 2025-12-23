@@ -1,10 +1,4 @@
-import {
-  BoardCell,
-  EMPTY_CELL,
-  IBoard,
-  MARKER_O,
-  MARKER_X,
-} from '../../../../src/core/model/boardState';
+import { BoardCell, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
 import {
   GAME_OUTCOME,
   GameOutcomeStrategy,
@@ -12,10 +6,11 @@ import {
 import { Pieces, Player } from '../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
 import { Move } from '../../../../src/core/model/rules';
+import { PIECE_O, PIECE_X } from '../../../../src/composition/orangeInARowComposition';
 
 const E: BoardCell = EMPTY_CELL;
-const X: BoardCell = MARKER_X;
-const O: BoardCell = MARKER_O;
+const X: BoardCell = PIECE_X;
+const O: BoardCell = PIECE_O;
 
 describe('GameOutcomeStrategy', () => {
   const createStrategy = () => new GameOutcomeStrategy({ connectionLength: 4 });
@@ -31,8 +26,8 @@ describe('GameOutcomeStrategy', () => {
       createNextMove,
     };
 
-    playerO = new Player('Player O', playerStrategy, [MARKER_O]);
-    playerX = new Player('Player X', playerStrategy, [MARKER_X]);
+    playerO = new Player('Player O', playerStrategy, [PIECE_O]);
+    playerX = new Player('Player X', playerStrategy, [PIECE_X]);
 
     players = [playerX, playerO];
   });

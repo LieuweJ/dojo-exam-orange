@@ -1,5 +1,6 @@
-import { BoardConstraint, PlayerBoardMarker } from './boardState';
+import { BoardConstraint } from './boardState';
 import { TurnConstraint } from './turnState';
+import { Piece } from './player';
 
 export const RULES_VIOLATIONS = {
   INVALID_PLACEMENT: 'INVALID_PLACEMENT',
@@ -8,7 +9,7 @@ export const RULES_VIOLATIONS = {
 
 export type RuleViolation = keyof typeof RULES_VIOLATIONS;
 
-export type Move = { column: number; marker: PlayerBoardMarker };
+export type Move = { column: number; marker: Piece };
 export type IncorrectMove = {
   move: Move;
   violations: RuleViolation[];

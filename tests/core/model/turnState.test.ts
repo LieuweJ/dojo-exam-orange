@@ -1,8 +1,9 @@
-import { IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { IBoard } from '../../../src/core/model/boardState';
 import { TurnState } from '../../../src/core/model/turnState';
 import { Pieces, Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
 import { Move } from '../../../src/core/model/rules';
+import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
 
 describe('Board.addMove', () => {
   let turnState: TurnState;
@@ -19,8 +20,8 @@ describe('Board.addMove', () => {
       createNextMove,
     };
 
-    playerO = new Player('Player O', playerStrategy, [MARKER_O]);
-    playerX = new Player('Player X', playerStrategy, [MARKER_X]);
+    playerO = new Player('Player O', playerStrategy, [PIECE_O]);
+    playerX = new Player('Player X', playerStrategy, [PIECE_X]);
 
     players = [playerX, playerO];
 
@@ -29,6 +30,6 @@ describe('Board.addMove', () => {
 
   it('can determine current player', () => {
     expect(turnState.getCurrentPlayer()).toBe(playerX);
-    expect(turnState.currentPlayerOwnsPiece(MARKER_X)).toBe(true);
+    expect(turnState.currentPlayerOwnsPiece(PIECE_X)).toBe(true);
   });
 });

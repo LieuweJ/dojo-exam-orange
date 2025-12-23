@@ -1,15 +1,20 @@
-import { IBoard, PlayerBoardMarker } from './boardState';
+import { IBoard } from './boardState';
 import { IMoveStrategy } from '../strategy/player/cliMoveStrategy';
 import { Move } from './rules';
 
 export type NonEmptyArray<T> = [T, ...T[]];
 
-export type Pieces = NonEmptyArray<PlayerBoardMarker>;
+export type Piece = {
+  boardValue: symbol;
+  displayName: string;
+};
+
+export type Pieces = NonEmptyArray<Piece>;
 
 interface IPlayer {
   getScreenName(): string;
 
-  hasPiece(piece: PlayerBoardMarker): boolean;
+  hasPiece(piece: Piece): boolean;
 
   getNextMove(board: IBoard): Promise<Move>;
 }
@@ -29,7 +34,7 @@ export class Player implements IPlayer {
     return this.strategy.createNextMove(board, this.pieces, this.getScreenName());
   }
 
-  hasPiece(piece: PlayerBoardMarker): boolean {
+  hasPiece(piece: Piece): boolean {
     return this.pieces.includes(piece);
   }
 }

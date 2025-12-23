@@ -1,7 +1,11 @@
 import { BoardPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
-import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
-import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
+import { EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
+import {
+  ORANGE_IN_A_ROW_BOARD_UI,
+  PIECE_O,
+  PIECE_X,
+} from '../../../src/composition/orangeInARowComposition';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -18,8 +22,8 @@ describe('BoardPresenter', () => {
   test('Board displays coins with correct colors for each player', () => {
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, MARKER_X],
-      [MARKER_O, MARKER_X],
+      [EMPTY_CELL, PIECE_X],
+      [PIECE_O, PIECE_X],
     ];
 
     presenter.present({ board });
@@ -37,9 +41,9 @@ describe('BoardPresenter', () => {
     ];
 
     const board: IBoard = [
-      [MARKER_O, EMPTY_CELL],
-      [EMPTY_CELL, MARKER_X],
-      [MARKER_O, MARKER_X],
+      [PIECE_O, EMPTY_CELL],
+      [EMPTY_CELL, PIECE_X],
+      [PIECE_O, PIECE_X],
     ];
 
     presenter.present({ board, highlightPositions });

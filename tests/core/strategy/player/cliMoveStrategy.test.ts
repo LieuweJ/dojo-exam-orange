@@ -1,14 +1,13 @@
 import { CliMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
 import { IInputAdapter } from '../../../../src/core/adapters/terminalInputAdapter';
-import {
-  EMPTY_CELL,
-  IBoard,
-  MARKER_X,
-  PlayerBoardMarker,
-} from '../../../../src/core/model/boardState';
+import { EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
 import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
 
-import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../../src/composition/orangeInARowComposition';
+import {
+  ORANGE_IN_A_ROW_BOARD_UI,
+  PIECE_X,
+} from '../../../../src/composition/orangeInARowComposition';
+import { Piece } from '../../../../src/core/model/player';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;
@@ -28,7 +27,7 @@ describe('CliMoveStrategy', () => {
   });
 
   test('returns a move with the given marker when a valid column is entered', async () => {
-    const givenMarker: PlayerBoardMarker = MARKER_X;
+    const givenMarker: Piece = PIECE_X;
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
@@ -49,9 +48,9 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, [MARKER_X], 'Bob');
+    const move = await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
 
-    expect(move).toStrictEqual({ column: 1, marker: MARKER_X });
+    expect(move).toStrictEqual({ column: 1, marker: PIECE_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
       "It is Bob's turn.\nChoose column (1-3) for ● : "
     );
@@ -66,7 +65,7 @@ describe('CliMoveStrategy', () => {
     inputAdapter.ask.mockResolvedValueOnce('-5');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, [MARKER_X], 'Bob');
+    await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(

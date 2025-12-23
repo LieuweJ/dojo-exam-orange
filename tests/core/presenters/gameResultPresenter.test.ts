@@ -1,10 +1,11 @@
 import { GameResultPresenter } from '../../../src/core/presenter/gameResultPresenter';
 import { BoardPresentArgs, IOutputPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
-import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import { GAME_OUTCOME } from '../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
+import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -18,7 +19,7 @@ describe('GameResultPresenter', () => {
       createNextMove: jest.fn(),
     };
 
-    player1 = new Player('Alice', playerStrategy, [MARKER_X]);
+    player1 = new Player('Alice', playerStrategy, [PIECE_X]);
 
     outputAdapter = {
       render: jest.fn(),
@@ -37,7 +38,7 @@ describe('GameResultPresenter', () => {
 
   test('renders winning board with highlights and winner message', () => {
     const board: IBoard = [
-      [MARKER_X, MARKER_X, MARKER_X],
+      [PIECE_X, PIECE_X, PIECE_X],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
@@ -69,8 +70,8 @@ describe('GameResultPresenter', () => {
 
   test('renders final board and draw message', () => {
     const board: IBoard = [
-      [MARKER_X, MARKER_O],
-      [MARKER_O, MARKER_X],
+      [PIECE_X, PIECE_O],
+      [PIECE_O, PIECE_X],
     ];
 
     presenter.present({

@@ -1,6 +1,7 @@
 import { ValidPlacementStrategy } from '../../../../../src/core/strategy/game/rules/validPlacementStrategy';
-import { MARKER_O, MARKER_X, PlayerBoardMarker } from '../../../../../src/core/model/boardState';
 import { Move, RuleViolation } from '../../../../../src/core/model/rules';
+import { PIECE_O, PIECE_X } from '../../../../../src/composition/orangeInARowComposition';
+import { Piece } from '../../../../../src/core/model/player';
 
 describe('ValidPlacementStrategy', () => {
   let constraints: {
@@ -8,7 +9,7 @@ describe('ValidPlacementStrategy', () => {
       canAddMove: jest.Mock<boolean, [Move]>;
     };
     turn: {
-      currentPlayerOwnsPiece: jest.Mock<boolean, [PlayerBoardMarker]>;
+      currentPlayerOwnsPiece: jest.Mock<boolean, [Piece]>;
     };
   };
 
@@ -31,7 +32,7 @@ describe('ValidPlacementStrategy', () => {
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
     const strategy = new ValidPlacementStrategy();
 
-    const move: Move = { marker: MARKER_X, column: 1 };
+    const move: Move = { marker: PIECE_X, column: 1 };
     constraints.board.canAddMove.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, moveContext: constraints });
@@ -43,7 +44,7 @@ describe('ValidPlacementStrategy', () => {
   test('returns null when validator reports move as valid', () => {
     const strategy = new ValidPlacementStrategy();
 
-    const move: Move = { marker: MARKER_O, column: 3 };
+    const move: Move = { marker: PIECE_O, column: 3 };
     constraints.board.canAddMove.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, moveContext: constraints });

@@ -3,11 +3,8 @@ import {
   BoardConstraint,
   BoardState,
   EMPTY_CELL,
-  I_EMPTY_CELL,
   IBoard,
   IBoardState,
-  MARKER_O,
-  MARKER_X,
 } from '../core/model/boardState';
 import { ITurnState, TurnConstraint, TurnState } from '../core/model/turnState';
 import {
@@ -35,7 +32,7 @@ import {
 import { TerminalInputAdapter } from '../core/adapters/terminalInputAdapter';
 import { TerminalOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 import { CliMoveStrategy } from '../core/strategy/player/cliMoveStrategy';
-import { Player } from '../core/model/player';
+import { Piece, Player } from '../core/model/player';
 import { HelpPresenter } from '../core/presenter/helpPresenter';
 import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
@@ -56,17 +53,27 @@ export type GameComposition = {
 
 const HELP_FILE = 'docs/rules-of-play.md';
 
+export const PIECE_X: Piece = {
+  boardValue: Symbol('x'),
+  displayName: '●',
+};
+
+export const PIECE_O: Piece = {
+  boardValue: Symbol('o'),
+  displayName: '○',
+};
+
 export const ORANGE_IN_A_ROW_BOARD_UI = new Map<BoardCell, string>([
   [EMPTY_CELL, '·'],
-  [MARKER_X, '●'],
-  [MARKER_O, '○'],
+  [PIECE_X, '●'],
+  [PIECE_O, '○'],
 ]);
 
 export function createOrangeInARowComposition(): GameComposition {
   const input = new TerminalInputAdapter();
   const output = new TerminalOutputAdapter();
 
-  const e: I_EMPTY_CELL = EMPTY_CELL;
+  const e: typeof EMPTY_CELL = EMPTY_CELL;
 
   const emptyBoard: IBoard = [
     [e, e, e, e, e, e, e],
@@ -84,8 +91,8 @@ export function createOrangeInARowComposition(): GameComposition {
     inputAdapter: input,
     turnState: new TurnState({
       players: [
-        new Player('Player 1', cliMoveStrategy, [MARKER_X]),
-        new Player('Player 2', cliMoveStrategy, [MARKER_O]),
+        new Player('Player 1', cliMoveStrategy, [PIECE_X]),
+        new Player('Player 2', cliMoveStrategy, [PIECE_O]),
       ],
     }),
     boardState: new BoardState(emptyBoard),

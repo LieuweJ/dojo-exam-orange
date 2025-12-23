@@ -4,8 +4,6 @@ import {
   BoardState,
   EMPTY_CELL,
   IBoardState,
-  MARKER_O,
-  MARKER_X,
 } from '../../src/core/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../../src/core/presenter/boardPresenter';
 import { IMoveStrategy } from '../../src/core/strategy/player/cliMoveStrategy';
@@ -26,6 +24,7 @@ import {
 import { TurnState } from '../../src/core/model/turnState';
 import { RulesChainHandler } from '../../src/core/strategy/game/rules/rulesChainHandler';
 import { GameLifecycleStrategy } from '../../src/core/strategy/game/gameLifecycleStrategy';
+import { PIECE_O, PIECE_X } from '../../src/composition/orangeInARowComposition';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & BoardConstraint;
@@ -79,8 +78,8 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    playerX = new Player('Alice', moveStrategy, [MARKER_X]);
-    playerO = new Player('Bob', moveStrategy, [MARKER_O]);
+    playerX = new Player('Alice', moveStrategy, [PIECE_X]);
+    playerO = new Player('Bob', moveStrategy, [PIECE_O]);
 
     players = [playerX, playerO];
 
@@ -106,7 +105,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValue({
       column: col(4),
-      marker: MARKER_X,
+      marker: PIECE_X,
     });
 
     await game.play();
@@ -118,11 +117,11 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_X,
+        marker: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: MARKER_O,
+        marker: PIECE_O,
       });
 
     gameOutcomeStrategy.determine
@@ -149,24 +148,24 @@ describe('A game of orange-in-a-row can be played', () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_X,
+        marker: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(3),
-        marker: MARKER_X,
+        marker: PIECE_X,
       })
       .mockResolvedValueOnce({
         column: col(4),
-        marker: MARKER_O,
+        marker: PIECE_O,
       });
 
     await game.play();
 
     expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(3);
 
-    expect(moveStrategy.createNextMove.mock.calls[0][1]).toStrictEqual([MARKER_X]);
-    expect(moveStrategy.createNextMove.mock.calls[1][1]).toStrictEqual([MARKER_O]);
-    expect(moveStrategy.createNextMove.mock.calls[2][1]).toStrictEqual([MARKER_X]);
+    expect(moveStrategy.createNextMove.mock.calls[0][1]).toStrictEqual([PIECE_X]);
+    expect(moveStrategy.createNextMove.mock.calls[1][1]).toStrictEqual([PIECE_O]);
+    expect(moveStrategy.createNextMove.mock.calls[2][1]).toStrictEqual([PIECE_X]);
   });
 
   test('game stops when a winning outcome is returned', async () => {
@@ -180,7 +179,7 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValueOnce({
       column: col(4),
-      marker: MARKER_X,
+      marker: PIECE_X,
     });
 
     await game.play();
@@ -194,7 +193,7 @@ describe('A game of orange-in-a-row can be played', () => {
   test('throws when players are missing.', () => {
     expect(() => {
       new Game(
-        new TurnState({ players: [new Player('Bob', moveStrategy, [MARKER_O])] }),
+        new TurnState({ players: [new Player('Bob', moveStrategy, [PIECE_O])] }),
         board,
         boardPresenter,
         helpPresenter,
@@ -208,8 +207,8 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('player is notified when an invalid move is proposed', async () => {
-    const invalidMove: Move = { column: col(10), marker: MARKER_X };
-    const validMove: Move = { column: col(3), marker: MARKER_X };
+    const invalidMove: Move = { column: col(10), marker: PIECE_X };
+    const validMove: Move = { column: col(3), marker: PIECE_X };
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 

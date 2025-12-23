@@ -1,4 +1,5 @@
-import { BoardState, EMPTY_CELL, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { BoardState, EMPTY_CELL } from '../../../src/core/model/boardState';
+import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
 
 describe('Board.addMove', () => {
   let board: BoardState;
@@ -13,36 +14,36 @@ describe('Board.addMove', () => {
   });
 
   it('places a marker in the lowest empty row of a column', () => {
-    board.addMove({ column: col(2), marker: MARKER_X });
+    board.addMove({ column: col(2), marker: PIECE_X });
 
     const state = board.getBoard();
 
-    expect(state[3][2]).toBe(MARKER_X); // bottom row
+    expect(state[3][2]).toBe(PIECE_X); // bottom row
   });
 
   it('stacks markers in the same column', () => {
-    board.addMove({ column: col(1), marker: MARKER_X });
-    board.addMove({ column: col(1), marker: MARKER_O });
+    board.addMove({ column: col(1), marker: PIECE_X });
+    board.addMove({ column: col(1), marker: PIECE_O });
 
     const state = board.getBoard();
 
-    expect(state[3][1]).toBe(MARKER_X);
-    expect(state[2][1]).toBe(MARKER_O);
+    expect(state[3][1]).toBe(PIECE_X);
+    expect(state[2][1]).toBe(PIECE_O);
   });
 
   it('throws when adding a move to a full column', () => {
     for (let i = 0; i < 4; i++) {
-      board.addMove({ column: col(2), marker: MARKER_X });
+      board.addMove({ column: col(2), marker: PIECE_X });
     }
 
     expect(() => {
-      board.addMove({ column: col(2), marker: MARKER_O });
+      board.addMove({ column: col(2), marker: PIECE_O });
     }).toThrow('Cannot add move to column 2.');
   });
 
   it('throws when column is not on the board', () => {
     expect(() => {
-      board.addMove({ column: col(99), marker: MARKER_O });
+      board.addMove({ column: col(99), marker: PIECE_O });
     }).toThrow('Cannot add move to column 99.');
   });
 });
