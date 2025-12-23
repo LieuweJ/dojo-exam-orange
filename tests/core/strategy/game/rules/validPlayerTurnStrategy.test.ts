@@ -8,7 +8,7 @@ describe('ValidPlayerTurnStrategy', () => {
       canAddMove: jest.Mock<boolean, [Move]>;
     };
     turn: {
-      isCurrentPlayerMarker: jest.Mock<boolean, [PlayerBoardMarker]>;
+      currentPlayerOwnsPiece: jest.Mock<boolean, [PlayerBoardMarker]>;
     };
   };
 
@@ -18,7 +18,7 @@ describe('ValidPlayerTurnStrategy', () => {
         canAddMove: jest.fn(),
       },
       turn: {
-        isCurrentPlayerMarker: jest.fn(),
+        currentPlayerOwnsPiece: jest.fn(),
       },
     };
   });
@@ -32,11 +32,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_X, column: 1 };
-    constraints.turn.isCurrentPlayerMarker.mockReturnValueOnce(false);
+    constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.turn.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.marker);
     expect(result).toEqual(['INVALID_PLAYER_TURN'] as RuleViolation[]);
   });
 
@@ -44,11 +44,11 @@ describe('ValidPlayerTurnStrategy', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
     const move: Move = { marker: MARKER_O, column: 3 };
-    constraints.turn.isCurrentPlayerMarker.mockReturnValueOnce(true);
+    constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, moveContext: constraints });
 
-    expect(constraints.turn.isCurrentPlayerMarker).toHaveBeenCalledWith(move.marker);
+    expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.marker);
     expect(result).toBeNull();
   });
 });

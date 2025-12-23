@@ -4,11 +4,15 @@ import {
   IBoard,
   MARKER_O,
   MARKER_X,
+  PlayerBoardMarker,
 } from '../../../../src/core/model/boardState';
 import {
   GAME_OUTCOME,
   GameOutcomeStrategy,
 } from '../../../../src/core/strategy/game/gameOutcomeStrategy';
+import { Player } from '../../../../src/core/model/player';
+import { IMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
+import { Move } from '../../../../src/core/model/rules';
 
 const E: BoardCell = EMPTY_CELL;
 const X: BoardCell = MARKER_X;
@@ -16,6 +20,27 @@ const O: BoardCell = MARKER_O;
 
 describe('GameOutcomeStrategy', () => {
   const createStrategy = () => new GameOutcomeStrategy({ connectionLength: 4 });
+
+  let playerStrategy: jest.Mocked<IMoveStrategy>;
+  let playerO: Player;
+  let playerX: Player;
+  let players: Player[];
+
+  beforeEach(() => {
+    const createNextMove = jest.fn<Promise<Move>, [IBoard, PlayerBoardMarker, string]>();
+    playerStrategy = {
+      createNextMove,
+    };
+
+    playerO = new Player('Player O', playerStrategy, MARKER_O);
+    playerX = new Player('Player X', playerStrategy, MARKER_X);
+
+    players = [playerX, playerO];
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   describe('ONGOING', () => {
     it('returns ONGOING when no player has won and the board is not full', () => {
@@ -26,7 +51,7 @@ describe('GameOutcomeStrategy', () => {
         [E, E, E, E],
       ];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       expect(outcome).toEqual({ type: GAME_OUTCOME.ONGOING });
     });
@@ -41,7 +66,7 @@ describe('GameOutcomeStrategy', () => {
         [O, X, O, X],
       ];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       expect(outcome).toEqual({ type: GAME_OUTCOME.DRAW });
     });
@@ -49,7 +74,7 @@ describe('GameOutcomeStrategy', () => {
     it('returns DRAW for a board with no rows in them.', () => {
       const board: IBoard = [];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       expect(outcome).toEqual({ type: GAME_OUTCOME.DRAW });
     });
@@ -64,11 +89,11 @@ describe('GameOutcomeStrategy', () => {
         [E, E, E, E],
       ];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       expect(outcome).toEqual({
         type: GAME_OUTCOME.WIN,
-        winner: X,
+        winner: playerX,
         winningPositions: [
           { row: 2, col: 0 },
           { row: 2, col: 1 },
@@ -86,14 +111,14 @@ describe('GameOutcomeStrategy', () => {
         [E, O, E, E],
       ];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       if (outcome.type !== GAME_OUTCOME.WIN) {
         throw new Error('Expected WIN outcome');
       }
 
       expect(outcome.type).toBe(GAME_OUTCOME.WIN);
-      expect(outcome.winner).toBe(O);
+      expect(outcome.winner).toBe(playerO);
       expect(outcome.winningPositions).toEqual([
         { row: 0, col: 1 },
         { row: 1, col: 1 },
@@ -110,11 +135,11 @@ describe('GameOutcomeStrategy', () => {
         [E, E, E, X],
       ];
 
-      const outcome = createStrategy().determine(board);
+      const outcome = createStrategy().determine(board, players);
 
       expect(outcome).toEqual({
         type: GAME_OUTCOME.WIN,
-        winner: X,
+        winner: playerX,
         winningPositions: [
           { row: 0, col: 0 },
           { row: 1, col: 1 },
@@ -122,6 +147,24 @@ describe('GameOutcomeStrategy', () => {
           { row: 3, col: 3 },
         ],
       });
+    });
+
+    it('throws an error if no player matches the winning marker', () => {
+      const board: IBoard = [
+        [X, X, X, X],
+        [E, E, E, E],
+        [E, E, E, E],
+        [E, E, E, E],
+      ];
+
+      const invalidPlayers: Player[] = [
+        // Intentionally using invalid player piece for testing
+        new Player('Player Y', playerStrategy, 'Y' as unknown as PlayerBoardMarker),
+      ];
+
+      expect(() => {
+        createStrategy().determine(board, invalidPlayers);
+      }).toThrow('No player can be matched to the winning combination.');
     });
 
     it('respects injected win condition length', () => {
@@ -133,14 +176,14 @@ describe('GameOutcomeStrategy', () => {
         [E, E, E],
       ];
 
-      const outcome = strategy.determine(board);
+      const outcome = strategy.determine(board, players);
 
       if (outcome.type !== GAME_OUTCOME.WIN) {
         throw new Error('Expected WIN outcome');
       }
 
       expect(outcome.type).toBe(GAME_OUTCOME.WIN);
-      expect(outcome.winner).toBe(X);
+      expect(outcome.winner).toBe(playerX);
       expect(outcome.winningPositions).toEqual([
         { row: 1, col: 0 },
         { row: 1, col: 1 },

@@ -1,4 +1,5 @@
-import { PlayerBoardMarker, IBoard, EMPTY_CELL } from '../../model/boardState';
+import { EMPTY_CELL, IBoard, PlayerBoardMarker } from '../../model/boardState';
+import { Player } from '../../model/player';
 
 export const GAME_OUTCOME = {
   ONGOING: 'ONGOING',
@@ -10,7 +11,7 @@ type GameOutComeDraw = { type: typeof GAME_OUTCOME.DRAW };
 type GameOutcomeOngoing = { type: typeof GAME_OUTCOME.ONGOING };
 type GameOutComeWin = {
   type: typeof GAME_OUTCOME.WIN;
-  winner: PlayerBoardMarker;
+  winner: Player;
   winningPositions: BoardPosition[];
 };
 
@@ -27,7 +28,7 @@ const DIRECTIONS: Direction[] = [
 ];
 
 export type IGameOutcomeStrategy = {
-  determine(board: IBoard): GameOutcome;
+  determine(board: IBoard, players: Player[]): GameOutcome;
 };
 
 type WinConditions = {
@@ -37,8 +38,8 @@ type WinConditions = {
 export class GameOutcomeStrategy implements IGameOutcomeStrategy {
   constructor(private readonly winConditions: WinConditions) {}
 
-  determine(board: IBoard): GameOutcome {
-    const winningOutcome = this.findWinningOutcome(board);
+  determine(board: IBoard, players: Player[]): GameOutcome {
+    const winningOutcome = this.findWinningOutcome(board, players);
 
     if (winningOutcome) {
       return winningOutcome;
@@ -51,7 +52,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     return { type: GAME_OUTCOME.ONGOING };
   }
 
-  private findWinningOutcome(board: IBoard): GameOutComeWin | null {
+  private findWinningOutcome(board: IBoard, players: Player[]): GameOutComeWin | null {
     const rows = board.length;
     const cols = board[0]?.length ?? 0;
 
@@ -65,9 +66,11 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
           const winningPositions = this.hasLine(board, { row, col }, direction, cell);
 
           if (winningPositions) {
+            const winner = this.findWinner(cell, players);
+
             return {
               type: GAME_OUTCOME.WIN,
-              winner: cell,
+              winner,
               winningPositions,
             };
           }
@@ -76,6 +79,16 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     }
 
     return null;
+  }
+
+  private findWinner(cell: PlayerBoardMarker, players: Player[]): Player {
+    for (const player of players) {
+      if (player.hasPiece(cell)) {
+        return player;
+      }
+    }
+
+    throw Error('No player can be matched to the winning combination.');
   }
 
   private hasLine(

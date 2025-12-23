@@ -37,7 +37,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     }
   }
 
-  isValid(input: string): boolean {
+  private isValid(input: string): boolean {
     return /^\d+$/.test(input);
   }
 

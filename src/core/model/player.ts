@@ -5,6 +5,8 @@ import { Move } from './rules';
 interface IPlayer {
   getScreenName(): string;
 
+  hasPiece(piece: PlayerBoardMarker): boolean;
+
   getNextMove(board: IBoard): Promise<Move>;
 }
 
@@ -21,5 +23,9 @@ export class Player implements IPlayer {
 
   getNextMove(board: IBoard): Promise<Move> {
     return this.strategy.createNextMove(board, this.piece, this.getScreenName());
+  }
+
+  hasPiece(piece: PlayerBoardMarker): boolean {
+    return this.piece === piece;
   }
 }

@@ -23,7 +23,7 @@ import {
   RuleStrategy,
   RuleViolation,
 } from '../../src/core/model/rules';
-import { PlayersByMarker, TurnState } from '../../src/core/model/turnState';
+import { TurnState } from '../../src/core/model/turnState';
 import { RulesChainHandler } from '../../src/core/strategy/game/rules/rulesChainHandler';
 import { GameLifecycleStrategy } from '../../src/core/strategy/game/gameLifecycleStrategy';
 
@@ -35,7 +35,9 @@ describe('A game of orange-in-a-row can be played', () => {
   let moveStrategy: jest.Mocked<IMoveStrategy>;
   let gameOutcomeStrategy: jest.Mocked<IGameOutcomeStrategy>;
   let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
-  let players: PlayersByMarker;
+  let playerX: Player;
+  let playerO: Player;
+  let players: Player[];
   let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
   let violationStrategy: jest.Mocked<RuleStrategy>;
 
@@ -77,13 +79,13 @@ describe('A game of orange-in-a-row can be played', () => {
       present: jest.fn(),
     };
 
-    players = {
-      [MARKER_X]: new Player('Alice', moveStrategy, MARKER_X),
-      [MARKER_O]: new Player('Bob', moveStrategy, MARKER_O),
-    };
+    playerX = new Player('Alice', moveStrategy, MARKER_X);
+    playerO = new Player('Bob', moveStrategy, MARKER_O);
+
+    players = [playerX, playerO];
 
     game = new Game(
-      new TurnState(players),
+      new TurnState({ players }),
       board,
       boardPresenter,
       helpPresenter,
@@ -170,7 +172,7 @@ describe('A game of orange-in-a-row can be played', () => {
   test('game stops when a winning outcome is returned', async () => {
     const outcome: GameOutcome = {
       type: GAME_OUTCOME.WIN,
-      winner: MARKER_X,
+      winner: playerX,
       winningPositions: [{ col: 4, row: 0 }],
     };
 
@@ -186,17 +188,13 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(gameResultPresenter.present).toHaveBeenLastCalledWith({
       board: board.getBoard(),
       outcome,
-      players,
     });
   });
 
-  test('throws when player for MARKER_X is missing', () => {
+  test('throws when players are missing.', () => {
     expect(() => {
       new Game(
-        // @ts-expect-error - Necessary to test missing player
-        new TurnState({
-          [MARKER_O]: new Player('Bob', moveStrategy, MARKER_O),
-        }),
+        new TurnState({ players: [new Player('Bob', moveStrategy, MARKER_O)] }),
         board,
         boardPresenter,
         helpPresenter,
@@ -206,26 +204,7 @@ describe('A game of orange-in-a-row can be played', () => {
         violationsPresenter,
         new GameLifecycleStrategy()
       );
-    }).toThrow(new Error(`Player for marker ${MARKER_X.toString()} is missing.`));
-  });
-
-  test('throws when player for MARKER_O is missing', () => {
-    expect(() => {
-      new Game(
-        // @ts-expect-error - Necessary to test missing player
-        new TurnState({
-          [MARKER_X]: new Player('Alice', moveStrategy, MARKER_O),
-        }),
-        board,
-        boardPresenter,
-        helpPresenter,
-        gameOutcomeStrategy,
-        gameResultPresenter,
-        new RulesChainHandler([violationStrategy]),
-        violationsPresenter,
-        new GameLifecycleStrategy()
-      );
-    }).toThrow(new Error(`Player for marker ${MARKER_O.toString()} is missing.`));
+    }).toThrow(new Error(`In order to play this game, we need at least 2 players.`));
   });
 
   test('player is notified when an invalid move is proposed', async () => {

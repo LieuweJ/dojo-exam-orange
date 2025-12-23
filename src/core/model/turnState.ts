@@ -1,47 +1,41 @@
-import { MARKER_O, MARKER_X, PlayerBoardMarker } from './boardState';
+import { PlayerBoardMarker } from './boardState';
 import { Player } from './player';
-
-export type PlayersByMarker = Record<PlayerBoardMarker, Player>;
 
 export type ITurnState = {
   nextPlayer: () => void;
   getCurrentPlayer(): Player;
-  getPlayers(): PlayersByMarker;
+  getPlayers(): Player[];
 };
 
 export type TurnConstraint = {
-  isCurrentPlayerMarker(marker: PlayerBoardMarker): boolean;
+  currentPlayerOwnsPiece(marker: PlayerBoardMarker): boolean;
 };
 
 export class TurnState implements ITurnState, TurnConstraint {
-  currentPlayerMarker: PlayerBoardMarker = MARKER_X;
-  players: PlayersByMarker;
+  playersPointer: number = 0;
+  players: Player[];
 
-  constructor(players: PlayersByMarker) {
-    if (!players[MARKER_X]) {
-      throw new Error(`Player for marker ${MARKER_X.toString()} is missing.`);
-    }
-
-    if (!players[MARKER_O]) {
-      throw new Error(`Player for marker ${MARKER_O.toString()} is missing.`);
+  constructor({ players }: { players: Player[] }) {
+    if (players.length < 2) {
+      throw new Error(`In order to play this game, we need at least 2 players.`);
     }
 
     this.players = players;
   }
 
   nextPlayer(): void {
-    this.currentPlayerMarker = this.isCurrentPlayerMarker(MARKER_X) ? MARKER_O : MARKER_X;
+    this.playersPointer = this.playersPointer === 0 ? 1 : 0;
   }
 
-  getPlayers(): PlayersByMarker {
+  getPlayers(): Player[] {
     return this.players;
   }
 
   getCurrentPlayer = (): Player => {
-    return this.players[this.currentPlayerMarker];
+    return this.players[this.playersPointer];
   };
 
-  isCurrentPlayerMarker = (marker: PlayerBoardMarker): boolean => {
-    return this.currentPlayerMarker === marker;
+  currentPlayerOwnsPiece = (marker: PlayerBoardMarker): boolean => {
+    return this.players[this.playersPointer].hasPiece(marker);
   };
 }

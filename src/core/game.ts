@@ -30,12 +30,14 @@ export class Game implements IGame {
     while (true) {
       await this.playTurn();
 
-      const outcome = this.outcomeStrategy.determine(this.boardState.getBoard());
+      const outcome = this.outcomeStrategy.determine(
+        this.boardState.getBoard(),
+        this.turnState.getPlayers()
+      );
 
       if (this.gameLifeCycleStrategy.isGameOver(outcome)) {
         this.resultPresenter.present({
           board: this.boardState.getBoard(),
-          players: this.turnState.getPlayers(),
           outcome,
         });
 

@@ -83,14 +83,16 @@ export function createOrangeInARowComposition(): GameComposition {
   return {
     inputAdapter: input,
     turnState: new TurnState({
-      [MARKER_X]: new Player('Player 1', cliMoveStrategy, MARKER_X),
-      [MARKER_O]: new Player('Player 2', cliMoveStrategy, MARKER_O),
+      players: [
+        new Player('Player 1', cliMoveStrategy, MARKER_X),
+        new Player('Player 2', cliMoveStrategy, MARKER_O),
+      ],
     }),
     boardState: new BoardState(emptyBoard),
     boardPresenter,
     helpPresenter: new HelpPresenter(output, HELP_FILE),
     outcomeStrategy: new GameOutcomeStrategy({ connectionLength: 4 }),
-    resultPresenter: new GameResultPresenter(boardPresenter, output, ORANGE_IN_A_ROW_BOARD_UI),
+    resultPresenter: new GameResultPresenter(boardPresenter, output),
     rulesChecker: new RulesChainHandler([
       new ValidPlacementStrategy(),
       new ValidPlayerTurnStrategy(),

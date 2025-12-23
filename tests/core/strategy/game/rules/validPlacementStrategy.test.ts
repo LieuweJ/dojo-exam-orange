@@ -8,7 +8,7 @@ describe('ValidPlacementStrategy', () => {
       canAddMove: jest.Mock<boolean, [Move]>;
     };
     turn: {
-      isCurrentPlayerMarker: jest.Mock<boolean, [PlayerBoardMarker]>;
+      currentPlayerOwnsPiece: jest.Mock<boolean, [PlayerBoardMarker]>;
     };
   };
 
@@ -18,7 +18,7 @@ describe('ValidPlacementStrategy', () => {
         canAddMove: jest.fn(),
       },
       turn: {
-        isCurrentPlayerMarker: jest.fn(),
+        currentPlayerOwnsPiece: jest.fn(),
       },
     };
   });

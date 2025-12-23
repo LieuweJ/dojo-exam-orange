@@ -5,14 +5,12 @@ import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/
 import { GAME_OUTCOME } from '../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
-import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
   let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
   let presenter: GameResultPresenter;
   let player1: Player;
-  let player2: Player;
   let playerStrategy: IMoveStrategy;
 
   beforeEach(() => {
@@ -21,7 +19,6 @@ describe('GameResultPresenter', () => {
     };
 
     player1 = new Player('Alice', playerStrategy, MARKER_X);
-    player2 = new Player('Bob', playerStrategy, MARKER_O);
 
     outputAdapter = {
       render: jest.fn(),
@@ -31,7 +28,7 @@ describe('GameResultPresenter', () => {
       present: jest.fn(),
     };
 
-    presenter = new GameResultPresenter(boardPresenter, outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
+    presenter = new GameResultPresenter(boardPresenter, outputAdapter);
   });
 
   afterEach(() => {
@@ -47,13 +44,9 @@ describe('GameResultPresenter', () => {
 
     presenter.present({
       board,
-      players: {
-        [MARKER_X]: player1,
-        [MARKER_O]: player2,
-      },
       outcome: {
         type: GAME_OUTCOME.WIN,
-        winner: MARKER_X,
+        winner: player1,
         winningPositions: [
           { row: 0, col: 0 },
           { row: 0, col: 1 },
@@ -71,7 +64,7 @@ describe('GameResultPresenter', () => {
       ],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith('Alice (●) wins!');
+    expect(outputAdapter.render).toHaveBeenCalledWith('Alice wins!');
   });
 
   test('renders final board and draw message', () => {
@@ -82,10 +75,6 @@ describe('GameResultPresenter', () => {
 
     presenter.present({
       board,
-      players: {
-        [MARKER_X]: player1,
-        [MARKER_O]: player2,
-      },
       outcome: {
         type: GAME_OUTCOME.DRAW,
       },
