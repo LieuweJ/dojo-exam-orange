@@ -5,6 +5,7 @@ import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/
 import { GAME_OUTCOME } from '../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/cliMoveStrategy';
+import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -30,7 +31,7 @@ describe('GameResultPresenter', () => {
       present: jest.fn(),
     };
 
-    presenter = new GameResultPresenter(boardPresenter, outputAdapter);
+    presenter = new GameResultPresenter(boardPresenter, outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
   });
 
   afterEach(() => {

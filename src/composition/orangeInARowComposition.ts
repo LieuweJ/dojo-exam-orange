@@ -1,4 +1,5 @@
 import {
+  BoardCell,
   BoardConstraint,
   BoardState,
   EMPTY_CELL,
@@ -55,6 +56,12 @@ export type GameComposition = {
 
 const HELP_FILE = 'docs/rules-of-play.md';
 
+export const ORANGE_IN_A_ROW_BOARD_UI = new Map<BoardCell, string>([
+  [EMPTY_CELL, '·'],
+  [MARKER_X, '●'],
+  [MARKER_O, '○'],
+]);
+
 export function createOrangeInARowComposition(): GameComposition {
   const input = new TerminalInputAdapter();
   const output = new TerminalOutputAdapter();
@@ -70,7 +77,8 @@ export function createOrangeInARowComposition(): GameComposition {
     [e, e, e, e, e, e, e],
   ];
 
-  const cliMoveStrategy = new CliMoveStrategy(input, output);
+  const cliMoveStrategy = new CliMoveStrategy(input, output, ORANGE_IN_A_ROW_BOARD_UI);
+  const boardPresenter = new BoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
 
   return {
     inputAdapter: input,
@@ -79,15 +87,19 @@ export function createOrangeInARowComposition(): GameComposition {
       [MARKER_O]: new Player('Player 2', cliMoveStrategy),
     }),
     boardState: new BoardState(emptyBoard),
-    boardPresenter: new BoardPresenter(output),
+    boardPresenter,
     helpPresenter: new HelpPresenter(output, HELP_FILE),
     outcomeStrategy: new GameOutcomeStrategy({ connectionLength: 4 }),
-    resultPresenter: new GameResultPresenter(new BoardPresenter(output), output),
+    resultPresenter: new GameResultPresenter(boardPresenter, output, ORANGE_IN_A_ROW_BOARD_UI),
     rulesChecker: new RulesChainHandler([
       new ValidPlacementStrategy(),
       new ValidPlayerTurnStrategy(),
     ]),
-    violationPresenter: new ViolationsPresenter(output, VIOLATION_MESSAGES),
+    violationPresenter: new ViolationsPresenter(
+      output,
+      VIOLATION_MESSAGES,
+      ORANGE_IN_A_ROW_BOARD_UI
+    ),
     lifecycleStrategy: new GameLifecycleStrategy(),
   };
 }

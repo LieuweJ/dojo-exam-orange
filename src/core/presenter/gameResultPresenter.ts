@@ -1,7 +1,7 @@
-import { IBoard } from '../model/boardState';
+import { BoardCell, IBoard } from '../model/boardState';
 import { GAME_OUTCOME, GameOutcome } from '../strategy/game/gameOutcomeStrategy';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { BOARD_CELL_TO_UI, BoardPresentArgs, IOutputPresenter } from './boardPresenter';
+import { BoardPresentArgs, IOutputPresenter } from './boardPresenter';
 
 import { PlayersByMarker } from '../model/turnState';
 
@@ -14,7 +14,8 @@ export type GameResultPresenterArgs = {
 export class GameResultPresenter implements IOutputPresenter<GameResultPresenterArgs> {
   constructor(
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
-    private readonly output: IOutputAdapter
+    private readonly output: IOutputAdapter,
+    private readonly boardCellToUi: Map<BoardCell, string>
   ) {}
 
   present({ board, players, outcome }: GameResultPresenterArgs): void {
@@ -27,7 +28,7 @@ export class GameResultPresenter implements IOutputPresenter<GameResultPresenter
       });
 
       this.output.render(
-        `${winningPlayer.getScreenName()} (${BOARD_CELL_TO_UI.get(outcome.winner)}) wins!`
+        `${winningPlayer.getScreenName()} (${this.boardCellToUi.get(outcome.winner)}) wins!`
       );
 
       return;

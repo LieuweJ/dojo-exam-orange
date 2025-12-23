@@ -4,8 +4,8 @@ import {
   ViolationsPresenter,
 } from '../../../src/core/presenter/violationsPresenter';
 import { IncorrectMove, RULES_VIOLATIONS, RuleViolation } from '../../../src/core/model/rules';
-import { BOARD_CELL_TO_UI } from '../../../src/core/presenter/boardPresenter';
 import { MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();
@@ -20,7 +20,11 @@ describe('ViolationsPresenter', () => {
   });
 
   test('renders a single violation message', () => {
-    const presenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
+    const presenter = new ViolationsPresenter(
+      outputAdapter,
+      VIOLATION_MESSAGES,
+      ORANGE_IN_A_ROW_BOARD_UI
+    );
 
     const incorrectMove: IncorrectMove = {
       move: {
@@ -33,20 +37,24 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${BOARD_CELL_TO_UI.get(MARKER_X)} at column 2:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_X)} at column 2:\n` +
       `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
   });
 
   test('renders multiple violation messages separated by new lines', () => {
-    const presenter = new ViolationsPresenter(outputAdapter, {
-      INVALID_PLACEMENT: 'Invalid move',
-      INVALID_PLAYER_TURN: 'Invalid player turn',
-      // intentionally adding a second violation for test clarity
-      // (this keeps the test future-proof)
-      OTHER: 'Some other violation',
-    } as Record<RuleViolation, string>);
+    const presenter = new ViolationsPresenter(
+      outputAdapter,
+      {
+        INVALID_PLACEMENT: 'Invalid move',
+        INVALID_PLAYER_TURN: 'Invalid player turn',
+        // intentionally adding a second violation for test clarity
+        // (this keeps the test future-proof)
+        OTHER: 'Some other violation',
+      } as Record<RuleViolation, string>,
+      ORANGE_IN_A_ROW_BOARD_UI
+    );
 
     const incorrectMove: IncorrectMove = {
       move: {
@@ -59,14 +67,18 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${BOARD_CELL_TO_UI.get(MARKER_O)} at column 1:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_O)} at column 1:\n` +
       `- Invalid move\n- Some other violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
   });
 
   test('renders an unknown violation message when no violations are provided', () => {
-    const presenter = new ViolationsPresenter(outputAdapter, VIOLATION_MESSAGES);
+    const presenter = new ViolationsPresenter(
+      outputAdapter,
+      VIOLATION_MESSAGES,
+      ORANGE_IN_A_ROW_BOARD_UI
+    );
 
     const incorrectMove: IncorrectMove = {
       move: {
@@ -79,7 +91,8 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${BOARD_CELL_TO_UI.get(MARKER_X)} at column 0:\n` + `- unknown violation`;
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(MARKER_X)} at column 0:\n` +
+      `- unknown violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
   });

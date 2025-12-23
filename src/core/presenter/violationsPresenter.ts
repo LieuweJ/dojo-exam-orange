@@ -1,6 +1,7 @@
-import { BOARD_CELL_TO_UI, IOutputPresenter } from './boardPresenter';
+import { IOutputPresenter } from './boardPresenter';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IncorrectMove, RuleViolation } from '../model/rules';
+import { BoardCell } from '../model/boardState';
 
 export const VIOLATION_MESSAGES: Record<RuleViolation, string> = {
   INVALID_PLACEMENT: 'The move cannot be placed on the board.',
@@ -10,7 +11,8 @@ export const VIOLATION_MESSAGES: Record<RuleViolation, string> = {
 export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
   constructor(
     private readonly output: IOutputAdapter,
-    private violationMessages: Record<RuleViolation, string>
+    private readonly violationMessages: Record<RuleViolation, string>,
+    private readonly boardCellToUi: Map<BoardCell, string>
   ) {}
 
   present({ move, violations }: IncorrectMove): void {
@@ -21,7 +23,7 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
       violationString = `- ${violationMessages.join('\n- ')}`;
     }
 
-    const outputMessage = `Invalid move: ${BOARD_CELL_TO_UI.get(move.marker)} at column ${move.column}:\n${violationString}`;
+    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.marker)} at column ${move.column}:\n${violationString}`;
 
     this.output.render(outputMessage);
   }

@@ -8,6 +8,8 @@ import {
 } from '../../../../src/core/model/boardState';
 import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
 
+import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../../src/composition/orangeInARowComposition';
+
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -22,7 +24,7 @@ describe('CliMoveStrategy', () => {
       render: jest.fn(),
     };
 
-    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter);
+    moveStrategy = new CliMoveStrategy(inputAdapter, outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
   });
 
   test('returns a move with the given marker when a valid column is entered', async () => {

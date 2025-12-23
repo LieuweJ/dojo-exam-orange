@@ -1,12 +1,6 @@
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { BoardCell, EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../model/boardState';
+import { BoardCell, IBoard } from '../model/boardState';
 import { BoardPosition } from '../strategy/game/gameOutcomeStrategy';
-
-export const BOARD_CELL_TO_UI = new Map<BoardCell, string>([
-  [EMPTY_CELL, '·'],
-  [MARKER_X, '●'],
-  [MARKER_O, '○'],
-]);
 
 export type BoardPresentArgs = {
   board: IBoard;
@@ -18,7 +12,10 @@ export type IOutputPresenter<T> = {
 };
 
 export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
-  constructor(private outputAdapter: IOutputAdapter) {}
+  constructor(
+    private readonly outputAdapter: IOutputAdapter,
+    private readonly boardCellToUi: Map<BoardCell, string>
+  ) {}
 
   public present({ board, highlightPositions = [] }: BoardPresentArgs): void {
     const highlightSet = this.toHighlightSet(highlightPositions);
@@ -73,7 +70,7 @@ export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     boardPosition: BoardPosition,
     highlightSet: Set<string>
   ): string {
-    const symbol = BOARD_CELL_TO_UI.get(cell)!;
+    const symbol = this.boardCellToUi.get(cell)!;
 
     if (highlightSet.has(this.createCellKey(boardPosition))) {
       return `[${symbol}]|`;

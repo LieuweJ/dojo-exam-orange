@@ -1,6 +1,7 @@
 import { BoardPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 import { EMPTY_CELL, IBoard, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
+import { ORANGE_IN_A_ROW_BOARD_UI } from '../../../src/composition/orangeInARowComposition';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -11,7 +12,7 @@ describe('BoardPresenter', () => {
       render: jest.fn(),
     };
 
-    presenter = new BoardPresenter(outputAdapter);
+    presenter = new BoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
   });
 
   test('Board displays coins with correct colors for each player', () => {
