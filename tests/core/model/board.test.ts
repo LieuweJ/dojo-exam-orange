@@ -1,10 +1,4 @@
-import {
-  BoardState,
-  ColumnIndex,
-  EMPTY_CELL,
-  MARKER_O,
-  MARKER_X,
-} from '../../../src/core/model/boardState';
+import { BoardState, EMPTY_CELL, MARKER_O, MARKER_X } from '../../../src/core/model/boardState';
 
 describe('Board.addMove', () => {
   let board: BoardState;
@@ -53,4 +47,4 @@ describe('Board.addMove', () => {
   });
 });
 
-export const col = (n: number) => n as ColumnIndex;
+export const col = (n: number) => n;
