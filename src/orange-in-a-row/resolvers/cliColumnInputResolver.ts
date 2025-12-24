@@ -6,7 +6,7 @@ export type CliPositionResolverArgs = {
   board: IBoard;
 };
 
-export class CliPositionResolver implements IBoardPositionResolver<CliPositionResolverArgs> {
+export class CliColumnInputResolver implements IBoardPositionResolver<CliPositionResolverArgs> {
   resolve({ column, board }: CliPositionResolverArgs): BoardPosition {
     for (let row = board.length - 1; row >= 0; row--) {
       if (board[row][column] === EMPTY_CELL) {

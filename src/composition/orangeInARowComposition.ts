@@ -32,9 +32,9 @@ import { HelpPresenter } from '../core/presenter/helpPresenter';
 import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
 import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
-import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cli-move-strategy';
-import { CliPositionResolver } from '../orange-in-a-row/resolvers/cli-position-resolver';
-import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/position-to-orange-in-a-row-cli-resolver';
+import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cliMoveStrategy';
+import { CliColumnInputResolver } from '../orange-in-a-row/resolvers/cliColumnInputResolver';
+import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
 import { OrangeInARowBoardPresenter } from '../orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 export type GameComposition = {
@@ -85,7 +85,7 @@ export function createOrangeInARowComposition(): GameComposition {
     input,
     output,
     ORANGE_IN_A_ROW_BOARD_UI,
-    new CliPositionResolver()
+    new CliColumnInputResolver()
   );
   const boardPresenter = new OrangeInARowBoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
 
