@@ -1,11 +1,16 @@
-import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardPosition, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
+import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
+import {
+  BoardCell,
+  BoardPosition,
+  EMPTY_CELL,
+  IBoard,
+} from '../../../../src/core/model/boardState';
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
   PIECE_X,
-} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { OrangeInARowBoardPresenter } from '../../../src/games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
+} from '../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { OrangeInARowBoardPresenter } from '../../../../src/games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;

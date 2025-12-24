@@ -1,15 +1,15 @@
-import { IInputAdapter } from '../../../../src/core/adapters/terminalInputAdapter';
-import { EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
-import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
+import { IInputAdapter } from '../../../../../src/core/adapters/terminalInputAdapter';
+import { EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
+import { IOutputAdapter } from '../../../../../src/core/adapters/terminalOutputAdapter';
 
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
   PIECE_X,
-} from '../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { Piece } from '../../../../src/core/model/player';
-import { CliMoveStrategy } from '../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
-import { CliColumnInputResolver } from '../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';
+} from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { Piece } from '../../../../../src/core/model/player';
+import { CliMoveStrategy } from '../../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
+import { CliColumnInputResolver } from '../../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;

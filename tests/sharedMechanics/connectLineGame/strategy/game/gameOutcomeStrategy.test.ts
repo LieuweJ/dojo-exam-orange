@@ -1,13 +1,13 @@
-import { BoardCell, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
-import { GAME_OUTCOME } from '../../../../src/core/strategy/game/gameOutcomeStrategy';
-import { Piece, Pieces, Player } from '../../../../src/core/model/player';
-import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
-import { Move } from '../../../../src/core/model/rules';
+import { BoardCell, EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
+import { GAME_OUTCOME } from '../../../../../src/core/strategy/game/gameOutcomeStrategy';
+import { Piece, Pieces, Player } from '../../../../../src/core/model/player';
+import { IMoveStrategy } from '../../../../../src/core/strategy/player/move-strategy';
+import { Move } from '../../../../../src/core/model/rules';
 import {
   PIECE_O,
   PIECE_X,
-} from '../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { ConnectLineGameOutcomeStrategy } from '../../../../src/sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
+} from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { ConnectLineGameOutcomeStrategy } from '../../../../../src/sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 const E: BoardCell = EMPTY_CELL;
 const X: BoardCell = PIECE_X;
