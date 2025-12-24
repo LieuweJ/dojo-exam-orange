@@ -1,8 +1,5 @@
-import { BoardPosition, BoardState, EMPTY_CELL } from '../../../src/core/model/boardState';
-import {
-  PIECE_O,
-  PIECE_X,
-} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { BoardState, EMPTY_CELL } from '../../../src/core/model/boardState';
+import { PIECE_O } from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('Board.addMove', () => {
   let board: BoardState;
@@ -11,49 +8,30 @@ describe('Board.addMove', () => {
     board = new BoardState([
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ]);
-  });
-
-  it('places a piece in the lowest empty row of a column', () => {
-    board.addMove({ position: createBoardPosition(2), piece: PIECE_X });
-
-    const state = board.getBoard();
-
-    expect(state[3][2]).toBe(PIECE_X); // bottom row
-  });
-
-  it('stacks pieces in the same column', () => {
-    board.addMove({ position: createBoardPosition(1), piece: PIECE_X });
-    board.addMove({ position: createBoardPosition(1), piece: PIECE_O });
-
-    const state = board.getBoard();
-
-    expect(state[3][1]).toBe(PIECE_X);
-    expect(state[2][1]).toBe(PIECE_O);
-  });
-
-  it('throws when adding a move to a full column', () => {
-    for (let i = 0; i < 4; i++) {
-      board.addMove({ position: createBoardPosition(2), piece: PIECE_X });
-    }
-
-    expect(() => {
-      board.addMove({ position: createBoardPosition(2), piece: PIECE_O });
-    }).toThrow('Cannot add move to column 2.');
   });
 
   it('throws when column is not on the board', () => {
     expect(() => {
-      board.addMove({ position: createBoardPosition(99), piece: PIECE_O });
-    }).toThrow('Cannot add move to column 99.');
+      board.addMove({
+        position: {
+          column: 99,
+          row: 0,
+        },
+        piece: PIECE_O,
+      });
+    }).toThrow('Cannot add boardPosition: {row: 0, column: 99} to the board.');
+  });
+
+  it('throws when row is not on the board', () => {
+    expect(() => {
+      board.addMove({
+        position: {
+          column: 1,
+          row: -99,
+        },
+        piece: PIECE_O,
+      });
+    }).toThrow('Cannot add boardPosition: {row: -99, column: 1} to the board.');
   });
 });
-
-const createBoardPosition = (n: number): BoardPosition => {
-  return {
-    column: n,
-    row: 0,
-  };
-};

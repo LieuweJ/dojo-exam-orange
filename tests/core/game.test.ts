@@ -154,11 +154,11 @@ describe('A game of orange-in-a-row can be played', () => {
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: { column: 3, row: 0 },
+        position: { column: 3, row: 1 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: { column: 4, row: 0 },
+        position: { column: 4, row: 3 },
         piece: PIECE_O,
       });
 

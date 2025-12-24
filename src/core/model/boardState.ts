@@ -25,25 +25,24 @@ export class BoardState implements IBoardState, BoardConstraint {
     return this.board.map((row) => [...row]);
   }
 
-  addMove({ position, piece }: Move) {
-    if (!this.canAddMove({ position, piece })) {
-      throw new Error(`Cannot add move to column ${position.column}.`);
+  addMove(move: Move) {
+    const {
+      position: { row, column },
+      piece,
+    } = move;
+
+    if (!this.canAddMove(move)) {
+      throw new Error(`Cannot add boardPosition: {row: ${row}, column: ${column}} to the board.`);
     }
 
-    const column = position.column;
-
-    for (let row = this.board.length - 1; row >= 0; row--) {
-      if (this.board[row][column] === EMPTY_CELL) {
-        this.board[row][column] = piece;
-        return;
-      }
-    }
+    this.board[row][column] = piece;
   }
 
-  canAddMove({ position: { column } }: Move): boolean {
-    const isInteger = Number.isInteger(column);
-    const isInBounds = column >= 0 && column < this.board[0].length;
+  canAddMove({ position: { column, row } }: Move): boolean {
+    if (!this.board[row]) {
+      return false;
+    }
 
-    return isInteger && isInBounds && this.board[0][column] === EMPTY_CELL;
+    return this.board[row][column] === EMPTY_CELL;
   }
 }
