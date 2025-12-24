@@ -1,29 +1,8 @@
-import {
-  BoardCell,
-  BoardConstraint,
-  BoardState,
-  EMPTY_CELL,
-  IBoard,
-  IBoardState,
-} from '../../../core/model/boardState';
-import { ITurnState, TurnConstraint, TurnState } from '../../../core/model/turnState';
-import { BoardPresentArgs, IOutputPresenter } from '../../../core/presenter/boardPresenter';
-import { IGameOutcomeStrategy } from '../../../core/strategy/game/gameOutcomeStrategy';
-import {
-  GameOutcomePresenter,
-  GameResultPresenterArgs,
-} from '../../../core/presenter/gameOutcomePresenter';
-import {
-  IRulesChainHandler,
-  RulesChainHandler,
-} from '../../../core/strategy/game/rules/rulesChainHandler';
-import { IncorrectMove } from '../../../core/model/rules';
-import {
-  GameLifecycleStrategy,
-  IGameLifecycleStrategy,
-} from '../../../core/strategy/game/gameLifecycleStrategy';
-import { TerminalInputAdapter } from '../../../core/adapters/terminalInputAdapter';
-import { TerminalOutputAdapter } from '../../../core/adapters/terminalOutputAdapter';
+import { BoardCell, BoardState, EMPTY_CELL, IBoard } from '../../../core/model/boardState';
+import { TurnState } from '../../../core/model/turnState';
+import { GameOutcomePresenter } from '../../../core/presenter/gameOutcomePresenter';
+import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainHandler';
+import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
 import { Piece, Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
 import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
@@ -37,19 +16,10 @@ import { CliColumnInputResolver } from '../resolvers/cliColumnInputResolver';
 import { PositionToOrangeInARowCliResolver } from '../resolvers/positionToOrangeInARowCliResolver';
 import { OrangeInARowBoardPresenter } from '../presenter/orangeInARowBoardPresenter';
 import { ConnectLineGameOutcomeStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
-
-export type GameComposition = {
-  turnState: ITurnState & TurnConstraint;
-  boardState: IBoardState & BoardConstraint;
-  boardPresenter: IOutputPresenter<BoardPresentArgs>;
-  helpPresenter: IOutputPresenter<void>;
-  outcomeStrategy: IGameOutcomeStrategy;
-  resultPresenter: IOutputPresenter<GameResultPresenterArgs>;
-  rulesChecker: IRulesChainHandler;
-  violationPresenter: IOutputPresenter<IncorrectMove>;
-  lifecycleStrategy: IGameLifecycleStrategy;
-  inputAdapter: TerminalInputAdapter;
-};
+import {
+  GameComposition,
+  GameCompositionInput,
+} from '../../../game-bootstrap/composition/games-config';
 
 const HELP_FILE = 'docs/rules-of-play.md';
 
@@ -67,9 +37,14 @@ export const ORANGE_IN_A_ROW_BOARD_UI = new Map<BoardCell, string>([
   [PIECE_O, '○'],
 ]);
 
-export function createOrangeInARowComposition(): GameComposition {
-  const input = new TerminalInputAdapter();
-  const output = new TerminalOutputAdapter();
+export function createOrangeInARowComposition({
+  inputAdapter,
+  outputAdapter,
+  playerNames,
+}: GameCompositionInput): GameComposition {
+  if (playerNames.length !== 2) {
+    throw new Error('Orange in a Row requires exactly 2 players.');
+  }
 
   const e: typeof EMPTY_CELL = EMPTY_CELL;
 
@@ -83,32 +58,31 @@ export function createOrangeInARowComposition(): GameComposition {
   ];
 
   const cliMoveStrategy = new CliMoveStrategy(
-    input,
-    output,
+    inputAdapter,
+    outputAdapter,
     ORANGE_IN_A_ROW_BOARD_UI,
     new CliColumnInputResolver()
   );
-  const boardPresenter = new OrangeInARowBoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
+  const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
 
   return {
-    inputAdapter: input,
     turnState: new TurnState({
       players: [
-        new Player('Player 1', cliMoveStrategy, [PIECE_X]),
-        new Player('Player 2', cliMoveStrategy, [PIECE_O]),
+        new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
+        new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
       ],
     }),
     boardState: new BoardState(emptyBoard),
     boardPresenter,
-    helpPresenter: new HelpPresenter(output, HELP_FILE),
+    helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),
     outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 4 }),
-    resultPresenter: new GameOutcomePresenter(boardPresenter, output),
+    resultPresenter: new GameOutcomePresenter(boardPresenter, outputAdapter),
     rulesChecker: new RulesChainHandler([
       new ValidLineGamePlacementStrategy(),
       new ValidPlayerTurnStrategy(),
     ]),
     violationPresenter: new ViolationsPresenter(
-      output,
+      outputAdapter,
       VIOLATION_MESSAGES,
       ORANGE_IN_A_ROW_BOARD_UI,
       new PositionToOrangeInARowCliResolver()
