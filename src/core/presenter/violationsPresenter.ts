@@ -1,4 +1,4 @@
-import { IOutputPresenter } from './boardPresenter';
+import { IBoardPositionUiResolver, IOutputPresenter } from './boardPresenter';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IncorrectMove, RuleViolation } from '../model/rules';
 import { BoardCell } from '../model/boardState';
@@ -12,7 +12,8 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
   constructor(
     private readonly output: IOutputAdapter,
     private readonly violationMessages: Record<RuleViolation, string>,
-    private readonly boardCellToUi: Map<BoardCell, string>
+    private readonly boardCellToUi: Map<BoardCell, string>,
+    private readonly boardPositionToUiResolver: IBoardPositionUiResolver<string>
   ) {}
 
   present({ move, violations }: IncorrectMove): void {
@@ -23,7 +24,7 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
       violationString = `- ${violationMessages.join('\n- ')}`;
     }
 
-    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece)} at column ${move.position.column}:\n${violationString}`;
+    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece)} at ${this.boardPositionToUiResolver.resolve(move.position)}:\n${violationString}`;
 
     this.output.render(outputMessage);
   }

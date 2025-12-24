@@ -9,6 +9,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../src/composition/orangeInARowComposition';
+import { PositionToOrangeInARowCliResolver } from '../../../src/orange-in-a-row/resolvers/position-to-orange-in-a-row-cli-resolver';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();
@@ -26,7 +27,8 @@ describe('ViolationsPresenter', () => {
     const presenter = new ViolationsPresenter(
       outputAdapter,
       VIOLATION_MESSAGES,
-      ORANGE_IN_A_ROW_BOARD_UI
+      ORANGE_IN_A_ROW_BOARD_UI,
+      new PositionToOrangeInARowCliResolver()
     );
 
     const incorrectMove: IncorrectMove = {
@@ -40,7 +42,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 2:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 3:\n` +
       `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -56,7 +58,8 @@ describe('ViolationsPresenter', () => {
         // (this keeps the test future-proof)
         OTHER: 'Some other violation',
       } as Record<RuleViolation, string>,
-      ORANGE_IN_A_ROW_BOARD_UI
+      ORANGE_IN_A_ROW_BOARD_UI,
+      new PositionToOrangeInARowCliResolver()
     );
 
     const incorrectMove: IncorrectMove = {
@@ -70,7 +73,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_O)} at column 1:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_O)} at column 2:\n` +
       `- Invalid move\n- Some other violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -80,7 +83,8 @@ describe('ViolationsPresenter', () => {
     const presenter = new ViolationsPresenter(
       outputAdapter,
       VIOLATION_MESSAGES,
-      ORANGE_IN_A_ROW_BOARD_UI
+      ORANGE_IN_A_ROW_BOARD_UI,
+      new PositionToOrangeInARowCliResolver()
     );
 
     const incorrectMove: IncorrectMove = {
@@ -94,7 +98,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 0:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 1:\n` +
       `- unknown violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);

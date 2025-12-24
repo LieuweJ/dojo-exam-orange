@@ -6,6 +6,10 @@ export type BoardPresentArgs = {
   highlightPositions?: BoardPosition[];
 };
 
+export type IBoardPositionUiResolver<T> = {
+  resolve(position: BoardPosition): T;
+};
+
 export type IOutputPresenter<T> = {
   present(arg: T): void;
 };

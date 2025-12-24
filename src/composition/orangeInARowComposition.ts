@@ -38,6 +38,7 @@ import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayer
 import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cli-move-strategy';
 import { CliPositionResolver } from '../orange-in-a-row/resolvers/cli-position-resolver';
+import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/position-to-orange-in-a-row-cli-resolver';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;
@@ -111,7 +112,8 @@ export function createOrangeInARowComposition(): GameComposition {
     violationPresenter: new ViolationsPresenter(
       output,
       VIOLATION_MESSAGES,
-      ORANGE_IN_A_ROW_BOARD_UI
+      ORANGE_IN_A_ROW_BOARD_UI,
+      new PositionToOrangeInARowCliResolver()
     ),
     lifecycleStrategy: new GameLifecycleStrategy(),
   };
