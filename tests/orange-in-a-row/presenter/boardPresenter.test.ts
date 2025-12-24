@@ -1,4 +1,3 @@
-import { BoardPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import {
@@ -6,17 +5,18 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../src/composition/orangeInARowComposition';
+import { OrangeInARowBoardPresenter } from '../../../src/orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
-  let presenter: BoardPresenter;
+  let presenter: OrangeInARowBoardPresenter;
 
   beforeEach(() => {
     outputAdapter = {
       render: jest.fn(),
     };
 
-    presenter = new BoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
+    presenter = new OrangeInARowBoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
   });
 
   test('Board displays coins with correct colors for each player', () => {
@@ -66,7 +66,7 @@ describe('BoardPresenter', () => {
       // PIECE_X is intentionally missing
     ]);
 
-    const boardPresenter = new BoardPresenter(outputAdapter, uiMappingWithoutPieceX);
+    const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, uiMappingWithoutPieceX);
 
     expect(() => boardPresenter.present({ board })).toThrow(
       `Piece cannot be rendered at boardPosition: {\"row\":1,\"column\":2}.`

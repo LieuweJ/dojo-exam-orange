@@ -7,11 +7,7 @@ import {
   IBoardState,
 } from '../core/model/boardState';
 import { ITurnState, TurnConstraint, TurnState } from '../core/model/turnState';
-import {
-  BoardPresentArgs,
-  BoardPresenter,
-  IOutputPresenter,
-} from '../core/presenter/boardPresenter';
+import { BoardPresentArgs, IOutputPresenter } from '../core/presenter/boardPresenter';
 import {
   GameOutcomeStrategy,
   IGameOutcomeStrategy,
@@ -39,6 +35,7 @@ import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/viola
 import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cli-move-strategy';
 import { CliPositionResolver } from '../orange-in-a-row/resolvers/cli-position-resolver';
 import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/position-to-orange-in-a-row-cli-resolver';
+import { OrangeInARowBoardPresenter } from '../orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;
@@ -90,7 +87,7 @@ export function createOrangeInARowComposition(): GameComposition {
     ORANGE_IN_A_ROW_BOARD_UI,
     new CliPositionResolver()
   );
-  const boardPresenter = new BoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
+  const boardPresenter = new OrangeInARowBoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
 
   return {
     inputAdapter: input,
