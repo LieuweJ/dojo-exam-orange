@@ -69,7 +69,7 @@ describe('BoardPresenter', () => {
     const boardPresenter = new BoardPresenter(outputAdapter, uiMappingWithoutPieceX);
 
     expect(() => boardPresenter.present({ board })).toThrow(
-      `Piece cannot be rendered at boardPosition: {\"row\":1,\"column\":2}. Available pieces: [\"·\",\"○\"]}.`
+      `Piece cannot be rendered at boardPosition: {\"row\":1,\"column\":2}.`
     );
   });
 });
