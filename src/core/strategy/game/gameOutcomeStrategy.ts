@@ -96,10 +96,6 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     direction: Direction,
     piece: Piece
   ): BoardPosition[] | null {
-    if (!start.row && start.row !== 0) {
-      throw new Error('Start position must have a row defined.');
-    }
-
     const positions: BoardPosition[] = [start];
 
     for (let i = 1; i < this.winConditions.connectionLength; i++) {

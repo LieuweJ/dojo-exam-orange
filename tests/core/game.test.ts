@@ -104,7 +104,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine.mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
     moveStrategy.createNextMove.mockResolvedValue({
-      position: { column: 4 },
+      position: { column: 4, row: 0 },
       piece: PIECE_X,
     });
 
@@ -116,11 +116,11 @@ describe('A game of orange-in-a-row can be played', () => {
   test('Board displays coins with correct colors for each player', async () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
-        position: { column: 4 },
+        position: { column: 4, row: 0 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: { column: 3 },
+        position: { column: 3, row: 0 },
         piece: PIECE_O,
       });
 
@@ -147,15 +147,15 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
-        position: { column: 4 },
+        position: { column: 4, row: 0 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: { column: 3 },
+        position: { column: 3, row: 0 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: { column: 4 },
+        position: { column: 4, row: 0 },
         piece: PIECE_O,
       });
 
@@ -178,7 +178,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine.mockReturnValueOnce(outcome);
 
     moveStrategy.createNextMove.mockResolvedValueOnce({
-      position: { column: 4 },
+      position: { column: 4, row: 0 },
       piece: PIECE_X,
     });
 
@@ -207,8 +207,8 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('player is notified when an invalid move is proposed', async () => {
-    const invalidMove: Move = { position: { column: 10 }, piece: PIECE_X };
-    const validMove: Move = { position: { column: 3 }, piece: PIECE_X };
+    const invalidMove: Move = { position: { column: 10, row: 0 }, piece: PIECE_X };
+    const validMove: Move = { position: { column: 3, row: 0 }, piece: PIECE_X };
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 

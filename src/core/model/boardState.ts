@@ -5,7 +5,7 @@ export const EMPTY_CELL = Symbol('.');
 
 export type BoardCell = typeof EMPTY_CELL | Piece;
 
-export type BoardPosition = { row?: number; column: number };
+export type BoardPosition = { row: number; column: number };
 
 export type IBoard = BoardCell[][];
 

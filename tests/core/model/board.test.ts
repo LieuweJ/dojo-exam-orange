@@ -51,5 +51,6 @@ describe('Board.addMove', () => {
 const createBoardPosition = (n: number): BoardPosition => {
   return {
     column: n,
+    row: 0,
   };
 };
