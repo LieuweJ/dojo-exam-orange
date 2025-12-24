@@ -49,9 +49,9 @@ describe('GameResultPresenter', () => {
         type: GAME_OUTCOME.WIN,
         winner: player1,
         winningPositions: [
-          { row: 0, col: 0 },
-          { row: 0, col: 1 },
-          { row: 0, col: 2 },
+          { row: 0, column: 0 },
+          { row: 0, column: 1 },
+          { row: 0, column: 2 },
         ],
       },
     });
@@ -59,9 +59,9 @@ describe('GameResultPresenter', () => {
     expect(boardPresenter.present).toHaveBeenCalledWith({
       board,
       highlightPositions: [
-        { row: 0, col: 0 },
-        { row: 0, col: 1 },
-        { row: 0, col: 2 },
+        { row: 0, column: 0 },
+        { row: 0, column: 1 },
+        { row: 0, column: 2 },
       ],
     });
 

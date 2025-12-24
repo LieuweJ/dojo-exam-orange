@@ -1,4 +1,4 @@
-import { BoardConstraint } from './boardState';
+import { BoardConstraint, BoardPosition } from './boardState';
 import { TurnConstraint } from './turnState';
 import { Piece } from './player';
 
@@ -9,9 +9,7 @@ export const RULES_VIOLATIONS = {
 
 export type RuleViolation = keyof typeof RULES_VIOLATIONS;
 
-export type BoardPosition = { row: number; column: number };
-
-export type Move = { position: number; piece: Piece };
+export type Move = { position: BoardPosition; piece: Piece };
 export type IncorrectMove = {
   move: Move;
   violations: RuleViolation[];

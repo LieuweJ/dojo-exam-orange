@@ -32,7 +32,7 @@ describe('ValidPlacementStrategy', () => {
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
     const strategy = new ValidPlacementStrategy();
 
-    const move: Move = { piece: PIECE_X, position: 1 };
+    const move: Move = { piece: PIECE_X, position: { column: 1 } };
     constraints.board.canAddMove.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, moveContext: constraints });
@@ -44,7 +44,7 @@ describe('ValidPlacementStrategy', () => {
   test('returns null when validator reports move as valid', () => {
     const strategy = new ValidPlacementStrategy();
 
-    const move: Move = { piece: PIECE_O, position: 3 };
+    const move: Move = { piece: PIECE_O, position: { column: 3 } };
     constraints.board.canAddMove.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, moveContext: constraints });

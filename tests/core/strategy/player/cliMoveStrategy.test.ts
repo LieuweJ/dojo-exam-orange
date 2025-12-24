@@ -37,7 +37,7 @@ describe('CliMoveStrategy', () => {
 
     const move = await moveStrategy.createNextMove(board, [givenPiece], 'Alice');
 
-    expect(move).toStrictEqual({ position: 1, piece: givenPiece });
+    expect(move).toStrictEqual({ position: { column: 1 }, piece: givenPiece });
   });
 
   test('sends the the correct question to the user', async () => {
@@ -50,7 +50,7 @@ describe('CliMoveStrategy', () => {
 
     const move = await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
 
-    expect(move).toStrictEqual({ position: 1, piece: PIECE_X });
+    expect(move).toStrictEqual({ position: { column: 1 }, piece: PIECE_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
       "It is Bob's turn.\nChoose column (1-3) for ● : "
     );

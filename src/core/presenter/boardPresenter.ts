@@ -1,6 +1,5 @@
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
-import { BoardCell, IBoard } from '../model/boardState';
-import { BoardPosition } from '../strategy/game/gameOutcomeStrategy';
+import { BoardCell, BoardPosition, IBoard } from '../model/boardState';
 
 export type BoardPresentArgs = {
   board: IBoard;
@@ -35,7 +34,7 @@ export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     board.forEach((row, rowIndex) => {
       output += '|';
       row.forEach((cell, colIndex) => {
-        output += this.renderCell(cell, { row: rowIndex, col: colIndex }, highlightSet);
+        output += this.renderCell(cell, { row: rowIndex, column: colIndex }, highlightSet);
       });
       output += '\n';
     });
@@ -84,6 +83,6 @@ export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   }
 
   private createCellKey(boardPosition: BoardPosition): string {
-    return `${boardPosition.row},${boardPosition.col}`;
+    return `${boardPosition.row},${boardPosition.column}`;
   }
 }

@@ -5,6 +5,8 @@ export const EMPTY_CELL = Symbol('.');
 
 export type BoardCell = typeof EMPTY_CELL | Piece;
 
+export type BoardPosition = { row?: number; column: number };
+
 export type IBoard = BoardCell[][];
 
 export type IBoardState = {
@@ -25,21 +27,23 @@ export class BoardState implements IBoardState, BoardConstraint {
 
   addMove({ position, piece }: Move) {
     if (!this.canAddMove({ position, piece })) {
-      throw new Error(`Cannot add move to column ${position}.`);
+      throw new Error(`Cannot add move to column ${position.column}.`);
     }
 
+    const column = position.column;
+
     for (let row = this.board.length - 1; row >= 0; row--) {
-      if (this.board[row][position] === EMPTY_CELL) {
-        this.board[row][position] = piece;
+      if (this.board[row][column] === EMPTY_CELL) {
+        this.board[row][column] = piece;
         return;
       }
     }
   }
 
-  canAddMove({ position }: Move): boolean {
-    const isInteger = Number.isInteger(position);
-    const isInBounds = position >= 0 && position < this.board[0].length;
+  canAddMove({ position: { column } }: Move): boolean {
+    const isInteger = Number.isInteger(column);
+    const isInBounds = column >= 0 && column < this.board[0].length;
 
-    return isInteger && isInBounds && this.board[0][position] === EMPTY_CELL;
+    return isInteger && isInBounds && this.board[0][column] === EMPTY_CELL;
   }
 }

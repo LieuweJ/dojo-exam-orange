@@ -1,6 +1,6 @@
 import { BoardPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
-import { EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
+import { BoardPosition, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
@@ -34,10 +34,10 @@ describe('BoardPresenter', () => {
   });
 
   test('Board displays highlights', () => {
-    const highlightPositions = [
-      { row: 0, col: 1 },
-      { row: 2, col: 0 },
-      { row: 2, col: 1 },
+    const highlightPositions: BoardPosition[] = [
+      { row: 0, column: 1 },
+      { row: 2, column: 0 },
+      { row: 2, column: 1 },
     ];
 
     const board: IBoard = [

@@ -29,7 +29,7 @@ export class CliMoveStrategy implements IMoveStrategy {
       }
 
       return {
-        position: this.mapToColumn(raw),
+        position: { column: this.mapToColumn(raw) },
         piece: defaultPiece,
       };
     }

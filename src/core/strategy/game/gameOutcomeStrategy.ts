@@ -1,4 +1,4 @@
-import { EMPTY_CELL, IBoard } from '../../model/boardState';
+import { BoardPosition, EMPTY_CELL, IBoard } from '../../model/boardState';
 import { Piece, Player } from '../../model/player';
 
 export const GAME_OUTCOME = {
@@ -17,7 +17,6 @@ type GameOutComeWin = {
 
 export type GameOutcome = GameOutComeDraw | GameOutcomeOngoing | GameOutComeWin;
 
-export type BoardPosition = { row: number; col: number };
 type Direction = { deltaRow: number; deltaCol: number };
 
 const DIRECTIONS: Direction[] = [
@@ -63,7 +62,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
         if (cell === EMPTY_CELL) continue;
 
         for (const direction of DIRECTIONS) {
-          const winningPositions = this.hasLine(board, { row, col }, direction, cell);
+          const winningPositions = this.hasLine(board, { row, column: col }, direction, cell);
 
           if (winningPositions) {
             const winner = this.findWinner(cell, players);
@@ -97,11 +96,15 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
     direction: Direction,
     piece: Piece
   ): BoardPosition[] | null {
+    if (!start.row && start.row !== 0) {
+      throw new Error('Start position must have a row defined.');
+    }
+
     const positions: BoardPosition[] = [start];
 
     for (let i = 1; i < this.winConditions.connectionLength; i++) {
       const row = start.row + direction.deltaRow * i;
-      const col = start.col + direction.deltaCol * i;
+      const col = start.column + direction.deltaCol * i;
 
       if (
         row < 0 ||
@@ -113,7 +116,7 @@ export class GameOutcomeStrategy implements IGameOutcomeStrategy {
         return null;
       }
 
-      positions.push({ row, col });
+      positions.push({ row, column: col });
     }
 
     return positions;

@@ -89,10 +89,10 @@ describe('GameOutcomeStrategy', () => {
         type: GAME_OUTCOME.WIN,
         winner: playerX,
         winningPositions: [
-          { row: 2, col: 0 },
-          { row: 2, col: 1 },
-          { row: 2, col: 2 },
-          { row: 2, col: 3 },
+          { row: 2, column: 0 },
+          { row: 2, column: 1 },
+          { row: 2, column: 2 },
+          { row: 2, column: 3 },
         ],
       });
     });
@@ -114,10 +114,10 @@ describe('GameOutcomeStrategy', () => {
       expect(outcome.type).toBe(GAME_OUTCOME.WIN);
       expect(outcome.winner).toBe(playerO);
       expect(outcome.winningPositions).toEqual([
-        { row: 0, col: 1 },
-        { row: 1, col: 1 },
-        { row: 2, col: 1 },
-        { row: 3, col: 1 },
+        { row: 0, column: 1 },
+        { row: 1, column: 1 },
+        { row: 2, column: 1 },
+        { row: 3, column: 1 },
       ]);
     });
 
@@ -135,10 +135,10 @@ describe('GameOutcomeStrategy', () => {
         type: GAME_OUTCOME.WIN,
         winner: playerX,
         winningPositions: [
-          { row: 0, col: 0 },
-          { row: 1, col: 1 },
-          { row: 2, col: 2 },
-          { row: 3, col: 3 },
+          { row: 0, column: 0 },
+          { row: 1, column: 1 },
+          { row: 2, column: 2 },
+          { row: 3, column: 3 },
         ],
       });
     });
@@ -178,9 +178,9 @@ describe('GameOutcomeStrategy', () => {
       expect(outcome.type).toBe(GAME_OUTCOME.WIN);
       expect(outcome.winner).toBe(playerX);
       expect(outcome.winningPositions).toEqual([
-        { row: 1, col: 0 },
-        { row: 1, col: 1 },
-        { row: 1, col: 2 },
+        { row: 1, column: 0 },
+        { row: 1, column: 1 },
+        { row: 1, column: 2 },
       ]);
     });
   });

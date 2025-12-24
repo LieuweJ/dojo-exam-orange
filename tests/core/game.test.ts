@@ -104,7 +104,7 @@ describe('A game of orange-in-a-row can be played', () => {
     gameOutcomeStrategy.determine.mockReturnValueOnce({ type: GAME_OUTCOME.DRAW });
 
     moveStrategy.createNextMove.mockResolvedValue({
-      position: createPosition(4),
+      position: { column: 4 },
       piece: PIECE_X,
     });
 
@@ -116,11 +116,11 @@ describe('A game of orange-in-a-row can be played', () => {
   test('Board displays coins with correct colors for each player', async () => {
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
-        position: createPosition(4),
+        position: { column: 4 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: createPosition(3),
+        position: { column: 3 },
         piece: PIECE_O,
       });
 
@@ -147,15 +147,15 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove
       .mockResolvedValueOnce({
-        position: createPosition(4),
+        position: { column: 4 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: createPosition(3),
+        position: { column: 3 },
         piece: PIECE_X,
       })
       .mockResolvedValueOnce({
-        position: createPosition(4),
+        position: { column: 4 },
         piece: PIECE_O,
       });
 
@@ -172,13 +172,13 @@ describe('A game of orange-in-a-row can be played', () => {
     const outcome: GameOutcome = {
       type: GAME_OUTCOME.WIN,
       winner: playerX,
-      winningPositions: [{ col: 4, row: 0 }],
+      winningPositions: [{ column: 4, row: 0 }],
     };
 
     gameOutcomeStrategy.determine.mockReturnValueOnce(outcome);
 
     moveStrategy.createNextMove.mockResolvedValueOnce({
-      position: createPosition(4),
+      position: { column: 4 },
       piece: PIECE_X,
     });
 
@@ -207,8 +207,8 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('player is notified when an invalid move is proposed', async () => {
-    const invalidMove: Move = { position: createPosition(10), piece: PIECE_X };
-    const validMove: Move = { position: createPosition(3), piece: PIECE_X };
+    const invalidMove: Move = { position: { column: 10 }, piece: PIECE_X };
+    const validMove: Move = { position: { column: 3 }, piece: PIECE_X };
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 
@@ -229,5 +229,3 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(2);
   });
 });
-
-export const createPosition = (n: number) => n;
