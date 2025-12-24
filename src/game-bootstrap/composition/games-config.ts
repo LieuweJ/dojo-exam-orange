@@ -9,6 +9,7 @@ import { IRulesChainHandler } from '../../core/strategy/game/rules/rulesChainHan
 import { IncorrectMove } from '../../core/model/rules';
 import { IGameLifecycleStrategy } from '../../core/strategy/game/gameLifecycleStrategy';
 import { IOutputAdapter } from '../../core/adapters/terminalOutputAdapter';
+import { createTicTacDojo } from '../../games/tic-tac-dojo/composition/ticTacDojoComposition';
 
 export type GameCompositionInput = {
   inputAdapter: IInputAdapter;
@@ -46,9 +47,6 @@ export const GAMES: GameDescriptor[] = [
     id: 'tic-tac-toe',
     displayName: 'Tic Tac Toe',
     requiredPlayers: 2,
-    createComposition: () => {
-      console.log('Tic Tac Toe composition not implemented yet.');
-      throw new Error('Not implemented');
-    },
+    createComposition: createTicTacDojo,
   },
 ];
