@@ -81,11 +81,15 @@ export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
       );
     }
 
-    if (highlightSet.has(this.createCellKey(boardPosition))) {
+    if (this.isHighlightedCell(boardPosition, highlightSet)) {
       return `[${symbol}]|`;
     }
 
     return ` ${symbol} |`;
+  }
+
+  private isHighlightedCell(boardPosition: BoardPosition, highlightSet: Set<string>): boolean {
+    return highlightSet.has(this.createCellKey(boardPosition));
   }
 
   private toHighlightSet(positions: BoardPosition[]): Set<string> {
