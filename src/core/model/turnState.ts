@@ -23,7 +23,8 @@ export class TurnState implements ITurnState, TurnConstraint {
   }
 
   nextPlayer(): void {
-    this.playersPointer = this.playersPointer === 0 ? 1 : 0;
+    this.playersPointer =
+      this.playersPointer + 1 < this.players.length ? this.playersPointer + 1 : 0;
   }
 
   getPlayers(): Player[] {
