@@ -1,10 +1,10 @@
-import { ValidPlacementStrategy } from '../../../../../src/core/strategy/game/rules/validPlacementStrategy';
-import { Move, RuleViolation } from '../../../../../src/core/model/rules';
+import { ValidLineGamePlacementStrategy } from '../../../../../../src/sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
+import { Move, RuleViolation } from '../../../../../../src/core/model/rules';
 import {
   PIECE_O,
   PIECE_X,
-} from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { Piece } from '../../../../../src/core/model/player';
+} from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { Piece } from '../../../../../../src/core/model/player';
 
 describe('ValidPlacementStrategy', () => {
   let constraints: {
@@ -33,7 +33,7 @@ describe('ValidPlacementStrategy', () => {
   });
 
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
-    const strategy = new ValidPlacementStrategy();
+    const strategy = new ValidLineGamePlacementStrategy();
 
     const move: Move = { piece: PIECE_X, position: { column: 1, row: 0 } };
     constraints.board.canAddMove.mockReturnValueOnce(false);
@@ -45,7 +45,7 @@ describe('ValidPlacementStrategy', () => {
   });
 
   test('returns null when validator reports move as valid', () => {
-    const strategy = new ValidPlacementStrategy();
+    const strategy = new ValidLineGamePlacementStrategy();
 
     const move: Move = { piece: PIECE_O, position: { column: 3, row: 0 } };
     constraints.board.canAddMove.mockReturnValueOnce(true);

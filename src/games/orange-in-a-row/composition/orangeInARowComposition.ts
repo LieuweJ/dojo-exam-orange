@@ -26,7 +26,7 @@ import { TerminalInputAdapter } from '../../../core/adapters/terminalInputAdapte
 import { TerminalOutputAdapter } from '../../../core/adapters/terminalOutputAdapter';
 import { Piece, Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
-import { ValidPlacementStrategy } from '../../../core/strategy/game/rules/validPlacementStrategy';
+import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
 import {
   VIOLATION_MESSAGES,
@@ -104,7 +104,7 @@ export function createOrangeInARowComposition(): GameComposition {
     outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 4 }),
     resultPresenter: new GameOutcomePresenter(boardPresenter, output),
     rulesChecker: new RulesChainHandler([
-      new ValidPlacementStrategy(),
+      new ValidLineGamePlacementStrategy(),
       new ValidPlayerTurnStrategy(),
     ]),
     violationPresenter: new ViolationsPresenter(
