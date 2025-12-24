@@ -8,10 +8,7 @@ import {
 } from '../core/model/boardState';
 import { ITurnState, TurnConstraint, TurnState } from '../core/model/turnState';
 import { BoardPresentArgs, IOutputPresenter } from '../core/presenter/boardPresenter';
-import {
-  GameOutcomeStrategy,
-  IGameOutcomeStrategy,
-} from '../core/strategy/game/gameOutcomeStrategy';
+import { IGameOutcomeStrategy } from '../core/strategy/game/gameOutcomeStrategy';
 import {
   GameOutcomePresenter,
   GameResultPresenterArgs,
@@ -36,6 +33,7 @@ import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cliMoveStrat
 import { CliColumnInputResolver } from '../orange-in-a-row/resolvers/cliColumnInputResolver';
 import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
 import { OrangeInARowBoardPresenter } from '../orange-in-a-row/presenter/orangeInARowBoardPresenter';
+import { ConnectLineGameOutcomeStrategy } from '../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;
@@ -100,7 +98,7 @@ export function createOrangeInARowComposition(): GameComposition {
     boardState: new BoardState(emptyBoard),
     boardPresenter,
     helpPresenter: new HelpPresenter(output, HELP_FILE),
-    outcomeStrategy: new GameOutcomeStrategy({ connectionLength: 4 }),
+    outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 4 }),
     resultPresenter: new GameOutcomePresenter(boardPresenter, output),
     rulesChecker: new RulesChainHandler([
       new ValidPlacementStrategy(),

@@ -1,19 +1,17 @@
 import { BoardCell, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
-import {
-  GAME_OUTCOME,
-  GameOutcomeStrategy,
-} from '../../../../src/core/strategy/game/gameOutcomeStrategy';
+import { GAME_OUTCOME } from '../../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Piece, Pieces, Player } from '../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../../src/core/model/rules';
 import { PIECE_O, PIECE_X } from '../../../../src/composition/orangeInARowComposition';
+import { ConnectLineGameOutcomeStrategy } from '../../../../src/sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 const E: BoardCell = EMPTY_CELL;
 const X: BoardCell = PIECE_X;
 const O: BoardCell = PIECE_O;
 
 describe('GameOutcomeStrategy', () => {
-  const createStrategy = () => new GameOutcomeStrategy({ connectionLength: 4 });
+  const createStrategy = () => new ConnectLineGameOutcomeStrategy({ connectionLength: 4 });
 
   let playerStrategy: jest.Mocked<IMoveStrategy>;
   let playerO: Player;
@@ -161,7 +159,7 @@ describe('GameOutcomeStrategy', () => {
     });
 
     it('respects injected win condition length', () => {
-      const strategy = new GameOutcomeStrategy({ connectionLength: 3 });
+      const strategy = new ConnectLineGameOutcomeStrategy({ connectionLength: 3 });
 
       const board: IBoard = [
         [E, E, E],
