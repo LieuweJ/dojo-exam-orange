@@ -1,6 +1,6 @@
 import { BoardPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
-import { BoardPosition, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
+import { BoardCell, BoardPosition, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
@@ -50,6 +50,26 @@ describe('BoardPresenter', () => {
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
       `| ○ |[·]|\n| · | ● |\n|[○]|[●]|\n|---|---|\n| 1 | 2 |\n`
+    );
+  });
+
+  test('throws error when boardRepresenter does not know how to render a piece.', () => {
+    const board: IBoard = [
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, PIECE_O, PIECE_X],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ];
+
+    const uiMappingWithoutPieceX = new Map<BoardCell, string>([
+      [EMPTY_CELL, '·'],
+      [PIECE_O, '○'],
+      // PIECE_X is intentionally missing
+    ]);
+
+    const boardPresenter = new BoardPresenter(outputAdapter, uiMappingWithoutPieceX);
+
+    expect(() => boardPresenter.present({ board })).toThrow(
+      `Piece cannot be rendered at boardPosition: {\"row\":1,\"column\":2}. Available pieces: [\"·\",\"○\"]}.`
     );
   });
 });

@@ -73,7 +73,17 @@ export class BoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     boardPosition: BoardPosition,
     highlightSet: Set<string>
   ): string {
-    const symbol = this.boardCellToUi.get(cell)!;
+    const symbol = this.boardCellToUi.get(cell);
+
+    if (!symbol) {
+      const availablePieces = Array.from(this.boardCellToUi.keys());
+
+      const availablePieceSymbols = availablePieces.map((piece) => this.boardCellToUi.get(piece));
+
+      throw new Error(
+        `Piece cannot be rendered at boardPosition: ${JSON.stringify(boardPosition)}. Available pieces: ${JSON.stringify(availablePieceSymbols)}}.`
+      );
+    }
 
     if (highlightSet.has(this.createCellKey(boardPosition))) {
       return `[${symbol}]|`;
