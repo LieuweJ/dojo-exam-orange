@@ -5,6 +5,11 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/main.ts'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', 'src/composition/'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/main.ts',
+    '!src/**/composition/*.ts',
+  ],
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
 };

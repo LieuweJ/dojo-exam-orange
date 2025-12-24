@@ -4,7 +4,7 @@ import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
   PIECE_X,
-} from '../../../src/composition/orangeInARowComposition';
+} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { OrangeInARowBoardPresenter } from '../../../src/games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 describe('BoardPresenter', () => {

@@ -1,6 +1,9 @@
 import { ValidPlacementStrategy } from '../../../../../src/core/strategy/game/rules/validPlacementStrategy';
 import { Move, RuleViolation } from '../../../../../src/core/model/rules';
-import { PIECE_O, PIECE_X } from '../../../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { Piece } from '../../../../../src/core/model/player';
 
 describe('ValidPlacementStrategy', () => {

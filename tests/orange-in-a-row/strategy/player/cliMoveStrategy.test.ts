@@ -5,7 +5,7 @@ import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdap
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_X,
-} from '../../../../src/composition/orangeInARowComposition';
+} from '../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { Piece } from '../../../../src/core/model/player';
 import { CliMoveStrategy } from '../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
 import { CliColumnInputResolver } from '../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';

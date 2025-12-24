@@ -5,35 +5,38 @@ import {
   EMPTY_CELL,
   IBoard,
   IBoardState,
-} from '../core/model/boardState';
-import { ITurnState, TurnConstraint, TurnState } from '../core/model/turnState';
-import { BoardPresentArgs, IOutputPresenter } from '../core/presenter/boardPresenter';
-import { IGameOutcomeStrategy } from '../core/strategy/game/gameOutcomeStrategy';
+} from '../../../core/model/boardState';
+import { ITurnState, TurnConstraint, TurnState } from '../../../core/model/turnState';
+import { BoardPresentArgs, IOutputPresenter } from '../../../core/presenter/boardPresenter';
+import { IGameOutcomeStrategy } from '../../../core/strategy/game/gameOutcomeStrategy';
 import {
   GameOutcomePresenter,
   GameResultPresenterArgs,
-} from '../core/presenter/gameOutcomePresenter';
+} from '../../../core/presenter/gameOutcomePresenter';
 import {
   IRulesChainHandler,
   RulesChainHandler,
-} from '../core/strategy/game/rules/rulesChainHandler';
-import { IncorrectMove } from '../core/model/rules';
+} from '../../../core/strategy/game/rules/rulesChainHandler';
+import { IncorrectMove } from '../../../core/model/rules';
 import {
   GameLifecycleStrategy,
   IGameLifecycleStrategy,
-} from '../core/strategy/game/gameLifecycleStrategy';
-import { TerminalInputAdapter } from '../core/adapters/terminalInputAdapter';
-import { TerminalOutputAdapter } from '../core/adapters/terminalOutputAdapter';
-import { Piece, Player } from '../core/model/player';
-import { HelpPresenter } from '../core/presenter/helpPresenter';
-import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
-import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
-import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
-import { CliMoveStrategy } from '../games/orange-in-a-row/strategy/player/cliMoveStrategy';
-import { CliColumnInputResolver } from '../games/orange-in-a-row/resolvers/cliColumnInputResolver';
-import { PositionToOrangeInARowCliResolver } from '../games/orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
-import { OrangeInARowBoardPresenter } from '../games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
-import { ConnectLineGameOutcomeStrategy } from '../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
+} from '../../../core/strategy/game/gameLifecycleStrategy';
+import { TerminalInputAdapter } from '../../../core/adapters/terminalInputAdapter';
+import { TerminalOutputAdapter } from '../../../core/adapters/terminalOutputAdapter';
+import { Piece, Player } from '../../../core/model/player';
+import { HelpPresenter } from '../../../core/presenter/helpPresenter';
+import { ValidPlacementStrategy } from '../../../core/strategy/game/rules/validPlacementStrategy';
+import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
+import {
+  VIOLATION_MESSAGES,
+  ViolationsPresenter,
+} from '../../../core/presenter/violationsPresenter';
+import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
+import { CliColumnInputResolver } from '../resolvers/cliColumnInputResolver';
+import { PositionToOrangeInARowCliResolver } from '../resolvers/positionToOrangeInARowCliResolver';
+import { OrangeInARowBoardPresenter } from '../presenter/orangeInARowBoardPresenter';
+import { ConnectLineGameOutcomeStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;

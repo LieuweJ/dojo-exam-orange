@@ -3,7 +3,10 @@ import { GAME_OUTCOME } from '../../../../src/core/strategy/game/gameOutcomeStra
 import { Piece, Pieces, Player } from '../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../../src/core/model/rules';
-import { PIECE_O, PIECE_X } from '../../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { ConnectLineGameOutcomeStrategy } from '../../../../src/sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 const E: BoardCell = EMPTY_CELL;

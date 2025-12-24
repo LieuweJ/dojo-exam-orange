@@ -1,6 +1,9 @@
 import { Move, RuleViolation } from '../../../../../src/core/model/rules';
 import { ValidPlayerTurnStrategy } from '../../../../../src/core/strategy/game/rules/validPlayerTurnStrategy';
-import { PIECE_O, PIECE_X } from '../../../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { Piece } from '../../../../../src/core/model/player';
 
 describe('ValidPlayerTurnStrategy', () => {

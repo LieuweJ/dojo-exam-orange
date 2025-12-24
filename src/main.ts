@@ -1,4 +1,4 @@
-import { createOrangeInARowComposition } from './composition/orangeInARowComposition';
+import { createOrangeInARowComposition } from './games/orange-in-a-row/composition/orangeInARowComposition';
 import { Game } from './core/game';
 
 async function main() {

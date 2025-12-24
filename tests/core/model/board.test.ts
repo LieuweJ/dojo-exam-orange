@@ -1,5 +1,8 @@
 import { BoardPosition, BoardState, EMPTY_CELL } from '../../../src/core/model/boardState';
-import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('Board.addMove', () => {
   let board: BoardState;

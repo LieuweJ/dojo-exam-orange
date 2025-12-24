@@ -3,7 +3,10 @@ import { TurnState } from '../../../src/core/model/turnState';
 import { Pieces, Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../src/core/model/rules';
-import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('Board.addMove', () => {
   let turnState: TurnState;

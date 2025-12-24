@@ -24,7 +24,10 @@ import {
 import { TurnState } from '../../src/core/model/turnState';
 import { RulesChainHandler } from '../../src/core/strategy/game/rules/rulesChainHandler';
 import { GameLifecycleStrategy } from '../../src/core/strategy/game/gameLifecycleStrategy';
-import { PIECE_O, PIECE_X } from '../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState & BoardConstraint;

@@ -5,7 +5,10 @@ import { EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import { GAME_OUTCOME } from '../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
-import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowComposition';
+import {
+  PIECE_O,
+  PIECE_X,
+} from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
