@@ -31,12 +31,13 @@ import {
 } from '../core/strategy/game/gameLifecycleStrategy';
 import { TerminalInputAdapter } from '../core/adapters/terminalInputAdapter';
 import { TerminalOutputAdapter } from '../core/adapters/terminalOutputAdapter';
-import { CliMoveStrategy } from '../core/strategy/player/cliMoveStrategy';
 import { Piece, Player } from '../core/model/player';
 import { HelpPresenter } from '../core/presenter/helpPresenter';
 import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
 import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
+import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cli-move-strategy';
+import { CliPositionResolver } from '../orange-in-a-row/resolvers/cli-position-resolver';
 
 export type GameComposition = {
   turnState: ITurnState & TurnConstraint;
@@ -82,7 +83,12 @@ export function createOrangeInARowComposition(): GameComposition {
     [e, e, e, e, e, e, e],
   ];
 
-  const cliMoveStrategy = new CliMoveStrategy(input, output, ORANGE_IN_A_ROW_BOARD_UI);
+  const cliMoveStrategy = new CliMoveStrategy(
+    input,
+    output,
+    ORANGE_IN_A_ROW_BOARD_UI,
+    new CliPositionResolver()
+  );
   const boardPresenter = new BoardPresenter(output, ORANGE_IN_A_ROW_BOARD_UI);
 
   return {

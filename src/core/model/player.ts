@@ -1,5 +1,5 @@
 import { IBoard } from './boardState';
-import { IMoveStrategy } from '../strategy/player/cliMoveStrategy';
+import { IMoveStrategy } from '../strategy/player/move-strategy';
 import { Move } from './rules';
 
 export type NonEmptyArray<T> = [T, ...T[]];

@@ -6,7 +6,7 @@ import {
   IBoardState,
 } from '../../src/core/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../../src/core/presenter/boardPresenter';
-import { IMoveStrategy } from '../../src/core/strategy/player/cliMoveStrategy';
+import { IMoveStrategy } from '../../src/core/strategy/player/move-strategy';
 import { Player } from '../../src/core/model/player';
 import {
   GAME_OUTCOME,

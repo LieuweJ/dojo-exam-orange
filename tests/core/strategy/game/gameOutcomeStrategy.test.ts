@@ -4,7 +4,7 @@ import {
   GameOutcomeStrategy,
 } from '../../../../src/core/strategy/game/gameOutcomeStrategy';
 import { Piece, Pieces, Player } from '../../../../src/core/model/player';
-import { IMoveStrategy } from '../../../../src/core/strategy/player/cliMoveStrategy';
+import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../../src/core/model/rules';
 import { PIECE_O, PIECE_X } from '../../../../src/composition/orangeInARowComposition';
 
