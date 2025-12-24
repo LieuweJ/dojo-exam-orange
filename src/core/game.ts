@@ -1,7 +1,7 @@
 import { BoardConstraint, IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
-import { GameResultPresenterArgs } from './presenter/gameResultPresenter';
+import { GameResultPresenterArgs } from './presenter/gameOutcomePresenter';
 import { IncorrectMove, Move } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
 import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';

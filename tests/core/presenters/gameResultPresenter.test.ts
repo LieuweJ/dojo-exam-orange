@@ -1,4 +1,4 @@
-import { GameResultPresenter } from '../../../src/core/presenter/gameResultPresenter';
+import { GameOutcomePresenter } from '../../../src/core/presenter/gameOutcomePresenter';
 import { BoardPresentArgs, IOutputPresenter } from '../../../src/core/presenter/boardPresenter';
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 import { EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
@@ -10,7 +10,7 @@ import { PIECE_O, PIECE_X } from '../../../src/composition/orangeInARowCompositi
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
   let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
-  let presenter: GameResultPresenter;
+  let presenter: GameOutcomePresenter;
   let player1: Player;
   let playerStrategy: IMoveStrategy;
 
@@ -29,7 +29,7 @@ describe('GameResultPresenter', () => {
       present: jest.fn(),
     };
 
-    presenter = new GameResultPresenter(boardPresenter, outputAdapter);
+    presenter = new GameOutcomePresenter(boardPresenter, outputAdapter);
   });
 
   afterEach(() => {

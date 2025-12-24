@@ -17,9 +17,9 @@ import {
   IGameOutcomeStrategy,
 } from '../core/strategy/game/gameOutcomeStrategy';
 import {
-  GameResultPresenter,
+  GameOutcomePresenter,
   GameResultPresenterArgs,
-} from '../core/presenter/gameResultPresenter';
+} from '../core/presenter/gameOutcomePresenter';
 import {
   IRulesChainHandler,
   RulesChainHandler,
@@ -103,7 +103,7 @@ export function createOrangeInARowComposition(): GameComposition {
     boardPresenter,
     helpPresenter: new HelpPresenter(output, HELP_FILE),
     outcomeStrategy: new GameOutcomeStrategy({ connectionLength: 4 }),
-    resultPresenter: new GameResultPresenter(boardPresenter, output),
+    resultPresenter: new GameOutcomePresenter(boardPresenter, output),
     rulesChecker: new RulesChainHandler([
       new ValidPlacementStrategy(),
       new ValidPlayerTurnStrategy(),

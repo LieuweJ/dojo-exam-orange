@@ -8,7 +8,7 @@ export type GameResultPresenterArgs = {
   outcome: GameOutcome;
 };
 
-export class GameResultPresenter implements IOutputPresenter<GameResultPresenterArgs> {
+export class GameOutcomePresenter implements IOutputPresenter<GameResultPresenterArgs> {
   constructor(
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly output: IOutputAdapter

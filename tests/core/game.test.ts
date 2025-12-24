@@ -13,7 +13,7 @@ import {
   GameOutcome,
   IGameOutcomeStrategy,
 } from '../../src/core/strategy/game/gameOutcomeStrategy';
-import { GameResultPresenterArgs } from '../../src/core/presenter/gameResultPresenter';
+import { GameResultPresenterArgs } from '../../src/core/presenter/gameOutcomePresenter';
 import {
   IncorrectMove,
   Move,
