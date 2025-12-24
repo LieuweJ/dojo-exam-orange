@@ -32,7 +32,7 @@ describe('ValidPlayerTurnStrategy', () => {
   test('returns INVALID_MOVE when validator reports move as invalid', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
-    const move: Move = { piece: PIECE_X, column: 1 };
+    const move: Move = { piece: PIECE_X, position: 1 };
     constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(false);
 
     const result = strategy.check({ move, moveContext: constraints });
@@ -44,7 +44,7 @@ describe('ValidPlayerTurnStrategy', () => {
   test('returns null when validator reports move as valid', () => {
     const strategy = new ValidPlayerTurnStrategy();
 
-    const move: Move = { piece: PIECE_O, column: 3 };
+    const move: Move = { piece: PIECE_O, position: 3 };
     constraints.turn.currentPlayerOwnsPiece.mockReturnValueOnce(true);
 
     const result = strategy.check({ move, moveContext: constraints });

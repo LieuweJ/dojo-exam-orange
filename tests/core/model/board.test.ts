@@ -14,7 +14,7 @@ describe('Board.addMove', () => {
   });
 
   it('places a piece in the lowest empty row of a column', () => {
-    board.addMove({ column: col(2), piece: PIECE_X });
+    board.addMove({ position: col(2), piece: PIECE_X });
 
     const state = board.getBoard();
 
@@ -22,8 +22,8 @@ describe('Board.addMove', () => {
   });
 
   it('stacks pieces in the same column', () => {
-    board.addMove({ column: col(1), piece: PIECE_X });
-    board.addMove({ column: col(1), piece: PIECE_O });
+    board.addMove({ position: col(1), piece: PIECE_X });
+    board.addMove({ position: col(1), piece: PIECE_O });
 
     const state = board.getBoard();
 
@@ -33,17 +33,17 @@ describe('Board.addMove', () => {
 
   it('throws when adding a move to a full column', () => {
     for (let i = 0; i < 4; i++) {
-      board.addMove({ column: col(2), piece: PIECE_X });
+      board.addMove({ position: col(2), piece: PIECE_X });
     }
 
     expect(() => {
-      board.addMove({ column: col(2), piece: PIECE_O });
+      board.addMove({ position: col(2), piece: PIECE_O });
     }).toThrow('Cannot add move to column 2.');
   });
 
   it('throws when column is not on the board', () => {
     expect(() => {
-      board.addMove({ column: col(99), piece: PIECE_O });
+      board.addMove({ position: col(99), piece: PIECE_O });
     }).toThrow('Cannot add move to column 99.');
   });
 });

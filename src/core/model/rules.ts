@@ -9,7 +9,9 @@ export const RULES_VIOLATIONS = {
 
 export type RuleViolation = keyof typeof RULES_VIOLATIONS;
 
-export type Move = { column: number; piece: Piece };
+export type BoardPosition = { row: number; column: number };
+
+export type Move = { position: number; piece: Piece };
 export type IncorrectMove = {
   move: Move;
   violations: RuleViolation[];

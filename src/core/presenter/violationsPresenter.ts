@@ -23,7 +23,7 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
       violationString = `- ${violationMessages.join('\n- ')}`;
     }
 
-    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece)} at column ${move.column}:\n${violationString}`;
+    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece)} at column ${move.position}:\n${violationString}`;
 
     this.output.render(outputMessage);
   }
