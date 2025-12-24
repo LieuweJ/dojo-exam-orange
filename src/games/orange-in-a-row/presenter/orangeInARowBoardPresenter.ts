@@ -1,6 +1,6 @@
-import { IOutputAdapter } from '../../core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardPosition, IBoard } from '../../core/model/boardState';
-import { BoardPresentArgs, IOutputPresenter } from '../../core/presenter/boardPresenter';
+import { IOutputAdapter } from '../../../core/adapters/terminalOutputAdapter';
+import { BoardCell, BoardPosition, IBoard } from '../../../core/model/boardState';
+import { BoardPresentArgs, IOutputPresenter } from '../../../core/presenter/boardPresenter';
 
 export class OrangeInARowBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   constructor(

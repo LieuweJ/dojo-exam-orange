@@ -29,10 +29,10 @@ import { HelpPresenter } from '../core/presenter/helpPresenter';
 import { ValidPlacementStrategy } from '../core/strategy/game/rules/validPlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../core/strategy/game/rules/validPlayerTurnStrategy';
 import { VIOLATION_MESSAGES, ViolationsPresenter } from '../core/presenter/violationsPresenter';
-import { CliMoveStrategy } from '../orange-in-a-row/strategy/player/cliMoveStrategy';
-import { CliColumnInputResolver } from '../orange-in-a-row/resolvers/cliColumnInputResolver';
-import { PositionToOrangeInARowCliResolver } from '../orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
-import { OrangeInARowBoardPresenter } from '../orange-in-a-row/presenter/orangeInARowBoardPresenter';
+import { CliMoveStrategy } from '../games/orange-in-a-row/strategy/player/cliMoveStrategy';
+import { CliColumnInputResolver } from '../games/orange-in-a-row/resolvers/cliColumnInputResolver';
+import { PositionToOrangeInARowCliResolver } from '../games/orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
+import { OrangeInARowBoardPresenter } from '../games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
 import { ConnectLineGameOutcomeStrategy } from '../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 
 export type GameComposition = {

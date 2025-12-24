@@ -1,5 +1,5 @@
-import { IBoardPositionResolver } from '../../core/resolvers/MoveResolver';
-import { BoardPosition, EMPTY_CELL, IBoard } from '../../core/model/boardState';
+import { IBoardPositionResolver } from '../../../core/resolvers/MoveResolver';
+import { BoardPosition, EMPTY_CELL, IBoard } from '../../../core/model/boardState';
 
 export type CliPositionResolverArgs = {
   column: number;

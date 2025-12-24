@@ -9,7 +9,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../src/composition/orangeInARowComposition';
-import { PositionToOrangeInARowCliResolver } from '../../../src/orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
+import { PositionToOrangeInARowCliResolver } from '../../../src/games/orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();

@@ -7,8 +7,8 @@ import {
   PIECE_X,
 } from '../../../../src/composition/orangeInARowComposition';
 import { Piece } from '../../../../src/core/model/player';
-import { CliMoveStrategy } from '../../../../src/orange-in-a-row/strategy/player/cliMoveStrategy';
-import { CliColumnInputResolver } from '../../../../src/orange-in-a-row/resolvers/cliColumnInputResolver';
+import { CliMoveStrategy } from '../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
+import { CliColumnInputResolver } from '../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;

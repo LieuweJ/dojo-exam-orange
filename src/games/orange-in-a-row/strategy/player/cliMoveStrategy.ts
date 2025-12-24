@@ -1,11 +1,11 @@
-import { IInputAdapter } from '../../../core/adapters/terminalInputAdapter';
-import { IOutputAdapter } from '../../../core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardPosition, IBoard } from '../../../core/model/boardState';
-import { IBoardPositionResolver } from '../../../core/resolvers/MoveResolver';
+import { IInputAdapter } from '../../../../core/adapters/terminalInputAdapter';
+import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter';
+import { BoardCell, BoardPosition, IBoard } from '../../../../core/model/boardState';
+import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
 import { CliPositionResolverArgs } from '../../resolvers/cliColumnInputResolver';
-import { Pieces } from '../../../core/model/player';
-import { Move } from '../../../core/model/rules';
-import { IMoveStrategy } from '../../../core/strategy/player/move-strategy';
+import { Pieces } from '../../../../core/model/player';
+import { Move } from '../../../../core/model/rules';
+import { IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 
 export class CliMoveStrategy implements IMoveStrategy {
   constructor(

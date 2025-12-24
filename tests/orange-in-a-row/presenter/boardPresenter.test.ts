@@ -5,7 +5,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../src/composition/orangeInARowComposition';
-import { OrangeInARowBoardPresenter } from '../../../src/orange-in-a-row/presenter/orangeInARowBoardPresenter';
+import { OrangeInARowBoardPresenter } from '../../../src/games/orange-in-a-row/presenter/orangeInARowBoardPresenter';
 
 describe('BoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
