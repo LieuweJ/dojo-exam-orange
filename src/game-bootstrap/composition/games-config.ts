@@ -44,8 +44,8 @@ export const GAMES: GameDescriptor[] = [
     createComposition: createOrangeInARowComposition,
   },
   {
-    id: 'tic-tac-toe',
-    displayName: 'Tic Tac Toe',
+    id: 'tic-tac-dojo',
+    displayName: 'Tic Tac Dojo',
     requiredPlayers: 2,
     createComposition: createTicTacDojo,
   },

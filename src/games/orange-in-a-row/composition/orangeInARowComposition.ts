@@ -21,7 +21,7 @@ import {
   GameCompositionInput,
 } from '../../../game-bootstrap/composition/games-config';
 
-const HELP_FILE = 'docs/rules-of-play.md';
+const HELP_FILE = 'docs/orange-in-a-row.md';
 
 export const PIECE_X: Piece = {
   boardValue: Symbol('x'),

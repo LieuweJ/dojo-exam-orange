@@ -21,7 +21,7 @@ import { CliTicTacToeInputResolver } from '../resolvers/cliInputResolver';
 import { PositionToTicTacToeCliResolver } from '../resolvers/positionToTicTacDojoCliResolver';
 import { TicTacDojoBoardPresenter } from '../presenter/ticTacDojoBoardPresenter';
 
-const HELP_FILE = 'docs/rules-of-play.md';
+const HELP_FILE = 'docs/tic-tac-dojo.md';
 
 export const PIECE_X: Piece = {
   boardValue: Symbol('x'),
