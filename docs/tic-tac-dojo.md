@@ -1,7 +1,8 @@
 # Welcome to Tic-tac-dojo 🥋
 
 Welcome to **Tic-tac-dojo** — a timeless battle of wits,
-where **discipline**, **focus**, **reading your opponent**, **sushi eating**, **AI hallucinations** decide victory.
+where **discipline**, **focus**, **reading your opponent**, **sushi eating** and
+**AI hallucinations** decide victory.
 
 Tic-tac-dojo is a two-player strategy game where every move matters,
 and mistakes are punished immediately.
@@ -30,14 +31,15 @@ Before you enter the dojo, study the rules.
 
 ## Winning the Game
 
-You win the game by **dying via the honorable sushi poisoning of death**,
+You win the game by **dying via the honorable death of sushi poisoning**,
 or by **placing three of your marks in a row**:
 
 - Horizontally
 - Vertically
 - Diagonally
 
-If all **9 positions** are filled before one player dies honorably of sushi poisining the game ends in a **draw**.
+If all **9 positions** are filled before one player dies via the honorably death of sushi poisoning, the game ends in a
+**draw**.
 
 ---
 
