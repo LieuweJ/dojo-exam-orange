@@ -44,6 +44,32 @@ describe('GameSelectionService', () => {
     expect(output.render).toHaveBeenCalledWith('Name cannot be empty.');
   });
 
+  it('retries when same player name is already provided for a different player', async () => {
+    const input = {
+      ask: jest
+        .fn()
+        .mockResolvedValueOnce('Alice')
+        .mockResolvedValueOnce('Alice')
+        .mockResolvedValueOnce('Bob'),
+    };
+
+    const output = {
+      render: jest.fn(),
+    };
+
+    const service = new GameSelectionService(input, output, [
+      { id: 'x', displayName: 'Game', requiredPlayers: 1, createComposition: jest.fn() },
+    ]);
+
+    const names = await service.collectPlayerNames(2);
+
+    expect(names).toEqual(['Alice', 'Bob']);
+    expect(input.ask).toHaveBeenCalledTimes(3);
+
+    expect(output.render).toHaveBeenCalledTimes(1);
+    expect(output.render).toHaveBeenCalledWith('Name must be unique. Please choose another name.');
+  });
+
   it('retries when player name is whitespace', async () => {
     const input = {
       ask: jest.fn().mockResolvedValueOnce('    ').mockResolvedValueOnce('Bob'),

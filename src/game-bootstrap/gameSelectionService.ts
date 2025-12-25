@@ -47,6 +47,11 @@ export class GameSelectionService implements IGameSelectionService {
           continue;
         }
 
+        if (names.includes(name.trim())) {
+          this.outputAdapter.render('Name must be unique. Please choose another name.');
+          continue;
+        }
+
         names.push(name.trim());
         break;
       }
