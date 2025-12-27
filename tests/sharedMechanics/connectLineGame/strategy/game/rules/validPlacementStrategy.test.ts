@@ -4,56 +4,68 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-
-import { IPiece } from '../../../../../../src/core/model/IPiece';
+import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
+import { TurnState } from '../../../../../../src/core/model/turnState';
+import { Player } from '../../../../../../src/core/model/player';
+import { IMoveStrategy } from '../../../../../../src/core/strategy/player/move-strategy';
 
 describe('ValidPlacementStrategy', () => {
-  let constraints: {
-    board: {
-      canAddMove: jest.Mock<boolean, [Move]>;
-    };
-    turn: {
-      currentPlayerOwnsPiece: jest.Mock<boolean, [IPiece]>;
-    };
-  };
+  const e = EMPTY_CELL;
+  let player1: Player;
+  let player2: Player;
+
+  let currentPlayers: TurnState;
+
+  let playerStrategy: jest.Mocked<IMoveStrategy>;
 
   beforeEach(() => {
-    constraints = {
-      board: {
-        canAddMove: jest.fn(),
-      },
-      turn: {
-        currentPlayerOwnsPiece: jest.fn(),
-      },
+    playerStrategy = {
+      createNextMove: jest.fn(),
     };
+
+    player1 = new Player('Player 1', playerStrategy, [PIECE_X]);
+    player2 = new Player('Player 2', playerStrategy, [PIECE_O]);
+
+    currentPlayers = new TurnState({
+      players: [player1, player2],
+    });
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-    jest.resetAllMocks();
-  });
-
-  test('returns INVALID_MOVE when validator reports move as invalid', () => {
-    const strategy = new ValidLineGamePlacementStrategy();
+  test('returns INVALID_MOVE when validator reports move as invalid.', () => {
+    const boardWithOccupiedCell: IBoard = [
+      [e, PIECE_X, e],
+      [e, e, e],
+    ];
 
     const move: Move = { piece: PIECE_X, position: { column: 1, row: 0 } };
-    constraints.board.canAddMove.mockReturnValueOnce(false);
+    const moveContext = {
+      board: new BoardState(boardWithOccupiedCell),
+      turn: new TurnState(currentPlayers),
+    };
 
-    const result = strategy.check({ move, moveContext: constraints });
+    const strategy = new ValidLineGamePlacementStrategy();
 
-    expect(constraints.board.canAddMove).toHaveBeenCalledWith(move);
+    const result = strategy.check({ move, moveContext });
+
     expect(result).toEqual(['INVALID_PLACEMENT'] as RuleViolation[]);
   });
 
-  test('returns null when validator reports move as valid', () => {
+  test('returns null when validator reports move as valid.', () => {
+    const move: Move = { piece: PIECE_O, position: { column: 1, row: 0 } };
+    const emptyBoard: IBoard = [
+      [e, e, e],
+      [e, e, e],
+    ];
+
+    const moveContext = {
+      board: new BoardState(emptyBoard),
+      turn: new TurnState(currentPlayers),
+    };
+
     const strategy = new ValidLineGamePlacementStrategy();
 
-    const move: Move = { piece: PIECE_O, position: { column: 3, row: 0 } };
-    constraints.board.canAddMove.mockReturnValueOnce(true);
+    const result = strategy.check({ move, moveContext });
 
-    const result = strategy.check({ move, moveContext: constraints });
-
-    expect(constraints.board.canAddMove).toHaveBeenCalledWith(move);
     expect(result).toBeNull();
   });
 });

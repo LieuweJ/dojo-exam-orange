@@ -1,4 +1,4 @@
-import { BoardConstraint, IBoardState } from './model/boardState';
+import { IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameOutcomePresenter';
@@ -14,7 +14,7 @@ export type IGame = {
 export class Game implements IGame {
   constructor(
     private readonly turnState: ITurnState & TurnConstraint,
-    private readonly boardState: IBoardState & BoardConstraint,
+    private readonly boardState: IBoardState,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
     private readonly helpPresenter: IOutputPresenter<void>,
     private readonly outcomeStrategy: IGameOutcomeStrategy,

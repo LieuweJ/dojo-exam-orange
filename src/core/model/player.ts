@@ -7,13 +7,13 @@ export type NonEmptyArray<T> = [T, ...T[]];
 
 export type Pieces = NonEmptyArray<IPiece>;
 
-interface IPlayer {
+export type IPlayer = {
   getScreenName(): string;
 
   hasPiece(piece: IPiece): boolean;
 
   getNextMove(board: IBoard): Promise<Move>;
-}
+};
 
 export class Player implements IPlayer {
   constructor(

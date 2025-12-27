@@ -6,12 +6,11 @@ import {
 } from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 import { IPiece } from '../../../../../src/core/model/IPiece';
+import { IBoardState } from '../../../../../src/core/model/boardState';
 
 describe('ValidPlayerTurnStrategy', () => {
   let constraints: {
-    board: {
-      canAddMove: jest.Mock<boolean, [Move]>;
-    };
+    board: jest.Mocked<IBoardState>;
     turn: {
       currentPlayerOwnsPiece: jest.Mock<boolean, [IPiece]>;
     };
@@ -19,9 +18,7 @@ describe('ValidPlayerTurnStrategy', () => {
 
   beforeEach(() => {
     constraints = {
-      board: {
-        canAddMove: jest.fn(),
-      },
+      board: createBoardMock(),
       turn: {
         currentPlayerOwnsPiece: jest.fn(),
       },
@@ -56,4 +53,12 @@ describe('ValidPlayerTurnStrategy', () => {
     expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.piece);
     expect(result).toBeNull();
   });
+});
+
+const createBoardMock = (): jest.Mocked<IBoardState> => ({
+  getBoard: jest.fn(),
+  addMove: jest.fn(),
+  getPositionBy: jest.fn(),
+  clearPosition: jest.fn(),
+  getBoardCellAt: jest.fn(),
 });

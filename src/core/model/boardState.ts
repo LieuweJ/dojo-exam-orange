@@ -29,13 +29,10 @@ export type IBoardState = {
   addMove(move: Move): void;
   getPositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
+  getBoardCellAt(position: BoardPosition): BoardCell;
 };
 
-export type BoardConstraint = {
-  canAddMove(move: Move): boolean;
-};
-
-export class BoardState implements IBoardState, BoardConstraint {
+export class BoardState implements IBoardState {
   constructor(private board: IBoard) {}
 
   getBoard() {
@@ -81,5 +78,10 @@ export class BoardState implements IBoardState, BoardConstraint {
     }
 
     return undefined;
+  }
+
+  getBoardCellAt(position: BoardPosition): BoardCell {
+    const { row, column } = position;
+    return this.board[row][column];
   }
 }

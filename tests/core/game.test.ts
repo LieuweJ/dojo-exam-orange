@@ -1,10 +1,5 @@
 import { Game } from '../../src/core/game';
-import {
-  BoardConstraint,
-  BoardState,
-  EMPTY_CELL,
-  IBoardState,
-} from '../../src/core/model/boardState';
+import { BoardState, EMPTY_CELL, IBoardState } from '../../src/core/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../../src/core/presenter/boardPresenter';
 import { IMoveStrategy } from '../../src/core/strategy/player/move-strategy';
 import { Player } from '../../src/core/model/player';
@@ -30,7 +25,7 @@ import {
 } from '../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 
 describe('A game of orange-in-a-row can be played', () => {
-  let board: IBoardState & BoardConstraint;
+  let board: IBoardState;
   let boardPresenter: jest.Mocked<IOutputPresenter<BoardPresentArgs>>;
   let helpPresenter: jest.Mocked<IOutputPresenter<void>>;
   let game: Game;

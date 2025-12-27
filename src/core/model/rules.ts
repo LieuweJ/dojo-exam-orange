@@ -1,4 +1,4 @@
-import { BoardConstraint, BoardPosition } from './boardState';
+import { BoardPosition, IBoardState } from './boardState';
 import { TurnConstraint } from './turnState';
 
 import { IPiece } from './IPiece';
@@ -20,5 +20,5 @@ export type RuleStrategy = {
   check(input: ProposedMove): RuleViolation[] | null;
 };
 
-export type MoveContext = { board: BoardConstraint; turn: TurnConstraint };
+export type MoveContext = { board: IBoardState; turn: TurnConstraint };
 export type ProposedMove = { move: Move; moveContext: MoveContext };

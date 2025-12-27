@@ -4,13 +4,17 @@ import {
   RuleStrategy,
   RuleViolation,
 } from '../../../../../core/model/rules';
+import { EMPTY_CELL } from '../../../../../core/model/boardState';
 
 export class ValidLineGamePlacementStrategy implements RuleStrategy {
   check({ move, moveContext }: ProposedMove): RuleViolation[] | null {
-    if (!moveContext.board.canAddMove(move)) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+    const currentCell = moveContext.board.getBoardCellAt(move.position);
+
+    // Check if the cell is already occupied
+    if (currentCell.getBoardValue() === EMPTY_CELL.getBoardValue()) {
+      return null;
     }
 
-    return null;
+    return [RULES_VIOLATIONS.INVALID_PLACEMENT];
   }
 }
