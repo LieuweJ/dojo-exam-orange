@@ -1,5 +1,7 @@
 import { ChessPiece } from '../../../src/games/scacchi-con-dojo/model/piece';
-import { BoardState, EMPTY_CELL } from '../../../src/core/model/boardState';
+import { BoardState, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
+import { ChessMoveHandler } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
+import { Move } from '../../../src/core/model/rules';
 
 describe('chess piece', () => {
   test('the chess piece is represented on the board with value', () => {
@@ -10,19 +12,29 @@ describe('chess piece', () => {
     expect(chessPiece.getBoardValue()).toBe(pieceSymbol);
   });
 
-  test('a chess piece can be placed on a board', () => {
-    const pawn: ChessPiece = new ChessPiece(Symbol('pb-1'));
-    const board = new BoardState([
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+  test('a chess piece can move to an empty place on the board.', () => {
+    const attackingPiece: ChessPiece = new ChessPiece(Symbol('attackingPiece'));
+
+    const initBoard = new BoardState([
+      [EMPTY_CELL, attackingPiece, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ]);
 
-    board.addMove({
-      position: { row: 1, column: 2 },
-      piece: pawn,
-    });
+    const expectedBoardAfterMove: IBoard = [
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, attackingPiece, EMPTY_CELL],
+    ];
 
-    const boardData = board.getBoard();
-    expect(boardData[1][2]).toStrictEqual(pawn);
+    const moveMove: Move = {
+      position: { row: 1, column: 1 },
+      piece: attackingPiece,
+    };
+
+    const moveHandler = new ChessMoveHandler();
+
+    moveHandler.handle(moveMove, initBoard);
+
+    const boardAfterMove = initBoard.getBoard();
+    expect(boardAfterMove).toStrictEqual(expectedBoardAfterMove);
   });
 });
