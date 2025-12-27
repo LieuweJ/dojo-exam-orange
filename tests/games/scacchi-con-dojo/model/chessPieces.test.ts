@@ -8,10 +8,8 @@ import { IPiece } from '../../../../src/core/model/IPiece';
 const createEmptyBoard = (rows = 8, columns = 8) =>
   Array.from({ length: rows }, () => Array.from({ length: columns }, () => EMPTY_CELL));
 
-// Simple dummy piece for blocking / attacking
-const createDummyPiece = (symbol = Symbol('X')): IPiece => ({
-  getBoardValue: () => symbol,
-});
+const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
+  new ChessPiece(symbol, new Set(), new Set<IPiece>());
 
 // --- test-side composition root --------------------------------
 
@@ -43,7 +41,7 @@ type BlockingReachabilityTestCase = {
   unreachable: BoardPosition[];
 };
 
-const otherPiece = createDummyPiece();
+const otherPiece = createStaticChessPiece();
 
 const cases: BlockingReachabilityTestCase[] = [
   {
@@ -114,4 +112,23 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       }
     }
   );
+
+  test('hasMoved reflects whether markMoved was called', () => {
+    const piece = createStaticChessPiece(Symbol('movedPiece'));
+
+    expect(piece.hasMoved()).toBe(false);
+
+    piece.markMoved();
+
+    expect(piece.hasMoved()).toBe(true);
+  });
+
+  test('canReachPosition returns false if the piece is not on the board', () => {
+    const board = createEmptyBoard();
+    const piece = createStaticChessPiece(Symbol('orphan'));
+
+    const boardState = new BoardState(board);
+
+    expect(piece.canReachPosition({ row: 0, column: 0 }, boardState)).toBe(false);
+  });
 });

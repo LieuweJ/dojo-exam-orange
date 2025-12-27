@@ -2,18 +2,22 @@ import { ChessPiece } from '../../../src/games/scacchi-con-dojo/model/piece';
 import { BoardState, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import { ChessMoveHandler } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
 import { Move } from '../../../src/core/model/rules';
+import { IPiece } from '../../../src/core/model/IPiece';
+
+const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
+  new ChessPiece(symbol, new Set(), new Set<IPiece>());
 
 describe('chess piece', () => {
   test('the chess piece is represented on the board with value', () => {
     const pieceSymbol = Symbol('pw-1');
 
-    const chessPiece: ChessPiece = new ChessPiece(pieceSymbol);
+    const chessPiece: ChessPiece = createStaticChessPiece(pieceSymbol);
 
     expect(chessPiece.getBoardValue()).toBe(pieceSymbol);
   });
 
   test('a chess piece can move to an empty place on the board.', () => {
-    const piece: ChessPiece = new ChessPiece(Symbol('attackingPiece'));
+    const piece: ChessPiece = createStaticChessPiece(Symbol('attackingPiece'));
 
     const initBoard = new BoardState([
       [EMPTY_CELL, piece, EMPTY_CELL],
@@ -39,8 +43,8 @@ describe('chess piece', () => {
   });
 
   test('a chess piece can move to a place on the board which is already occupied.', () => {
-    const attackingPiece: ChessPiece = new ChessPiece(Symbol('attackingPiece'));
-    const defendingPiece: ChessPiece = new ChessPiece(Symbol('defendingPiece'));
+    const attackingPiece: ChessPiece = createStaticChessPiece(Symbol('attackingPiece'));
+    const defendingPiece: ChessPiece = createStaticChessPiece(Symbol('defendingPiece'));
 
     const initBoard = new BoardState([
       [EMPTY_CELL, attackingPiece, EMPTY_CELL],
@@ -66,7 +70,7 @@ describe('chess piece', () => {
   });
 
   test('Throws when the chess piece we want to move is not already on the board.', async () => {
-    const pieceNotOnBoard: ChessPiece = new ChessPiece(Symbol('notPlacedPiece'));
+    const pieceNotOnBoard: ChessPiece = createStaticChessPiece(Symbol('notPlacedPiece'));
 
     const initBoard = new BoardState([
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],

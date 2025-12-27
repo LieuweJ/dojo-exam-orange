@@ -1,4 +1,7 @@
-import { ChessPiece } from '../../../../../../src/games/scacchi-con-dojo/model/piece';
+import {
+  ChessPiece,
+  RelativeMovement,
+} from '../../../../../../src/games/scacchi-con-dojo/model/piece';
 import { BoardState, EMPTY_CELL } from '../../../../../../src/core/model/boardState';
 import { Move } from '../../../../../../src/core/model/rules';
 import { ValidChessPlacementStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validChessPlacementStrategy';
@@ -10,6 +13,10 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { IPiece } from '../../../../../../src/core/model/IPiece';
+
+const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
+  new ChessPiece(symbol, new Set(), new Set<IPiece>());
 
 describe('chess rules', () => {
   const e = EMPTY_CELL;
@@ -39,7 +46,7 @@ describe('chess rules', () => {
   });
 
   test('a move will be seen as invalid if the move.piece is not already on the board.', async () => {
-    const pieceNotOnBoard: ChessPiece = new ChessPiece(Symbol('notPlacedPiece'));
+    const pieceNotOnBoard = createStaticChessPiece(Symbol('notPlacedPiece'));
 
     const initBoard = new BoardState([
       [e, e, e],
@@ -62,7 +69,7 @@ describe('chess rules', () => {
   });
 
   test('a move will be seen as invalid if the move.piece is on the same element as the current move.position on the board.', async () => {
-    const piece: ChessPiece = new ChessPiece(Symbol('notPlacedPiece'));
+    const piece: ChessPiece = createStaticChessPiece(Symbol('placedPiece'));
 
     const initBoard = new BoardState([
       [e, piece, e],
@@ -84,8 +91,8 @@ describe('chess rules', () => {
     expect(violations).toStrictEqual(['INVALID_PLACEMENT']);
   });
 
-  test('a move will be seen as valid if the move.piece is on a different element than the current move.position on the board.', async () => {
-    const piece: ChessPiece = new ChessPiece(Symbol('notPlacedPiece'));
+  test('a move is invalid if the piece cannot reach the target position', () => {
+    const piece = createStaticChessPiece(Symbol('placedPiece'));
 
     const initBoard = new BoardState([
       [e, e, e],
@@ -94,7 +101,38 @@ describe('chess rules', () => {
 
     const move: Move = {
       position: { row: 0, column: 1 },
-      piece: piece,
+      piece,
+    };
+
+    const rulesChecker = new RulesChainHandler([new ValidChessPlacementStrategy()]);
+
+    const violations = rulesChecker.check({
+      move,
+      moveContext: { board: initBoard, turn: turnState },
+    });
+
+    expect(violations).toStrictEqual(['INVALID_PLACEMENT']);
+  });
+
+  test('a move is valid when the piece can reach the target position', () => {
+    const movement: Set<RelativeMovement> = new Set([
+      {
+        direction: [{ row: 1, column: 0 }],
+        maxSteps: 1,
+      },
+    ]);
+
+    const piece = new ChessPiece(Symbol('pieceWhichCanReachTheProposedMove'), movement, new Set());
+
+    const initBoard = new BoardState([
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, piece, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL], // 👈 added row
+    ]);
+
+    const move: Move = {
+      position: { row: 2, column: 1 }, // now valid
+      piece,
     };
 
     const rulesChecker = new RulesChainHandler([new ValidChessPlacementStrategy()]);

@@ -1,8 +1,10 @@
 import { IPiece } from '../../../core/model/IPiece';
-import { BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
+import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;
+  hasMoved: () => boolean;
+  markMoved: () => void;
 };
 
 export type Direction = { row: number; column: number };
@@ -13,14 +15,24 @@ export type RelativeMovement = {
 };
 
 export class ChessPiece implements IChessPiece {
+  private hasMovedFlag = false;
+
   constructor(
     private readonly boardValue: symbol,
     private readonly relativeMovement: Set<RelativeMovement>,
-    private readonly attackablePieces: Set<IPiece>
+    protected readonly attackablePieces: Set<IPiece>
   ) {}
 
   getBoardValue(): symbol {
     return this.boardValue;
+  }
+
+  hasMoved(): boolean {
+    return this.hasMovedFlag;
+  }
+
+  markMoved(): void {
+    this.hasMovedFlag = true;
   }
 
   canReachPosition(position: BoardPosition, boardState: IBoardState): boolean {
@@ -50,13 +62,7 @@ export class ChessPiece implements IChessPiece {
 
           // Target square reached
           if (currentRow === position.row && currentColumn === position.column) {
-            // Empty square → reachable
-            if (cell === EMPTY_CELL) {
-              return true;
-            }
-
-            // Occupied square → only reachable if attackable
-            return this.attackablePieces.has(cell as IPiece);
+            return this.isReachableTarget(cell);
           }
 
           // Blocking piece before target → ray stops
@@ -68,6 +74,14 @@ export class ChessPiece implements IChessPiece {
     }
 
     return false;
+  }
+
+  protected isReachableTarget(cell: BoardCell): boolean {
+    if (cell === EMPTY_CELL) {
+      return true;
+    }
+
+    return this.attackablePieces.has(cell as IPiece);
   }
 
   private isInsideBoard(position: BoardPosition, boardState: IBoardState): boolean {

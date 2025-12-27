@@ -16,8 +16,8 @@ export class ValidChessPlacementStrategy implements RuleStrategy {
       return [RULES_VIOLATIONS.INVALID_PLACEMENT];
     }
 
-    if (piece.canReachPosition(position, moveContext.board)) {
-      return null;
+    if (!piece.canReachPosition(position, moveContext.board)) {
+      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
     }
 
     return null;
