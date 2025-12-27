@@ -4,12 +4,15 @@ import { IBoardState } from '../../../core/model/boardState';
 
 export class ChessMoveHandler implements IMoveHandler {
   async handle(move: Move, boardState: IBoardState): Promise<void> {
-    const currentPosition = boardState.getPositionBy(move.piece);
+    const currentPosition = boardState.getPiecePositionBy(move.piece);
 
-    if (currentPosition) {
-      boardState.clearPosition(currentPosition);
+    if (!currentPosition) {
+      throw new Error(
+        `The chess piece ${String(move.piece.getBoardValue())} is not present on the board. Chess piece cannot be moved.`
+      );
     }
 
+    boardState.clearPosition(currentPosition);
     boardState.addMove(move);
   }
 }

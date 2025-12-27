@@ -58,7 +58,7 @@ describe('ValidPlayerTurnStrategy', () => {
 const createBoardMock = (): jest.Mocked<IBoardState> => ({
   getBoard: jest.fn(),
   addMove: jest.fn(),
-  getPositionBy: jest.fn(),
+  getPiecePositionBy: jest.fn(),
   clearPosition: jest.fn(),
   getBoardCellAt: jest.fn(),
 });

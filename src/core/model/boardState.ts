@@ -27,7 +27,7 @@ export type IBoard = BoardCell[][];
 export type IBoardState = {
   getBoard(): IBoard;
   addMove(move: Move): void;
-  getPositionBy(piece: IPiece): BoardPosition | undefined;
+  getPiecePositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
   getBoardCellAt(position: BoardPosition): BoardCell;
 };
@@ -57,7 +57,7 @@ export class BoardState implements IBoardState {
       return false;
     }
 
-    return this.board[row][column] === EMPTY_CELL;
+    return this.board[row][column] !== undefined;
   }
 
   clearPosition(position: BoardPosition) {
@@ -68,7 +68,7 @@ export class BoardState implements IBoardState {
     }
   }
 
-  getPositionBy(piece: IPiece): BoardPosition | undefined {
+  getPiecePositionBy(piece: IPiece): BoardPosition | undefined {
     for (let row = 0; row < this.board.length; row++) {
       for (let column = 0; column < this.board[row].length; column++) {
         if (this.board[row][column] === piece) {
