@@ -1,19 +1,16 @@
 import { IBoard } from './boardState';
 import { IMoveStrategy } from '../strategy/player/move-strategy';
 import { Move } from './rules';
+import { IPiece } from './IPiece';
 
 export type NonEmptyArray<T> = [T, ...T[]];
 
-export type Piece = {
-  boardValue: symbol;
-};
-
-export type Pieces = NonEmptyArray<Piece>;
+export type Pieces = NonEmptyArray<IPiece>;
 
 interface IPlayer {
   getScreenName(): string;
 
-  hasPiece(piece: Piece): boolean;
+  hasPiece(piece: IPiece): boolean;
 
   getNextMove(board: IBoard): Promise<Move>;
 }
@@ -33,7 +30,7 @@ export class Player implements IPlayer {
     return this.strategy.createNextMove(board, this.pieces, this.getScreenName());
   }
 
-  hasPiece(piece: Piece): boolean {
+  hasPiece(piece: IPiece): boolean {
     return this.pieces.includes(piece);
   }
 }

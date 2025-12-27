@@ -1,6 +1,6 @@
 import { IInputAdapter } from '../../../../core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardPosition, IBoard } from '../../../../core/model/boardState';
+import { BoardPosition, IBoard } from '../../../../core/model/boardState';
 import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
 import { CliPositionResolverArgs } from '../../resolvers/cliColumnInputResolver';
 import { Pieces } from '../../../../core/model/player';
@@ -11,7 +11,7 @@ export class CliMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
-    private readonly boardCellToUi: Map<BoardCell, string>,
+    private readonly boardCellToUi: Map<symbol, string>,
     private readonly rowResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
@@ -19,7 +19,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     const defaultPiece = pieces[0];
     while (true) {
       const raw = await this.input.ask(
-        `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(defaultPiece)} : `
+        `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(defaultPiece.getBoardValue())} : `
       );
 
       if (!this.isValid(raw)) {

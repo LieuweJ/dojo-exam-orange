@@ -5,7 +5,7 @@ import { BoardPresentArgs, IOutputPresenter } from '../../../core/presenter/boar
 export class OrangeInARowBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   constructor(
     private readonly outputAdapter: IOutputAdapter,
-    private readonly boardCellToUi: Map<BoardCell, string>
+    private readonly boardCellToUi: Map<symbol, string>
   ) {}
 
   public present({ board, highlightPositions = [] }: BoardPresentArgs): void {
@@ -61,7 +61,9 @@ export class OrangeInARowBoardPresenter implements IOutputPresenter<BoardPresent
     boardPosition: BoardPosition,
     highlightSet: Set<string>
   ): string {
-    const symbol = this.boardCellToUi.get(cell);
+    const cellSymbol: symbol = cell.getBoardValue();
+
+    const symbol = this.boardCellToUi.get(cellSymbol);
 
     if (!symbol) {
       throw new Error(

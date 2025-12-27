@@ -4,7 +4,8 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { Piece } from '../../../../../../src/core/model/player';
+
+import { IPiece } from '../../../../../../src/core/model/IPiece';
 
 describe('ValidPlacementStrategy', () => {
   let constraints: {
@@ -12,7 +13,7 @@ describe('ValidPlacementStrategy', () => {
       canAddMove: jest.Mock<boolean, [Move]>;
     };
     turn: {
-      currentPlayerOwnsPiece: jest.Mock<boolean, [Piece]>;
+      currentPlayerOwnsPiece: jest.Mock<boolean, [IPiece]>;
     };
   };
 

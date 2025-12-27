@@ -1,7 +1,7 @@
 import { IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 import { IInputAdapter } from '../../../../core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardPosition, IBoard } from '../../../../core/model/boardState';
+import { BoardPosition, IBoard } from '../../../../core/model/boardState';
 import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
 import { Pieces } from '../../../../core/model/player';
 import { Move } from '../../../../core/model/rules';
@@ -11,7 +11,7 @@ export class CliMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
-    private readonly boardCellToUi: Map<BoardCell, string>,
+    private readonly boardCellToUi: Map<symbol, string>,
     private readonly positionResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
@@ -21,7 +21,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     while (true) {
       const raw = await this.input.ask(
         `It is ${displayName}'s turn.\n` +
-          `Choose a position (e.g. a1, b2, c3) for ${this.boardCellToUi.get(defaultPiece)}: `
+          `Choose a position (e.g. a1, b2, c3) for ${this.boardCellToUi.get(defaultPiece.getBoardValue())}: `
       );
 
       if (!this.isValid(raw)) {

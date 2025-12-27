@@ -1,9 +1,9 @@
-import { BoardCell, BoardState, EMPTY_CELL, IBoard } from '../../../core/model/boardState';
+import { BoardState, EMPTY_CELL, IBoard } from '../../../core/model/boardState';
 import { TurnState } from '../../../core/model/turnState';
 import { GameOutcomePresenter } from '../../../core/presenter/gameOutcomePresenter';
 import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainHandler';
 import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
-import { Piece, Player } from '../../../core/model/player';
+import { Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
 import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
@@ -20,21 +20,21 @@ import {
 import { CliTicTacToeInputResolver } from '../resolvers/cliInputResolver';
 import { PositionToTicTacToeCliResolver } from '../resolvers/positionToTicTacDojoCliResolver';
 import { TicTacDojoBoardPresenter } from '../presenter/ticTacDojoBoardPresenter';
+import { IPiece } from '../../../core/model/IPiece';
+import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
 
 const HELP_FILE = 'docs/tic-tac-dojo.md';
 
-export const PIECE_X: Piece = {
-  boardValue: Symbol('x'),
-};
+const SYMBOL_X = Symbol('x');
+const SYMBOL_O = Symbol('o');
 
-export const PIECE_O: Piece = {
-  boardValue: Symbol('o'),
-};
+export const PIECE_X: IPiece = new CoinPiece(SYMBOL_X);
+export const PIECE_O: IPiece = new CoinPiece(SYMBOL_O);
 
-export const TIC_TAC_DOJO_BOARD_UI = new Map<BoardCell, string>([
-  [EMPTY_CELL, '·'],
-  [PIECE_X, '╳'],
-  [PIECE_O, '○'],
+export const TIC_TAC_DOJO_BOARD_UI = new Map<symbol, string>([
+  [EMPTY_CELL.getBoardValue(), '·'],
+  [PIECE_X.getBoardValue(), '╳'],
+  [PIECE_O.getBoardValue(), '○'],
 ]);
 
 export const TIC_TAC_DOJO_TO_ROW: Record<string, number> = {

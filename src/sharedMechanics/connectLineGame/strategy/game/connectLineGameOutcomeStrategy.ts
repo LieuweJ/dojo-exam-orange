@@ -1,11 +1,12 @@
 import { BoardPosition, EMPTY_CELL, IBoard } from '../../../../core/model/boardState';
-import { Piece, Player } from '../../../../core/model/player';
+import { Player } from '../../../../core/model/player';
 import {
   GAME_OUTCOME,
   GameOutcome,
   GameOutComeWin,
   IGameOutcomeStrategy,
 } from '../../../../core/strategy/game/gameOutcomeStrategy';
+import { IPiece } from '../../../../core/model/IPiece';
 
 type WinConditions = {
   connectionLength: number;
@@ -66,7 +67,7 @@ export class ConnectLineGameOutcomeStrategy implements IGameOutcomeStrategy {
     return null;
   }
 
-  private findWinner(cell: Piece, players: Player[]): Player {
+  private findWinner(cell: IPiece, players: Player[]): Player {
     for (const player of players) {
       if (player.hasPiece(cell)) {
         return player;
@@ -80,7 +81,7 @@ export class ConnectLineGameOutcomeStrategy implements IGameOutcomeStrategy {
     board: IBoard,
     start: BoardPosition,
     direction: Direction,
-    piece: Piece
+    piece: IPiece
   ): BoardPosition[] | null {
     const positions: BoardPosition[] = [start];
 

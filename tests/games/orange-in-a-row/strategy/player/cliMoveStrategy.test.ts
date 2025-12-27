@@ -7,9 +7,9 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
-import { Piece } from '../../../../../src/core/model/player';
 import { CliMoveStrategy } from '../../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
 import { CliColumnInputResolver } from '../../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';
+import { IPiece } from '../../../../../src/core/model/IPiece';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;
@@ -34,7 +34,7 @@ describe('CliMoveStrategy', () => {
   });
 
   test('returns a move with the given piece and with the closest empty row from the board bottom when a valid column is entered', async () => {
-    const givenPiece: Piece = PIECE_X;
+    const givenPiece: IPiece = PIECE_X;
     const board: IBoard = [
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],

@@ -1,18 +1,18 @@
 import { IInputAdapter } from '../../../../../src/core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../../src/core/adapters/terminalOutputAdapter';
 import { BoardCell, EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
-import { Piece, Pieces } from '../../../../../src/core/model/player';
+import { Pieces } from '../../../../../src/core/model/player';
 import { CliTicTacToeInputResolver } from '../../../../../src/games/tic-tac-dojo/resolvers/cliInputResolver';
 import { CliMoveStrategy } from '../../../../../src/games/tic-tac-dojo/strategy/player/cliMoveStrategy';
+import { IPiece } from '../../../../../src/core/model/IPiece';
+import { CoinPiece } from '../../../../../src/sharedMechanics/connectLineGame/model/coinPiece';
 
 describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
   let input: jest.Mocked<IInputAdapter>;
   let output: jest.Mocked<IOutputAdapter>;
 
   const EMPTY: BoardCell = EMPTY_CELL;
-  const X: Piece = {
-    boardValue: Symbol('X'),
-  };
+  const X: IPiece = new CoinPiece(Symbol('X'));
 
   const board: IBoard = [
     [EMPTY, EMPTY, EMPTY],
@@ -22,7 +22,7 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
   const pieces: Pieces = [X];
 
-  const boardCellToUi = new Map<BoardCell, string>([[X, 'X']]);
+  const boardCellToUi = new Map<symbol, string>([[X.getBoardValue(), 'X']]);
 
   const TO_ROW_MAP = {
     a: 0,

@@ -1,10 +1,5 @@
 import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
-import {
-  BoardCell,
-  BoardPosition,
-  EMPTY_CELL,
-  IBoard,
-} from '../../../../src/core/model/boardState';
+import { BoardPosition, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
@@ -65,10 +60,10 @@ describe('BoardPresenter', () => {
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
 
-    const uiMappingWithoutPieceX = new Map<BoardCell, string>([
-      [EMPTY_CELL, '·'],
-      [PIECE_O, '○'],
-      // PIECE_X is intentionally missing
+    const uiMappingWithoutPieceX = new Map<symbol, string>([
+      [EMPTY_CELL.getBoardValue(), '·'],
+      [PIECE_O.getBoardValue(), '○'],
+      // PIECE_X.getBoardValue() is intentionally missing
     ]);
 
     const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, uiMappingWithoutPieceX);

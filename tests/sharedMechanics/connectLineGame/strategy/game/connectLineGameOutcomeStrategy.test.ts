@@ -1,6 +1,6 @@
 import { BoardCell, EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
 import { GAME_OUTCOME } from '../../../../../src/core/strategy/game/gameOutcomeStrategy';
-import { Piece, Pieces, Player } from '../../../../../src/core/model/player';
+import { Pieces, Player } from '../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../../../src/core/model/rules';
 import {
@@ -8,6 +8,8 @@ import {
   PIECE_X,
 } from '../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { ConnectLineGameOutcomeStrategy } from '../../../../../src/sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
+import { IPiece } from '../../../../../src/core/model/IPiece';
+import { CoinPiece } from '../../../../../src/sharedMechanics/connectLineGame/model/coinPiece';
 
 const E: BoardCell = EMPTY_CELL;
 const X: BoardCell = PIECE_X;
@@ -145,9 +147,7 @@ describe('GameOutcomeStrategy', () => {
     });
 
     it('throws an error if winning combination cannot be matched to a player', () => {
-      const U: Piece = {
-        boardValue: Symbol('Piece which does not belong to any player.'),
-      };
+      const U: IPiece = new CoinPiece(Symbol('Piece which does not belong to any player.'));
 
       const board: IBoard = [
         [U, U, U, U],

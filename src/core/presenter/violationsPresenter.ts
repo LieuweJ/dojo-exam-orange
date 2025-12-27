@@ -1,7 +1,6 @@
 import { IBoardPositionUiResolver, IOutputPresenter } from './boardPresenter';
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { IncorrectMove, RuleViolation } from '../model/rules';
-import { BoardCell } from '../model/boardState';
 
 export const VIOLATION_MESSAGES: Record<RuleViolation, string> = {
   INVALID_PLACEMENT: 'The move cannot be placed on the board.',
@@ -12,7 +11,7 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
   constructor(
     private readonly output: IOutputAdapter,
     private readonly violationMessages: Record<RuleViolation, string>,
-    private readonly boardCellToUi: Map<BoardCell, string>,
+    private readonly boardCellToUi: Map<symbol, string>,
     private readonly boardPositionToUiResolver: IBoardPositionUiResolver<string>
   ) {}
 
@@ -24,7 +23,7 @@ export class ViolationsPresenter implements IOutputPresenter<IncorrectMove> {
       violationString = `- ${violationMessages.join('\n- ')}`;
     }
 
-    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece)} at ${this.boardPositionToUiResolver.resolve(move.position)}:\n${violationString}`;
+    const outputMessage = `Invalid move: ${this.boardCellToUi.get(move.piece.getBoardValue())} at ${this.boardPositionToUiResolver.resolve(move.position)}:\n${violationString}`;
 
     this.output.render(outputMessage);
   }

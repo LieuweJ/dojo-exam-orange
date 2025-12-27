@@ -42,7 +42,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 3:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X.getBoardValue())} at column 3:\n` +
       `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -73,7 +73,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_O)} at column 2:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_O.getBoardValue())} at column 2:\n` +
       `- Invalid move\n- Some other violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
@@ -98,7 +98,7 @@ describe('ViolationsPresenter', () => {
     presenter.present(incorrectMove);
 
     const expectedMessage =
-      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X)} at column 1:\n` +
+      `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X.getBoardValue())} at column 1:\n` +
       `- unknown violation`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);

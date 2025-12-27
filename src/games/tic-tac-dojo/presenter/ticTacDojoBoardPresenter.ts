@@ -6,7 +6,7 @@ import { TicTacDojoRowToString } from '../composition/ticTacDojoComposition';
 export class TicTacDojoBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   constructor(
     private readonly outputAdapter: IOutputAdapter,
-    private readonly boardCellToUi: Map<BoardCell, string>,
+    private readonly boardCellToUi: Map<symbol, string>,
     private readonly rowToString: TicTacDojoRowToString
   ) {}
 
@@ -65,7 +65,7 @@ export class TicTacDojoBoardPresenter implements IOutputPresenter<BoardPresentAr
     boardPosition: BoardPosition,
     highlightSet: Set<string>
   ): string {
-    const symbol = this.boardCellToUi.get(cell);
+    const symbol = this.boardCellToUi.get(cell.getBoardValue());
 
     if (!symbol) {
       throw new Error(

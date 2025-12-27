@@ -1,14 +1,9 @@
-import { Piece } from '../../../core/model/player';
+import { IPiece } from '../../../core/model/IPiece';
 
-export const CHESS_PIECE_TYPES = {
-  PAWN: 'pawn',
-} as const;
+export class ChessPiece implements IPiece {
+  constructor(public readonly boardValue: symbol) {}
 
-type ChessPieceType = (typeof CHESS_PIECE_TYPES)[keyof typeof CHESS_PIECE_TYPES];
-
-export class ChessPiece implements Piece {
-  constructor(
-    public readonly boardValue: symbol,
-    private readonly type: ChessPieceType
-  ) {}
+  getBoardValue(): symbol {
+    return this.boardValue;
+  }
 }

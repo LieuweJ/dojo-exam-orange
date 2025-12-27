@@ -1,23 +1,19 @@
 import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
-import { Piece } from '../../../../src/core/model/player';
-import {
-  BoardCell,
-  BoardPosition,
-  EMPTY_CELL,
-  IBoard,
-} from '../../../../src/core/model/boardState';
+import { BoardPosition, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
 import { TicTacDojoBoardPresenter } from '../../../../src/games/tic-tac-dojo/presenter/ticTacDojoBoardPresenter';
+import { IPiece } from '../../../../src/core/model/IPiece';
+import { CoinPiece } from '../../../../src/sharedMechanics/connectLineGame/model/coinPiece';
 
 describe('TicTacDojoBoardPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
 
-  const X: Piece = { boardValue: Symbol('X') };
-  const O: Piece = { boardValue: Symbol('O') };
+  const X: IPiece = new CoinPiece(Symbol('X'));
+  const O: IPiece = new CoinPiece(Symbol('O'));
 
-  const boardCellToUi = new Map<BoardCell, string>([
-    [EMPTY_CELL, ' '],
-    [X, 'X'],
-    [O, 'O'],
+  const boardCellToUi = new Map<symbol, string>([
+    [EMPTY_CELL.getBoardValue(), ' '],
+    [X.getBoardValue(), 'X'],
+    [O.getBoardValue(), 'O'],
   ]);
 
   const ROW_TO_STRING = {
@@ -94,7 +90,7 @@ describe('TicTacDojoBoardPresenter', () => {
   });
 
   it('throws if a board cell cannot be rendered', () => {
-    const UNKNOWN_CELL = { boardValue: Symbol('UNKNOWN') } as Piece;
+    const UNKNOWN_CELL: IPiece = new CoinPiece(Symbol('UNKNOWN'));
 
     const board: IBoard = [[UNKNOWN_CELL]];
 

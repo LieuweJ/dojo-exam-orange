@@ -1,9 +1,24 @@
 import { Move } from './rules';
-import { Piece } from './player';
 
-export const EMPTY_CELL = Symbol('.');
+import { IPiece } from './IPiece';
 
-export type BoardCell = typeof EMPTY_CELL | Piece;
+type IEmptyCell = {
+  readonly getBoardValue: () => symbol;
+};
+
+export class EmptyCell implements IEmptyCell {
+  constructor(private readonly id: symbol) {}
+
+  getBoardValue(): symbol {
+    return this.id;
+  }
+}
+
+export const EMPTY_CELL_SYMBOL = Symbol('.');
+
+export const EMPTY_CELL = new EmptyCell(EMPTY_CELL_SYMBOL);
+
+export type BoardCell = IEmptyCell | IPiece;
 
 export type BoardPosition = { row: number; column: number };
 
