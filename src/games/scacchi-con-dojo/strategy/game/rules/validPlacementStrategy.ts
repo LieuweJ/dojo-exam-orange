@@ -5,7 +5,7 @@ import {
   RuleViolation,
 } from '../../../../../core/model/rules';
 
-export class ValidTurnStrategy implements RuleStrategy {
+export class ValidPlacementStrategy implements RuleStrategy {
   check({ move, moveContext }: ProposedMove): RuleViolation[] | null {
     const currentPosition = moveContext.board.getPiecePositionBy(move.piece);
 
