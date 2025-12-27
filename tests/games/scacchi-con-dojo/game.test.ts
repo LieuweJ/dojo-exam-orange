@@ -65,7 +65,7 @@ describe('chess piece', () => {
     expect(boardAfterMove).toStrictEqual(expectedBoardAfterMove);
   });
 
-  test('a chess piece cannot be moved if the move.piece is not already on the board.', async () => {
+  test('Throws when the chess piece we want to move is not already on the board.', async () => {
     const pieceNotOnBoard: ChessPiece = new ChessPiece(Symbol('notPlacedPiece'));
 
     const initBoard = new BoardState([

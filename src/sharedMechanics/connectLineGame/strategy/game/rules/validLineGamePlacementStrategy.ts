@@ -10,7 +10,6 @@ export class ValidLineGamePlacementStrategy implements RuleStrategy {
   check({ move, moveContext }: ProposedMove): RuleViolation[] | null {
     const currentCell = moveContext.board.getBoardCellAt(move.position);
 
-    // Check if the cell is already occupied
     if (currentCell.getBoardValue() === EMPTY_CELL.getBoardValue()) {
       return null;
     }

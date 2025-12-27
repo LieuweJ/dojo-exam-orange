@@ -14,7 +14,7 @@ describe('ValidPlacementStrategy', () => {
   let player1: Player;
   let player2: Player;
 
-  let currentPlayers: TurnState;
+  let turnState: TurnState;
 
   let playerStrategy: jest.Mocked<IMoveStrategy>;
 
@@ -26,9 +26,14 @@ describe('ValidPlacementStrategy', () => {
     player1 = new Player('Player 1', playerStrategy, [PIECE_X]);
     player2 = new Player('Player 2', playerStrategy, [PIECE_O]);
 
-    currentPlayers = new TurnState({
+    turnState = new TurnState({
       players: [player1, player2],
     });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   test('returns INVALID_MOVE when validator reports move as invalid.', () => {
@@ -40,7 +45,7 @@ describe('ValidPlacementStrategy', () => {
     const move: Move = { piece: PIECE_X, position: { column: 1, row: 0 } };
     const moveContext = {
       board: new BoardState(boardWithOccupiedCell),
-      turn: new TurnState(currentPlayers),
+      turn: new TurnState(turnState),
     };
 
     const strategy = new ValidLineGamePlacementStrategy();
@@ -59,7 +64,7 @@ describe('ValidPlacementStrategy', () => {
 
     const moveContext = {
       board: new BoardState(emptyBoard),
-      turn: new TurnState(currentPlayers),
+      turn: new TurnState(turnState),
     };
 
     const strategy = new ValidLineGamePlacementStrategy();
