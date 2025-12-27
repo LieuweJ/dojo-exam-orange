@@ -1,7 +1,7 @@
 import { ChessPiece } from '../../../../../../src/games/scacchi-con-dojo/model/piece';
 import { BoardState, EMPTY_CELL } from '../../../../../../src/core/model/boardState';
 import { Move } from '../../../../../../src/core/model/rules';
-import { ValidPlacementStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validPlacementStrategy';
+import { ValidChessPlacementStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validChessPlacementStrategy';
 import { RulesChainHandler } from '../../../../../../src/core/strategy/game/rules/rulesChainHandler';
 import { Player } from '../../../../../../src/core/model/player';
 import { TurnState } from '../../../../../../src/core/model/turnState';
@@ -51,7 +51,7 @@ describe('chess rules', () => {
       piece: pieceNotOnBoard,
     };
 
-    const rulesChecker = new RulesChainHandler([new ValidPlacementStrategy()]);
+    const rulesChecker = new RulesChainHandler([new ValidChessPlacementStrategy()]);
 
     const violations = rulesChecker.check({
       move,
@@ -74,7 +74,7 @@ describe('chess rules', () => {
       piece: piece,
     };
 
-    const rulesChecker = new RulesChainHandler([new ValidPlacementStrategy()]);
+    const rulesChecker = new RulesChainHandler([new ValidChessPlacementStrategy()]);
 
     const violations = rulesChecker.check({
       move,
@@ -97,7 +97,7 @@ describe('chess rules', () => {
       piece: piece,
     };
 
-    const rulesChecker = new RulesChainHandler([new ValidPlacementStrategy()]);
+    const rulesChecker = new RulesChainHandler([new ValidChessPlacementStrategy()]);
 
     const violations = rulesChecker.check({
       move,
