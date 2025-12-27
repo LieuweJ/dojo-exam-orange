@@ -1,4 +1,4 @@
-import { ChessPiece } from '../../../src/games/scacchi-con-dojo/model/piece';
+import { ChessPiece } from '../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { BoardState, EMPTY_CELL, IBoard } from '../../../src/core/model/boardState';
 import { ChessMoveHandler } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
 import { Move } from '../../../src/core/model/rules';

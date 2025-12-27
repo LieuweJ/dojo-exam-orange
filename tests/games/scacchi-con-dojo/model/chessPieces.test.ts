@@ -1,7 +1,7 @@
 // --- helpers ----------------------------------------------------
 
 import { BoardPosition, BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
-import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/piece';
+import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { ROOK_MOVEMENT } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
 import { IPiece } from '../../../../src/core/model/IPiece';
 

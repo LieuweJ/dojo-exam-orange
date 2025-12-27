@@ -1,7 +1,7 @@
 import {
   ChessPiece,
   RelativeMovement,
-} from '../../../../../../src/games/scacchi-con-dojo/model/piece';
+} from '../../../../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { BoardState, EMPTY_CELL } from '../../../../../../src/core/model/boardState';
 import { Move } from '../../../../../../src/core/model/rules';
 import { ValidChessPlacementStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validChessPlacementStrategy';

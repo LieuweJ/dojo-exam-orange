@@ -1,4 +1,4 @@
-import { ChessPiece, Direction, RelativeMovement } from './piece';
+import { ChessPiece, Direction, RelativeMovement } from './chessPiece';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
 import { IPiece } from '../../../core/model/IPiece';
 

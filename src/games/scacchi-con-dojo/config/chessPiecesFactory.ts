@@ -1,4 +1,4 @@
-import { RelativeMovement } from '../model/piece';
+import { RelativeMovement } from '../model/chessPiece';
 
 export const ROOK_MOVEMENT: Set<RelativeMovement> = new Set([
   { direction: [{ row: -1, column: 0 }], maxSteps: Infinity }, // up
