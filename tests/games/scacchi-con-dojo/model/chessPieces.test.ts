@@ -3,7 +3,11 @@
 import { BoardPosition, BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
 import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { IPiece } from '../../../../src/core/model/IPiece';
-import { ChessPieceFactory } from '../../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
+import {
+  ChessPieceFactory,
+  CreateChessPieceInput,
+} from '../../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
+import { CHESS_PIECE_KIND } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
 
 const createEmptyBoard = (rows = 8, columns = 8) =>
   Array.from({ length: rows }, () => Array.from({ length: columns }, () => EMPTY_CELL));
@@ -300,5 +304,15 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
 
       expect(king.isCastlingDestination({ row: 7, column: 6 }, boardState)).toBe(false);
     });
+  });
+
+  test('chess piece factory will throw if pawn is created with create method', () => {
+    expect(() => {
+      pieceFactory.create({
+        team: 'white',
+        kind: CHESS_PIECE_KIND.PAWN as unknown as CreateChessPieceInput['kind'],
+        index: 1,
+      });
+    }).toThrow('Pawn kind is not allowed in this method.');
   });
 });

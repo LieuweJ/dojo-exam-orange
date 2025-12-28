@@ -1,6 +1,7 @@
 import { IMoveHandler } from '../../../core/handler/MoveHandler';
 import { BoardPosition, BoardState } from '../../../core/model/boardState';
 import { ChessPiece } from '../model/chessPiece';
+import { ChessPiecePawn } from '../model/chessPiecePawn';
 
 export type ChessMove = {
   position: BoardPosition;
@@ -19,10 +20,27 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
 
     if (this.isCastlingMove(move, boardState)) {
       this.handleCastling(move, from, boardState);
+      this.clearAllEnPassant(boardState);
+
+      return;
+    }
+
+    if (this.isEnPassantMove(move, boardState)) {
+      this.handleEnPassant(move, from, boardState);
+      this.clearAllEnPassant(boardState);
+
       return;
     }
 
     this.handleNormalMove(move, from, boardState);
+
+    this.clearAllEnPassant(boardState);
+    if (
+      move.piece instanceof ChessPiecePawn &&
+      this.isPawnDoubleStep(move.piece, from, move.position)
+    ) {
+      this.registerEnPassantTargets(move.piece, move.position, boardState);
+    }
   }
 
   private isCastlingMove({ piece, position }: ChessMove, boardState: BoardState): boolean {
@@ -30,9 +48,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   }
 
   private handleNormalMove(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
-    boardState.clearPosition(from);
-    boardState.addMove(move);
-    move.piece.markMoved();
+    this.movePiece(move.piece, from, move.position, boardState);
   }
 
   private handleCastling(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
@@ -62,16 +78,76 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
       throw new Error('Castling rook not found where expected.');
     }
 
-    // Clear old positions
+    this.movePiece(king, from, kingTarget, boardState);
+    this.movePiece(rook, rookFrom, rookTo, boardState);
+  }
+
+  private isEnPassantMove(move: ChessMove, boardState: BoardState): boolean {
+    return (
+      move.piece instanceof ChessPiecePawn &&
+      move.piece.canEnPassantAttack(move.position, boardState)
+    );
+  }
+
+  private handleEnPassant(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
+    const pawn = move.piece;
+
+    const capturedPawnPosition: BoardPosition = {
+      row: from.row,
+      column: move.position.column,
+    };
+
+    // Remove captured pawn
+    boardState.clearPosition(capturedPawnPosition);
+
+    // Move attacking pawn
+    this.movePiece(pawn, from, move.position, boardState);
+  }
+
+  private isPawnDoubleStep(pawn: ChessPiecePawn, from: BoardPosition, to: BoardPosition): boolean {
+    return Math.abs(to.row - from.row) === 2;
+  }
+
+  private registerEnPassantTargets(
+    pawn: ChessPiecePawn,
+    to: BoardPosition,
+    boardState: BoardState
+  ): void {
+    const targetRow = to.row; // IMPORTANT: enemy pawns are on the landing row
+    const col = to.column;
+
+    const adjacentColumns = [col - 1, col + 1];
+
+    for (const adjCol of adjacentColumns) {
+      const cell = boardState.getBoardCellAt({
+        row: targetRow,
+        column: adjCol,
+      });
+
+      if (cell instanceof ChessPiecePawn) {
+        cell.setEnPassantAttackablePawn(pawn);
+      }
+    }
+  }
+
+  private clearAllEnPassant(boardState: BoardState): void {
+    for (const row of boardState.getBoard()) {
+      for (const cell of row) {
+        if (cell instanceof ChessPiecePawn) {
+          cell.clearEnPassantAttackablePawns();
+        }
+      }
+    }
+  }
+
+  private movePiece(
+    piece: ChessPiece,
+    from: BoardPosition,
+    to: BoardPosition,
+    boardState: BoardState
+  ): void {
     boardState.clearPosition(from);
-    boardState.clearPosition(rookFrom);
-
-    // Place king and rook
-    boardState.addMove({ piece: king, position: kingTarget });
-    boardState.addMove({ piece: rook, position: rookTo });
-
-    // Mark both as moved
-    king.markMoved();
-    rook.markMoved();
+    boardState.addMove({ piece, position: to });
+    piece.markMoved();
   }
 }

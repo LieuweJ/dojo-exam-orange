@@ -5,6 +5,7 @@ import { IPiece } from '../../../core/model/IPiece';
 export class ChessPiecePawn extends ChessPiece {
   private forwardMovement: RelativeMovement;
   private readonly attackDirections: Direction[];
+  private readonly enPassantAttackablePawns = new Set<ChessPiecePawn>();
 
   constructor(
     boardValue: symbol,
@@ -35,13 +36,57 @@ export class ChessPiecePawn extends ChessPiece {
     }
 
     // Diagonal attack
-    return this.canAttack(position, boardState);
+    if (this.canAttack(position, boardState)) {
+      return true;
+    }
+
+    // En Passant attack
+    return this.canEnPassantAttack(position, boardState);
   }
 
   markMoved(): void {
     super.markMoved();
 
     this.forwardMovement.maxSteps = 1;
+  }
+
+  setEnPassantAttackablePawn(pawn: ChessPiecePawn): void {
+    this.enPassantAttackablePawns.add(pawn);
+  }
+
+  clearEnPassantAttackablePawns(): void {
+    this.enPassantAttackablePawns.clear();
+  }
+
+  canEnPassantAttack(position: BoardPosition, boardState: IBoardState): boolean {
+    const from = boardState.getPiecePositionBy(this);
+    if (!from) return false;
+
+    // determine forward direction from pawn movement
+    const forwardRow = this.attackDirections[0].row;
+
+    for (const targetPawn of this.enPassantAttackablePawns) {
+      const targetPos = boardState.getPiecePositionBy(targetPawn);
+
+      if (!targetPos) {
+        continue;
+      }
+
+      const landingSquare: BoardPosition = {
+        row: from.row + forwardRow,
+        column: targetPos.column,
+      };
+
+      if (
+        landingSquare.row === position.row &&
+        landingSquare.column === position.column &&
+        boardState.getBoardCellAt(landingSquare) === EMPTY_CELL
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   protected isReachableTarget(cell: BoardCell): boolean {

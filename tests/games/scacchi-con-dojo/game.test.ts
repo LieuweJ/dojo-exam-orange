@@ -15,7 +15,7 @@ const pieceFactory = new ChessPieceFactory();
 
 const createTestPiece = (overrides?: {
   team?: string;
-  kind?: ChessPieceKind;
+  kind?: Exclude<ChessPieceKind, typeof CHESS_PIECE_KIND.PAWN>;
   index?: number;
   attackablePieces?: Set<IPiece>;
 }) =>
@@ -24,6 +24,16 @@ const createTestPiece = (overrides?: {
     kind: overrides?.kind ?? CHESS_PIECE_KIND.BISHOP,
     index: overrides?.index ?? 1,
     attackablePieces: overrides?.attackablePieces ?? new Set(),
+  });
+
+const createPawn = (overrides?: { team?: 'white' | 'black'; index?: number }) =>
+  pieceFactory.createPawn({
+    team: overrides?.team ?? 'white',
+    index: overrides?.index ?? 1,
+    forwardDirection:
+      overrides?.team === 'black'
+        ? { row: 1, column: 0 } // black pawns move down
+        : { row: -1, column: 0 }, // white pawns move up
   });
 
 describe('chess piece can be moved on the board', () => {
@@ -236,5 +246,219 @@ describe('chess piece can be moved on the board', () => {
     await expect(moveHandler.handle(move, boardState)).rejects.toThrow(
       'Castling rook not found where expected.'
     );
+  });
+
+  describe('en passant', () => {
+    test('pawn double-step enables en passant for adjacent enemy pawns', async () => {
+      const e = EMPTY_CELL;
+
+      const whitePawn = createPawn({
+        team: 'white',
+        index: 1,
+      });
+
+      const blackPawn = createPawn({
+        team: 'black',
+        index: 1,
+      });
+
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, blackPawn, e, e, e, e, e], // d5
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, whitePawn, e, e, e, e], // d2
+        [e, e, e, e, e, e, e, e],
+      ]);
+
+      const moveHandler = new ChessMoveHandler();
+
+      // White pawn double-step: d2 → d4
+      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+      expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
+    });
+
+    test('en passant capture removes pawn and moves attacker correctly', async () => {
+      const e = EMPTY_CELL;
+
+      const whitePawn = createPawn({ team: 'white', index: 1 });
+      const blackPawn = createPawn({ team: 'black', index: 1 });
+
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, blackPawn, e, e, e, e], // d5
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, whitePawn, e, e, e, e], // d2
+        [e, e, e, e, e, e, e, e],
+      ]);
+
+      const moveHandler = new ChessMoveHandler();
+
+      // d2 → d4
+      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+      // en passant: d5 → d4
+      await moveHandler.handle({ piece: blackPawn, position: { row: 4, column: 3 } }, boardState);
+
+      const board = boardState.getBoard();
+
+      expect(board[4][3]).toBe(blackPawn); // black pawn moved
+      expect(board[5][3]).toBe(e); // original black square cleared
+      expect(board[4][3]).not.toBe(whitePawn); // white pawn captured
+    });
+
+    test('en passant is only available for one opponent move', async () => {
+      const e = EMPTY_CELL;
+
+      const whitePawn = createPawn({ team: 'white', index: 1 });
+      const blackPawn = createPawn({ team: 'black', index: 1 });
+
+      const blackRook = createTestPiece({
+        team: 'black',
+        kind: CHESS_PIECE_KIND.ROOK,
+        index: 1,
+      });
+
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, blackPawn, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, whitePawn, e, e, e, e],
+        [e, e, e, blackRook, e, e, e, e],
+      ]);
+
+      const moveHandler = new ChessMoveHandler();
+
+      // White: d2 → d4
+      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+      // Black plays something else
+      await moveHandler.handle({ piece: blackRook, position: { row: 6, column: 3 } }, boardState);
+
+      // En passant should now be invalid
+      expect(blackPawn.canEnPassantAttack({ row: 4, column: 3 }, boardState)).toBe(false);
+    });
+
+    test('en passant is blocked if the landing square is occupied', async () => {
+      const e = EMPTY_CELL;
+
+      const whitePawn = createPawn({ team: 'white', index: 1 });
+      const blackPawn = createPawn({ team: 'black', index: 1 });
+
+      const whiteRook = createTestPiece({
+        team: 'white',
+        kind: CHESS_PIECE_KIND.ROOK,
+        index: 1,
+      });
+
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, blackPawn, e, e, e, e], // d5
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, whitePawn, e, e, e, e], // d2
+        [e, e, e, e, e, e, e, e],
+      ]);
+
+      const moveHandler = new ChessMoveHandler();
+
+      // White pawn double-step: d2 → d4
+      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+      // Block en passant landing square (c4)
+      boardState.addMove({
+        piece: whiteRook,
+        position: { row: 4, column: 2 },
+      });
+
+      // En passant should now be blocked
+      expect(blackPawn.canEnPassantAttack({ row: 4, column: 2 }, boardState)).toBe(false);
+    });
+
+    test('en passant is not possible if the target pawn is no longer on the board', async () => {
+      const e = EMPTY_CELL;
+
+      const whitePawn = createPawn({ team: 'white', index: 1 });
+      const blackPawn = createPawn({ team: 'black', index: 1 });
+
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e], // 0
+        [e, e, e, e, e, e, e, e], // 1
+        [e, e, e, e, e, e, e, e], // 2
+        [e, e, e, e, e, e, e, e], // 3
+        [e, e, blackPawn, e, e, e, e, e], // row 4: c4
+        [e, e, e, e, e, e, e, e], // 5
+        [e, e, e, whitePawn, e, e, e, e], // row 6: d2
+        [e, e, e, e, e, e, e, e], // 7
+      ]);
+
+      const moveHandler = new ChessMoveHandler();
+
+      // White pawn double-step: d2 → d4
+      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+      // Sanity: en passant would normally be possible
+      expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
+
+      // Remove the target pawn (simulate capture / illegal state / bug elsewhere)
+      boardState.clearPosition({ row: 4, column: 3 });
+
+      // Now en passant must NOT be possible
+      expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(false);
+    });
+  });
+
+  test('moveHandler executes en passant capture and clears en passant state', async () => {
+    const e = EMPTY_CELL;
+
+    const whitePawn = createPawn({ team: 'white', index: 1 });
+    const blackPawn = createPawn({ team: 'black', index: 1 });
+
+    const boardState = new BoardState([
+      [e, e, e, e, e, e, e, e], // 0
+      [e, e, e, e, e, e, e, e], // 1
+      [e, e, e, e, e, e, e, e], // 2
+      [e, e, e, e, e, e, e, e], // 3
+      [e, e, blackPawn, e, e, e, e, e], // row 4: c4
+      [e, e, e, e, e, e, e, e], // 5
+      [e, e, e, whitePawn, e, e, e, e], // row 6: d2
+      [e, e, e, e, e, e, e, e], // 7
+    ]);
+
+    const moveHandler = new ChessMoveHandler();
+
+    // White pawn double-step: d2 → d4
+    await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+
+    // Sanity check: en passant is available
+    expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
+
+    // Black performs en passant: c4 → d3
+    await moveHandler.handle({ piece: blackPawn, position: { row: 5, column: 3 } }, boardState);
+
+    const board = boardState.getBoard();
+
+    // Black pawn moved to en passant landing square
+    expect(board[5][3]).toBe(blackPawn);
+
+    // White pawn is removed (captured en passant)
+    expect(board[4][3]).toBe(e);
+
+    // Original black square cleared
+    expect(board[4][2]).toBe(e);
+
+    // En passant state cleared
+    expect(blackPawn.canEnPassantAttack({ row: 6, column: 3 }, boardState)).toBe(false);
   });
 });
