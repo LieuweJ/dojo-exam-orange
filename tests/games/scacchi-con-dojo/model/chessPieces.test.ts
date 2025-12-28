@@ -282,5 +282,23 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       // not a castling square, not reachable
       expect(king.canReachPosition({ row: 7, column: 4 }, boardState)).toBe(false);
     });
+
+    test('returns false if the piece is not on the board', () => {
+      const e = EMPTY_CELL;
+
+      const king = createKing();
+      const boardState = new BoardState([
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+        [e, e, e, e, e, e, e, e],
+      ]);
+
+      expect(king.isCastlingDestination({ row: 7, column: 6 }, boardState)).toBe(false);
+    });
   });
 });

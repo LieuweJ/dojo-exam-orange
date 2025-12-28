@@ -1,6 +1,6 @@
-import { Move } from '../model/rules';
-import { BoardState } from '../model/boardState';
+import { BoardPosition, BoardState } from '../model/boardState';
+import { IPiece } from '../model/IPiece';
 
-export type IMoveHandler = {
-  handle(move: Move, boardState: BoardState): Promise<void>;
+export type IMoveHandler<T extends IPiece> = {
+  handle(move: { position: BoardPosition; piece: T }, boardState: BoardState): Promise<void>;
 };

@@ -3,6 +3,7 @@ import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;
+  isCastlingDestination: (position: BoardPosition, boardState: IBoardState) => boolean;
   hasMoved: () => boolean;
   markMoved: () => void;
 };
@@ -54,6 +55,21 @@ export class ChessPiece implements IChessPiece {
     }
 
     return this.canReachByCastling(position, boardState);
+  }
+
+  isCastlingDestination(position: BoardPosition, boardState: IBoardState): boolean {
+    const from = boardState.getPiecePositionBy(this);
+
+    if (!from) {
+      return false;
+    }
+
+    if (position.row !== from.row) {
+      return false;
+    }
+
+    const columnDelta = position.column - from.column;
+    return Math.abs(columnDelta) === 2;
   }
 
   protected canReachNormally(position: BoardPosition, boardState: IBoardState): boolean {
@@ -116,30 +132,30 @@ export class ChessPiece implements IChessPiece {
   }
 
   private canReachByCastling(position: BoardPosition, boardState: IBoardState): boolean {
-    if (!this.isEligibleForCastling()) return false;
+    if (!this.canAttemptCastling()) {
+      return false;
+    }
 
     const from = boardState.getPiecePositionBy(this);
-    if (!from) return false;
 
-    if (!this.isValidCastlingTarget(position, from)) return false;
+    if (!from) {
+      return false;
+    }
+
+    if (!this.isCastlingDestination(position, boardState)) {
+      return false;
+    }
 
     const rook = this.getCastlingRook(from, position, boardState);
-    if (!this.isValidCastlingRook(rook)) return false;
+    if (!this.isValidCastlingRook(rook)) {
+      return false;
+    }
 
-    if (!this.isPathClearBetweenKingAndRook(from, position, boardState)) return false;
-
-    return true;
+    return this.isPathClearBetweenKingAndRook(from, position, boardState);
   }
 
-  private isEligibleForCastling(): boolean {
+  private canAttemptCastling(): boolean {
     return this.canInitiateCastling() && !this.hasMoved();
-  }
-
-  private isValidCastlingTarget(position: BoardPosition, from: BoardPosition): boolean {
-    if (position.row !== from.row) return false;
-
-    const columnDelta = position.column - from.column;
-    return Math.abs(columnDelta) === 2;
   }
 
   private getCastlingRook(
@@ -156,7 +172,7 @@ export class ChessPiece implements IChessPiece {
     });
   }
 
-  private isValidCastlingRook(rookCell: BoardCell): rookCell is ChessPiece {
+  private isValidCastlingRook(rookCell: BoardCell): boolean {
     return (
       rookCell instanceof ChessPiece && rookCell.canParticipateInCastling() && !rookCell.hasMoved()
     );
