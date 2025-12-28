@@ -16,12 +16,25 @@ export type RelativeMovement = {
 
 export class ChessPiece implements IChessPiece {
   private hasMovedFlag = false;
+  protected readonly relativeMovement: Set<RelativeMovement>;
 
   constructor(
     private readonly boardValue: symbol,
-    private readonly relativeMovement: Set<RelativeMovement>,
-    protected readonly attackablePieces: Set<IPiece>
-  ) {}
+    relativeMovement: ReadonlySet<RelativeMovement>,
+    protected readonly attackablePieces: Set<IPiece>,
+    private readonly canInitiateCastlingFlag = false,
+    private readonly canParticipateInCastlingFlag = false
+  ) {
+    this.relativeMovement = new Set(relativeMovement);
+  }
+
+  canInitiateCastling(): boolean {
+    return this.canInitiateCastlingFlag;
+  }
+
+  canParticipateInCastling(): boolean {
+    return this.canParticipateInCastlingFlag;
+  }
 
   getBoardValue(): symbol {
     return this.boardValue;
@@ -36,6 +49,14 @@ export class ChessPiece implements IChessPiece {
   }
 
   canReachPosition(position: BoardPosition, boardState: IBoardState): boolean {
+    if (this.canReachNormally(position, boardState)) {
+      return true;
+    }
+
+    return this.canReachByCastling(position, boardState);
+  }
+
+  protected canReachNormally(position: BoardPosition, boardState: IBoardState): boolean {
     const from = boardState.getPiecePositionBy(this);
 
     if (!from) {
@@ -92,5 +113,69 @@ export class ChessPiece implements IChessPiece {
       position.column >= 0 &&
       position.column < board[0].length
     );
+  }
+
+  private canReachByCastling(position: BoardPosition, boardState: IBoardState): boolean {
+    if (!this.isEligibleForCastling()) return false;
+
+    const from = boardState.getPiecePositionBy(this);
+    if (!from) return false;
+
+    if (!this.isValidCastlingTarget(position, from)) return false;
+
+    const rook = this.getCastlingRook(from, position, boardState);
+    if (!this.isValidCastlingRook(rook)) return false;
+
+    if (!this.isPathClearBetweenKingAndRook(from, position, boardState)) return false;
+
+    return true;
+  }
+
+  private isEligibleForCastling(): boolean {
+    return this.canInitiateCastling() && !this.hasMoved();
+  }
+
+  private isValidCastlingTarget(position: BoardPosition, from: BoardPosition): boolean {
+    if (position.row !== from.row) return false;
+
+    const columnDelta = position.column - from.column;
+    return Math.abs(columnDelta) === 2;
+  }
+
+  private getCastlingRook(
+    from: BoardPosition,
+    position: BoardPosition,
+    boardState: IBoardState
+  ): BoardCell {
+    const direction = position.column > from.column ? 1 : -1;
+    const rookColumn = direction > 0 ? boardState.getBoard()[from.row].length - 1 : 0;
+
+    return boardState.getBoardCellAt({
+      row: from.row,
+      column: rookColumn,
+    });
+  }
+
+  private isValidCastlingRook(rookCell: BoardCell): rookCell is ChessPiece {
+    return (
+      rookCell instanceof ChessPiece && rookCell.canParticipateInCastling() && !rookCell.hasMoved()
+    );
+  }
+
+  private isPathClearBetweenKingAndRook(
+    from: BoardPosition,
+    position: BoardPosition,
+    boardState: IBoardState
+  ): boolean {
+    const direction = position.column > from.column ? 1 : -1;
+    const rookColumn = direction > 0 ? boardState.getBoard()[from.row].length - 1 : 0;
+
+    for (let column = from.column + direction; column !== rookColumn; column += direction) {
+      if (boardState.getBoardCellAt({ row: from.row, column }) !== EMPTY_CELL) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

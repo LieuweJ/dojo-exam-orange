@@ -3,21 +3,40 @@ import { BoardState, EMPTY_CELL, IBoard } from '../../../src/core/model/boardSta
 import { ChessMoveHandler } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
 import { Move } from '../../../src/core/model/rules';
 import { IPiece } from '../../../src/core/model/IPiece';
+import { ChessPieceFactory } from '../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
+import {
+  CHESS_PIECE_KIND,
+  ChessPieceKind,
+} from '../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
 
-const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
-  new ChessPiece(symbol, new Set(), new Set<IPiece>());
+const pieceFactory = new ChessPieceFactory();
+
+const createTestPiece = (overrides?: {
+  team?: string;
+  kind?: ChessPieceKind;
+  index?: number;
+  attackablePieces?: Set<IPiece>;
+}) =>
+  pieceFactory.create({
+    team: overrides?.team || '',
+    kind: overrides?.kind ?? CHESS_PIECE_KIND.BISHOP,
+    index: overrides?.index ?? 1,
+    attackablePieces: overrides?.attackablePieces ?? new Set(),
+  });
 
 describe('chess piece', () => {
   test('the chess piece is represented on the board with value', () => {
-    const pieceSymbol = Symbol('pw-1');
+    const piece = createTestPiece({ team: 'white', kind: CHESS_PIECE_KIND.ROOK, index: 1 });
 
-    const chessPiece: ChessPiece = createStaticChessPiece(pieceSymbol);
-
-    expect(chessPiece.getBoardValue()).toBe(pieceSymbol);
+    expect(piece.getBoardValue().toString()).toContain('R1w');
   });
 
   test('a chess piece can move to an empty place on the board.', () => {
-    const piece: ChessPiece = createStaticChessPiece(Symbol('attackingPiece'));
+    const piece: ChessPiece = createTestPiece({
+      team: 'white',
+      kind: CHESS_PIECE_KIND.ROOK,
+      index: 1,
+    });
 
     const initBoard = new BoardState([
       [EMPTY_CELL, piece, EMPTY_CELL],
@@ -43,8 +62,8 @@ describe('chess piece', () => {
   });
 
   test('a chess piece can move to a place on the board which is already occupied.', () => {
-    const attackingPiece: ChessPiece = createStaticChessPiece(Symbol('attackingPiece'));
-    const defendingPiece: ChessPiece = createStaticChessPiece(Symbol('defendingPiece'));
+    const attackingPiece = createTestPiece({ index: 1 });
+    const defendingPiece = createTestPiece({ index: 2 });
 
     const initBoard = new BoardState([
       [EMPTY_CELL, attackingPiece, EMPTY_CELL],
@@ -70,7 +89,7 @@ describe('chess piece', () => {
   });
 
   test('Throws when the chess piece we want to move is not already on the board.', async () => {
-    const pieceNotOnBoard: ChessPiece = createStaticChessPiece(Symbol('notPlacedPiece'));
+    const pieceNotOnBoard = createTestPiece({ index: 99 });
 
     const initBoard = new BoardState([
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
@@ -85,7 +104,7 @@ describe('chess piece', () => {
     const moveHandler = new ChessMoveHandler();
 
     await expect(moveHandler.handle(move, initBoard)).rejects.toThrow(
-      'The chess piece Symbol(notPlacedPiece) is not present on the board. Chess piece cannot be moved.'
+      `The chess piece ${String(pieceNotOnBoard.getBoardValue())} is not present on the board. Chess piece cannot be moved.`
     );
   });
 });
