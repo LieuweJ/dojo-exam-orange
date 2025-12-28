@@ -174,4 +174,23 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
 
     expect(pawn.canReachPosition({ row: 0, column: 0 }, boardState)).toBe(false);
   });
+
+  test('pawn cannot promote if it is not on the board', () => {
+    const pawn = new ChessPiecePawn(
+      Symbol('P1w'),
+      { row: -1, column: 0 }, // white pawn
+      new Set()
+    );
+
+    const boardState = new BoardState([
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ]);
+
+    // Even though row 0 is the promotion row for white,
+    // the pawn is not on the board
+    const canPromote = pawn.canPromote({ row: 0, column: 1 }, boardState);
+
+    expect(canPromote).toBe(false);
+  });
 });

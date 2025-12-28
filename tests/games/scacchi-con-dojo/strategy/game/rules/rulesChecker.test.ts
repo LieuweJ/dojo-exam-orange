@@ -14,9 +14,10 @@ import {
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { IPiece } from '../../../../../../src/core/model/IPiece';
+import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
 
 const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
-  new ChessPiece(symbol, new Set(), new Set<IPiece>());
+  new ChessPiece(symbol, CHESS_PIECE_KIND.BISHOP, new Set(), new Set<IPiece>());
 
 describe('chess rules', () => {
   const e = EMPTY_CELL;
@@ -122,7 +123,12 @@ describe('chess rules', () => {
       },
     ]);
 
-    const piece = new ChessPiece(Symbol('pieceWhichCanReachTheProposedMove'), movement, new Set());
+    const piece = new ChessPiece(
+      Symbol('pieceWhichCanReachTheProposedMove'),
+      CHESS_PIECE_KIND.QUEEN,
+      movement,
+      new Set()
+    );
 
     const initBoard = new BoardState([
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],

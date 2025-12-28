@@ -8,13 +8,14 @@ import {
   CreateChessPieceInput,
 } from '../../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
 import { CHESS_PIECE_KIND } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
+import { ChessPiecePawn } from '../../../../src/games/scacchi-con-dojo/model/chessPiecePawn';
 
 const createEmptyBoard = (rows = 8, columns = 8) =>
   Array.from({ length: rows }, () => Array.from({ length: columns }, () => EMPTY_CELL));
 
 const pieceFactory = new ChessPieceFactory();
 const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
-  new ChessPiece(symbol, new Set(), new Set<IPiece>());
+  new ChessPiece(symbol, CHESS_PIECE_KIND.BISHOP, new Set(), new Set<IPiece>());
 
 const createKing = () =>
   pieceFactory.create({
@@ -306,13 +307,68 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
     });
   });
 
-  test('chess piece factory will throw if pawn is created with create method', () => {
-    expect(() => {
-      pieceFactory.create({
+  describe('ChessPieceFactory ', () => {
+    test('chess piece factory will throw if pawn is created with create method', () => {
+      const factory = new ChessPieceFactory();
+
+      expect(() => {
+        pieceFactory.create({
+          team: 'white',
+          kind: CHESS_PIECE_KIND.PAWN as unknown as CreateChessPieceInput['kind'],
+          index: 1,
+        });
+      }).toThrow('Pawn kind is not allowed in this method.');
+    });
+
+    test('throws if team cannot be inferred from source piece', () => {
+      const factory = new ChessPieceFactory();
+
+      // Create a piece with a malformed boardValue symbol
+      const badPiece = new ChessPiece(
+        Symbol(), // no trailing team char
+        CHESS_PIECE_KIND.ROOK,
+        new Set(),
+        new Set(),
+        false,
+        false
+      );
+
+      expect(() => factory.createFrom(badPiece, CHESS_PIECE_KIND.QUEEN, 1)).toThrow(
+        'Cannot infer team from source piece.'
+      );
+    });
+
+    test('throws when attempting to create pawn from non-pawn source', () => {
+      const factory = new ChessPieceFactory();
+
+      const rook = factory.create({
         team: 'white',
-        kind: CHESS_PIECE_KIND.PAWN as unknown as CreateChessPieceInput['kind'],
+        kind: CHESS_PIECE_KIND.ROOK,
         index: 1,
       });
-    }).toThrow('Pawn kind is not allowed in this method.');
+      expect(() => factory.createFrom(rook, CHESS_PIECE_KIND.PAWN, 1)).toThrow(
+        'Cannot promote non-pawn into pawn.'
+      );
+    });
+
+    test('creates pawn from pawn source (sanity check)', () => {
+      const factory = new ChessPieceFactory();
+
+      const pawn = factory.createPawn({
+        team: 'white',
+        index: 1,
+        forwardDirection: { row: -1, column: 0 },
+      });
+
+      const newPawn = factory.createFrom(pawn, CHESS_PIECE_KIND.PAWN, 2);
+
+      if (!(newPawn instanceof ChessPiecePawn)) {
+        throw new Error('Expected newPawn to be an instance of ChessPiecePawn');
+      }
+
+      expect(newPawn).toBeInstanceOf(ChessPiecePawn);
+      expect(newPawn.getForwardDirection()).toEqual(pawn.getForwardDirection());
+      expect(newPawn.getBoardValue().description).toContain('P2w');
+    });
   });
 });

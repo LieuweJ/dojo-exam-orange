@@ -1,6 +1,7 @@
 import { ChessPiece, Direction, RelativeMovement } from './chessPiece';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
 import { IPiece } from '../../../core/model/IPiece';
+import { CHESS_PIECE_KIND } from '../config/chessPiecesFactory';
 
 export class ChessPiecePawn extends ChessPiece {
   private forwardMovement: RelativeMovement;
@@ -20,7 +21,7 @@ export class ChessPiecePawn extends ChessPiece {
       maxSteps: 2,
     };
 
-    super(boardValue, new Set([forwardMovement]), attackablePieces);
+    super(boardValue, CHESS_PIECE_KIND.PAWN, new Set([forwardMovement]), attackablePieces);
 
     this.forwardMovement = forwardMovement;
     this.attackDirections = [
@@ -48,6 +49,22 @@ export class ChessPiecePawn extends ChessPiece {
     super.markMoved();
 
     this.forwardMovement.maxSteps = 1;
+  }
+
+  canPromote(position: BoardPosition, boardState: IBoardState): boolean {
+    const from = boardState.getPiecePositionBy(this);
+    if (!from) {
+      return false;
+    }
+
+    const board = boardState.getBoard();
+    const lastRow = this.attackDirections[0].row === -1 ? 0 : board.length - 1;
+
+    return position.row === lastRow;
+  }
+
+  getForwardDirection(): Direction {
+    return this.forwardMovement.direction[0];
   }
 
   setEnPassantAttackablePawn(pawn: ChessPiecePawn): void {

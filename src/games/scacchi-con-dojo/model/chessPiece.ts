@@ -1,9 +1,11 @@
 import { IPiece } from '../../../core/model/IPiece';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
+import { ChessPieceKind } from '../config/chessPiecesFactory';
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;
   isCastlingDestination: (position: BoardPosition, boardState: IBoardState) => boolean;
+  getAttackablePieces: () => Set<IPiece>;
   hasMoved: () => boolean;
   markMoved: () => void;
 };
@@ -21,12 +23,17 @@ export class ChessPiece implements IChessPiece {
 
   constructor(
     private readonly boardValue: symbol,
+    private readonly kind: ChessPieceKind,
     relativeMovement: ReadonlySet<RelativeMovement>,
     protected readonly attackablePieces: Set<IPiece>,
     private readonly canInitiateCastlingFlag = false,
     private readonly canParticipateInCastlingFlag = false
   ) {
     this.relativeMovement = new Set(relativeMovement);
+  }
+
+  getKind(): ChessPieceKind {
+    return this.kind;
   }
 
   canInitiateCastling(): boolean {
@@ -55,6 +62,10 @@ export class ChessPiece implements IChessPiece {
     }
 
     return this.canReachByCastling(position, boardState);
+  }
+
+  getAttackablePieces(): Set<IPiece> {
+    return this.attackablePieces;
   }
 
   isCastlingDestination(position: BoardPosition, boardState: IBoardState): boolean {

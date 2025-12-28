@@ -36,6 +36,7 @@ export class ChessPieceFactory {
 
     return new ChessPiece(
       boardValue,
+      kind,
       definition.movement,
       attackablePieces,
       definition.castling.canInitiate,
@@ -52,6 +53,37 @@ export class ChessPieceFactory {
     const boardValue = this.createBoardValue(team, CHESS_PIECE_KIND.PAWN, index);
 
     return new ChessPiecePawn(boardValue, forwardDirection, attackablePieces);
+  }
+
+  createFrom(source: ChessPiece, kind: ChessPieceKind, index: number): ChessPiece {
+    const teamChar = source.getBoardValue().description?.slice(-1);
+    if (!teamChar) {
+      throw new Error('Cannot infer team from source piece.');
+    }
+
+    const team = String(teamChar);
+
+    const attackablePieces = source.getAttackablePieces();
+
+    if (kind === CHESS_PIECE_KIND.PAWN) {
+      if (!(source instanceof ChessPiecePawn)) {
+        throw new Error('Cannot promote non-pawn into pawn.');
+      }
+
+      return this.createPawn({
+        team,
+        index,
+        forwardDirection: source.getForwardDirection(),
+        attackablePieces,
+      });
+    }
+
+    return this.create({
+      team,
+      kind,
+      index,
+      attackablePieces,
+    });
   }
 
   private createBoardValue(team: string, kind: ChessPieceKind, index: number): symbol {
