@@ -1,7 +1,7 @@
 import { RULES_VIOLATIONS, RuleStrategy } from '../../../../../core/model/rules';
 import { ProposedChessMove } from '../../../model/move';
 import { ChessPiecePawn } from '../../../model/chessPiecePawn';
-import { CHESS_PIECE_KIND, ChessPieceKind } from '../../../config/chessPiecesFactory';
+import { CHESS_PIECE_KIND, ChessPieceKind } from '../../../config/chessPiecesConfig';
 
 const ALLOWED_PROMOTIONS: ReadonlySet<ChessPieceKind> = new Set([
   CHESS_PIECE_KIND.QUEEN,

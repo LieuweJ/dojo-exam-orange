@@ -4,7 +4,7 @@ import {
   CHESS_PIECE_DEFINITIONS,
   CHESS_PIECE_KIND,
   ChessPieceKind,
-} from '../config/chessPiecesFactory';
+} from '../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
 
 export type CreateChessPieceInput = {

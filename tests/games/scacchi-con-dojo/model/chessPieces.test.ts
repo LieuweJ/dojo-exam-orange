@@ -6,8 +6,8 @@ import { IPiece } from '../../../../src/core/model/IPiece';
 import {
   ChessPieceFactory,
   CreateChessPieceInput,
-} from '../../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
-import { CHESS_PIECE_KIND } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
+} from '../../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
+import { CHESS_PIECE_KIND } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
 import { ChessPiecePawn } from '../../../../src/games/scacchi-con-dojo/model/chessPiecePawn';
 
 const createEmptyBoard = (rows = 8, columns = 8) =>

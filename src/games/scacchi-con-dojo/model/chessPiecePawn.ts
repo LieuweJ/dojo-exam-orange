@@ -1,7 +1,7 @@
 import { ChessPiece, Direction, RelativeMovement } from './chessPiece';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
 import { IPiece } from '../../../core/model/IPiece';
-import { CHESS_PIECE_KIND } from '../config/chessPiecesFactory';
+import { CHESS_PIECE_KIND } from '../config/chessPiecesConfig';
 
 export class ChessPiecePawn extends ChessPiece {
   private forwardMovement: RelativeMovement;

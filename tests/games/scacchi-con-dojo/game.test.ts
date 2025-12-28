@@ -5,11 +5,11 @@ import {
   ChessMoveHandler,
 } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
 import { IPiece } from '../../../src/core/model/IPiece';
-import { ChessPieceFactory } from '../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
+import { ChessPieceFactory } from '../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
 import {
   CHESS_PIECE_KIND,
   ChessPieceKind,
-} from '../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
+} from '../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
 
 const pieceFactory = new ChessPieceFactory();
 

@@ -1,5 +1,5 @@
-import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
-import { ChessPieceFactory } from '../../../../../../src/games/scacchi-con-dojo/factory/chessPieceSetFactory';
+import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
+import { ChessPieceFactory } from '../../../../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
 import { ValidPromotionStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validPromotionStrategy';
 import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
 import { ProposedChessMove } from '../../../../../../src/games/scacchi-con-dojo/model/move';

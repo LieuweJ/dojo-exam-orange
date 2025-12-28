@@ -14,7 +14,7 @@ import {
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { IPiece } from '../../../../../../src/core/model/IPiece';
-import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesFactory';
+import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
 
 const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
   new ChessPiece(symbol, CHESS_PIECE_KIND.BISHOP, new Set(), new Set<IPiece>());

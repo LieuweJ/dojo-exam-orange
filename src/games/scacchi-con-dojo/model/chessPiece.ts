@@ -1,6 +1,6 @@
 import { IPiece } from '../../../core/model/IPiece';
 import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
-import { ChessPieceKind } from '../config/chessPiecesFactory';
+import { ChessPieceKind } from '../config/chessPiecesConfig';
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;

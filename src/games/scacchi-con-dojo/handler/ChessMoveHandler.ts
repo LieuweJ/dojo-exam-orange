@@ -2,8 +2,8 @@ import { IMoveHandler } from '../../../core/handler/MoveHandler';
 import { BoardPosition, BoardState } from '../../../core/model/boardState';
 import { ChessPiece } from '../model/chessPiece';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
-import { ChessPieceKind } from '../config/chessPiecesFactory';
-import { ChessPieceFactory } from '../factory/chessPieceSetFactory';
+import { ChessPieceKind } from '../config/chessPiecesConfig';
+import { ChessPieceFactory } from '../factory/chessPieceFactory';
 
 export type ChessMove = {
   position: BoardPosition;
