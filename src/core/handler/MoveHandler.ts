@@ -1,6 +1,6 @@
-import { BoardPosition, BoardState } from '../model/boardState';
+import { BoardPosition, IBoardState } from '../model/boardState';
 import { IPiece } from '../model/IPiece';
 
 export type IMoveHandler<T extends IPiece> = {
-  handle(move: { position: BoardPosition; piece: T }, boardState: BoardState): Promise<void>;
+  handle(move: { position: BoardPosition; piece: T }, boardState: IBoardState): Promise<void>;
 };

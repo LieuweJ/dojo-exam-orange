@@ -6,6 +6,8 @@ import { IncorrectMove, Move } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
 import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 import { IGameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
+import { IMoveHandler } from './handler/MoveHandler';
+import { IPiece } from './model/IPiece';
 
 export type IGame = {
   play(): void;
@@ -21,7 +23,8 @@ export class Game implements IGame {
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
     private readonly rulesChecker: IRulesChainHandler,
     private readonly violationPresenter: IOutputPresenter<IncorrectMove>,
-    private readonly gameLifeCycleStrategy: IGameLifecycleStrategy
+    private readonly gameLifeCycleStrategy: IGameLifecycleStrategy,
+    private readonly moveHandler: IMoveHandler<IPiece>
   ) {}
 
   public async play() {
@@ -73,6 +76,6 @@ export class Game implements IGame {
       this.violationPresenter.present({ move: proposedMove, violations });
     }
 
-    this.boardState.addMove(proposedMove);
+    await this.moveHandler.handle(proposedMove, this.boardState);
   }
 }

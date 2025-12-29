@@ -10,6 +10,8 @@ import { IncorrectMove } from '../../core/model/rules';
 import { IGameLifecycleStrategy } from '../../core/strategy/game/gameLifecycleStrategy';
 import { IOutputAdapter } from '../../core/adapters/terminalOutputAdapter';
 import { createTicTacDojo } from '../../games/tic-tac-dojo/composition/ticTacDojoComposition';
+import { IPiece } from '../../core/model/IPiece';
+import { IMoveHandler } from '../../core/handler/MoveHandler';
 
 export type GameCompositionInput = {
   inputAdapter: IInputAdapter;
@@ -27,6 +29,7 @@ export type GameComposition = {
   rulesChecker: IRulesChainHandler;
   violationPresenter: IOutputPresenter<IncorrectMove>;
   lifecycleStrategy: IGameLifecycleStrategy;
+  moveHandler: IMoveHandler<IPiece>;
 };
 
 export type GameDescriptor = {

@@ -23,6 +23,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { ConnectLineMoveHandler } from '../../src/sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
@@ -90,7 +91,8 @@ describe('A game of orange-in-a-row can be played', () => {
       gameResultPresenter,
       new RulesChainHandler([violationStrategy]),
       violationsPresenter,
-      new GameLifecycleStrategy()
+      new GameLifecycleStrategy(),
+      new ConnectLineMoveHandler()
     );
   });
 
@@ -199,7 +201,8 @@ describe('A game of orange-in-a-row can be played', () => {
         gameResultPresenter,
         new RulesChainHandler([violationStrategy]),
         violationsPresenter,
-        new GameLifecycleStrategy()
+        new GameLifecycleStrategy(),
+        new ConnectLineMoveHandler()
       );
     }).toThrow(new Error(`In order to play this game, we need at least 2 players.`));
   });

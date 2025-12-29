@@ -33,6 +33,7 @@ export async function createGameFromUserSelection({
     composition.resultPresenter,
     composition.rulesChecker,
     composition.violationPresenter,
-    composition.lifecycleStrategy
+    composition.lifecycleStrategy,
+    composition.moveHandler
   );
 }

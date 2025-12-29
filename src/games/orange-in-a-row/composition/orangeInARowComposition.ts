@@ -22,6 +22,7 @@ import {
 } from '../../../game-bootstrap/composition/games-config';
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
+import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
 
 const HELP_FILE = 'docs/orange-in-a-row.md';
 
@@ -88,5 +89,6 @@ export function createOrangeInARowComposition({
       new PositionToOrangeInARowCliResolver()
     ),
     lifecycleStrategy: new GameLifecycleStrategy(),
+    moveHandler: new ConnectLineMoveHandler(),
   };
 }

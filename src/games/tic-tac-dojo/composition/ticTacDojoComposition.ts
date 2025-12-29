@@ -22,6 +22,7 @@ import { PositionToTicTacToeCliResolver } from '../resolvers/positionToTicTacDoj
 import { TicTacDojoBoardPresenter } from '../presenter/ticTacDojoBoardPresenter';
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
+import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
 
 const HELP_FILE = 'docs/tic-tac-dojo.md';
 
@@ -104,5 +105,6 @@ export function createTicTacDojo({
       new PositionToTicTacToeCliResolver(TIC_TAC_DOJO_ROW_TO_STRING)
     ),
     lifecycleStrategy: new GameLifecycleStrategy(),
+    moveHandler: new ConnectLineMoveHandler(),
   };
 }
