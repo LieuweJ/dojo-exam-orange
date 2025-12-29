@@ -8,7 +8,7 @@ import { HelpPresenter } from '../../../core/presenter/helpPresenter';
 import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
 import {
-  VIOLATION_MESSAGES,
+  CONNECT_LINE_VIOLATION_MESSAGES,
   ViolationsPresenter,
 } from '../../../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
@@ -100,7 +100,7 @@ export function createTicTacDojo({
     ]),
     violationPresenter: new ViolationsPresenter(
       outputAdapter,
-      VIOLATION_MESSAGES,
+      CONNECT_LINE_VIOLATION_MESSAGES,
       TIC_TAC_DOJO_BOARD_UI,
       new PositionToTicTacToeCliResolver(TIC_TAC_DOJO_ROW_TO_STRING)
     ),

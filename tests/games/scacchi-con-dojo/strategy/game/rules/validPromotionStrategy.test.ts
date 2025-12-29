@@ -3,7 +3,7 @@ import { ChessPieceFactory } from '../../../../../../src/games/scacchi-con-dojo/
 import { ValidPromotionStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validPromotionStrategy';
 import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
 import { ProposedChessMove } from '../../../../../../src/games/scacchi-con-dojo/model/move';
-import { Move, RULES_VIOLATIONS } from '../../../../../../src/core/model/rules';
+import { Move } from '../../../../../../src/core/model/rules';
 import { TurnState } from '../../../../../../src/core/model/turnState';
 import { Pieces, Player } from '../../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../../src/core/strategy/player/move-strategy';
@@ -11,6 +11,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { CHESS_RULE_VIOLATION_TYPES } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/violationTypes';
 
 const pieceFactory = new ChessPieceFactory();
 const strategy = new ValidPromotionStrategy();
@@ -71,7 +72,7 @@ describe('ValidPromotionStrategy', () => {
 
     const result = strategy.check(proposedMove);
 
-    expect(result).toEqual([RULES_VIOLATIONS.INVALID_PLACEMENT]);
+    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
   });
 
   test('promotionKind given but pawn is not promoting → INVALID', () => {
@@ -92,7 +93,7 @@ describe('ValidPromotionStrategy', () => {
       ...baseContext(board),
     } as ProposedChessMove);
 
-    expect(result).toEqual([RULES_VIOLATIONS.INVALID_PLACEMENT]);
+    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
   });
 
   test('promotionKind given for non-pawn → INVALID', () => {
@@ -112,7 +113,7 @@ describe('ValidPromotionStrategy', () => {
       ...baseContext(board),
     } as ProposedChessMove);
 
-    expect(result).toEqual([RULES_VIOLATIONS.INVALID_PLACEMENT]);
+    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
   });
 
   test('pawn promotes to invalid piece → INVALID', () => {
@@ -132,7 +133,7 @@ describe('ValidPromotionStrategy', () => {
       ...baseContext(board),
     } as ProposedChessMove);
 
-    expect(result).toEqual([RULES_VIOLATIONS.INVALID_PLACEMENT]);
+    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
   });
 
   test('pawn promotes to valid piece → OK', () => {

@@ -3,21 +3,27 @@ import { TurnConstraint } from './turnState';
 
 import { IPiece } from './IPiece';
 
-export const RULES_VIOLATIONS = {
-  INVALID_PLACEMENT: 'INVALID_PLACEMENT',
+export const PLAYER_RULES_VIOLATIONS = {
   INVALID_PLAYER_TURN: 'INVALID_PLAYER_TURN',
 } as const;
 
-export type RuleViolation = keyof typeof RULES_VIOLATIONS;
+export type PlayerRuleViolationType =
+  (typeof PLAYER_RULES_VIOLATIONS)[keyof typeof PLAYER_RULES_VIOLATIONS];
 
-export type Move = { position: BoardPosition; piece: IPiece };
-export type IncorrectMove = {
-  move: Move;
-  violations: RuleViolation[];
+export type RuleViolation<ViolationType extends BaseRuleViolationType> = {
+  reason: ViolationType;
 };
 
-export type RuleStrategy = {
-  check(input: ProposedMove): RuleViolation[] | null;
+export type BaseRuleViolationType = string;
+
+export type Move = { position: BoardPosition; piece: IPiece };
+export type IncorrectMove<ViolationType extends BaseRuleViolationType> = {
+  move: Move;
+  violations: RuleViolation<ViolationType>[];
+};
+
+export type RuleStrategy<ViolationType extends BaseRuleViolationType> = {
+  check(input: ProposedMove): RuleViolation<ViolationType>[] | null;
 };
 
 export type MoveContext = { board: IBoardState; turn: TurnConstraint };

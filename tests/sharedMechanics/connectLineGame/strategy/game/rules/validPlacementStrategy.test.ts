@@ -1,5 +1,5 @@
 import { ValidLineGamePlacementStrategy } from '../../../../../../src/sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
-import { Move, RuleViolation } from '../../../../../../src/core/model/rules';
+import { BaseRuleViolationType, Move, RuleViolation } from '../../../../../../src/core/model/rules';
 import {
   PIECE_O,
   PIECE_X,
@@ -52,7 +52,9 @@ describe('ValidPlacementStrategy', () => {
 
     const result = strategy.check({ move, moveContext });
 
-    expect(result).toEqual(['INVALID_PLACEMENT'] as RuleViolation[]);
+    expect(result).toEqual([
+      { reason: 'INVALID_PLACEMENT' },
+    ] as RuleViolation<BaseRuleViolationType>[]);
   });
 
   test('returns null when validator reports move as valid.', () => {

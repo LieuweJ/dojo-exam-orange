@@ -1,4 +1,4 @@
-import { Move, RuleViolation } from '../../../../../src/core/model/rules';
+import { BaseRuleViolationType, Move, RuleViolation } from '../../../../../src/core/model/rules';
 import { ValidPlayerTurnStrategy } from '../../../../../src/core/strategy/game/rules/validPlayerTurnStrategy';
 import {
   PIECE_O,
@@ -39,7 +39,9 @@ describe('ValidPlayerTurnStrategy', () => {
     const result = strategy.check({ move, moveContext: constraints });
 
     expect(constraints.turn.currentPlayerOwnsPiece).toHaveBeenCalledWith(move.piece);
-    expect(result).toEqual(['INVALID_PLAYER_TURN'] as RuleViolation[]);
+    expect(result).toEqual([
+      { reason: 'INVALID_PLAYER_TURN' },
+    ] as RuleViolation<BaseRuleViolationType>[]);
   });
 
   test('returns null when validator reports move as valid', () => {

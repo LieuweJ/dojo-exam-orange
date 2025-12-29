@@ -66,7 +66,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual(['INVALID_PLACEMENT']);
+    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
   });
 
   test('a move will be seen as invalid if the move.piece is on the same element as the current move.position on the board.', async () => {
@@ -89,7 +89,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual(['INVALID_PLACEMENT']);
+    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
   });
 
   test('a move is invalid if the piece cannot reach the target position', () => {
@@ -112,7 +112,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual(['INVALID_PLACEMENT']);
+    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
   });
 
   test('a move is valid when the piece can reach the target position', () => {

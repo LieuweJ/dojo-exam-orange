@@ -10,9 +10,9 @@ import {
 } from '../../src/core/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../../src/core/presenter/gameOutcomePresenter';
 import {
+  BaseRuleViolationType,
   IncorrectMove,
   Move,
-  RULES_VIOLATIONS,
   RuleStrategy,
   RuleViolation,
 } from '../../src/core/model/rules';
@@ -24,6 +24,7 @@ import {
   PIECE_X,
 } from '../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { ConnectLineMoveHandler } from '../../src/sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
+import { LINE_CONNECT_MOVE_RULES_VIOLATIONS } from '../../src/sharedMechanics/connectLineGame/model/rules';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
@@ -36,8 +37,8 @@ describe('A game of orange-in-a-row can be played', () => {
   let playerX: Player;
   let playerO: Player;
   let players: Player[];
-  let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove>>;
-  let violationStrategy: jest.Mocked<RuleStrategy>;
+  let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove<BaseRuleViolationType>>>;
+  let violationStrategy: jest.Mocked<RuleStrategy<BaseRuleViolationType>>;
 
   beforeEach(() => {
     board = new BoardState([
@@ -213,7 +214,9 @@ describe('A game of orange-in-a-row can be played', () => {
 
     moveStrategy.createNextMove.mockResolvedValueOnce(invalidMove).mockResolvedValueOnce(validMove);
 
-    const violation: RuleViolation = RULES_VIOLATIONS.INVALID_PLACEMENT;
+    const violation: RuleViolation<BaseRuleViolationType> = {
+      reason: LINE_CONNECT_MOVE_RULES_VIOLATIONS.INVALID_PLACEMENT,
+    };
 
     violationStrategy.check.mockReturnValueOnce([violation]).mockReturnValueOnce(null);
 

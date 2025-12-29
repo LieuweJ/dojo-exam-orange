@@ -1,15 +1,16 @@
 import { IOutputAdapter } from '../../../src/core/adapters/terminalOutputAdapter';
 import {
-  VIOLATION_MESSAGES,
+  CONNECT_LINE_VIOLATION_MESSAGES,
   ViolationsPresenter,
 } from '../../../src/core/presenter/violationsPresenter';
-import { IncorrectMove, RULES_VIOLATIONS, RuleViolation } from '../../../src/core/model/rules';
+import { BaseRuleViolationType, IncorrectMove, RuleViolation } from '../../../src/core/model/rules';
 import {
   ORANGE_IN_A_ROW_BOARD_UI,
   PIECE_O,
   PIECE_X,
 } from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { PositionToOrangeInARowCliResolver } from '../../../src/games/orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
+import { LINE_CONNECT_MOVE_RULES_VIOLATIONS } from '../../../src/sharedMechanics/connectLineGame/model/rules';
 
 describe('ViolationsPresenter', () => {
   const renderMock = jest.fn();
@@ -24,26 +25,26 @@ describe('ViolationsPresenter', () => {
   });
 
   test('renders a single violation message', () => {
-    const presenter = new ViolationsPresenter(
+    const presenter = new ViolationsPresenter<BaseRuleViolationType>(
       outputAdapter,
-      VIOLATION_MESSAGES,
+      CONNECT_LINE_VIOLATION_MESSAGES,
       ORANGE_IN_A_ROW_BOARD_UI,
       new PositionToOrangeInARowCliResolver()
     );
 
-    const incorrectMove: IncorrectMove = {
+    const incorrectMove: IncorrectMove<BaseRuleViolationType> = {
       move: {
         piece: PIECE_X,
         position: { column: 2, row: 0 },
       },
-      violations: [RULES_VIOLATIONS.INVALID_PLACEMENT],
+      violations: [{ reason: LINE_CONNECT_MOVE_RULES_VIOLATIONS.INVALID_PLACEMENT }],
     };
 
     presenter.present(incorrectMove);
 
     const expectedMessage =
       `Invalid move: ${ORANGE_IN_A_ROW_BOARD_UI.get(PIECE_X.getBoardValue())} at column 3:\n` +
-      `- ${VIOLATION_MESSAGES[RULES_VIOLATIONS.INVALID_PLACEMENT]}`;
+      `- ${CONNECT_LINE_VIOLATION_MESSAGES.INVALID_PLACEMENT}`;
 
     expect(renderMock).toHaveBeenCalledWith(expectedMessage);
   });
@@ -57,17 +58,20 @@ describe('ViolationsPresenter', () => {
         // intentionally adding a second violation for test clarity
         // (this keeps the test future-proof)
         OTHER: 'Some other violation',
-      } as Record<RuleViolation, string>,
+      } as Record<BaseRuleViolationType, string>,
       ORANGE_IN_A_ROW_BOARD_UI,
       new PositionToOrangeInARowCliResolver()
     );
 
-    const incorrectMove: IncorrectMove = {
+    const incorrectMove: IncorrectMove<BaseRuleViolationType> = {
       move: {
         piece: PIECE_O,
         position: { column: 1, row: 0 },
       },
-      violations: ['INVALID_PLACEMENT', 'OTHER'] as RuleViolation[],
+      violations: [
+        { reason: 'INVALID_PLACEMENT' },
+        { reason: 'OTHER' },
+      ] as RuleViolation<BaseRuleViolationType>[],
     };
 
     presenter.present(incorrectMove);
@@ -80,14 +84,14 @@ describe('ViolationsPresenter', () => {
   });
 
   test('renders an unknown violation message when no violations are provided', () => {
-    const presenter = new ViolationsPresenter(
+    const presenter = new ViolationsPresenter<BaseRuleViolationType>(
       outputAdapter,
-      VIOLATION_MESSAGES,
+      CONNECT_LINE_VIOLATION_MESSAGES,
       ORANGE_IN_A_ROW_BOARD_UI,
       new PositionToOrangeInARowCliResolver()
     );
 
-    const incorrectMove: IncorrectMove = {
+    const incorrectMove: IncorrectMove<BaseRuleViolationType> = {
       move: {
         piece: PIECE_X,
         position: { column: 0, row: 0 },

@@ -1,9 +1,15 @@
-import { ProposedMove, RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../../../model/rules';
+import {
+  PLAYER_RULES_VIOLATIONS,
+  PlayerRuleViolationType,
+  ProposedMove,
+  RuleStrategy,
+  RuleViolation,
+} from '../../../model/rules';
 
-export class ValidPlayerTurnStrategy implements RuleStrategy {
-  check({ move, moveContext }: ProposedMove): RuleViolation[] | null {
+export class ValidPlayerTurnStrategy implements RuleStrategy<PlayerRuleViolationType> {
+  check({ move, moveContext }: ProposedMove): RuleViolation<PlayerRuleViolationType>[] | null {
     if (!moveContext.turn.currentPlayerOwnsPiece(move.piece)) {
-      return [RULES_VIOLATIONS.INVALID_PLAYER_TURN];
+      return [{ reason: PLAYER_RULES_VIOLATIONS.INVALID_PLAYER_TURN }];
     }
 
     return null;

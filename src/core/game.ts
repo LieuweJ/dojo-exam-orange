@@ -2,7 +2,7 @@ import { IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameOutcomePresenter';
-import { IncorrectMove, Move } from './model/rules';
+import { BaseRuleViolationType, IncorrectMove, Move } from './model/rules';
 import { ITurnState, TurnConstraint } from './model/turnState';
 import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 import { IGameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
@@ -22,7 +22,7 @@ export class Game implements IGame {
     private readonly outcomeStrategy: IGameOutcomeStrategy,
     private readonly resultPresenter: IOutputPresenter<GameResultPresenterArgs>,
     private readonly rulesChecker: IRulesChainHandler,
-    private readonly violationPresenter: IOutputPresenter<IncorrectMove>,
+    private readonly violationPresenter: IOutputPresenter<IncorrectMove<BaseRuleViolationType>>,
     private readonly gameLifeCycleStrategy: IGameLifecycleStrategy,
     private readonly moveHandler: IMoveHandler<IPiece>
   ) {}

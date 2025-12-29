@@ -6,7 +6,7 @@ import { BoardPresentArgs, IOutputPresenter } from '../../core/presenter/boardPr
 import { IGameOutcomeStrategy } from '../../core/strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from '../../core/presenter/gameOutcomePresenter';
 import { IRulesChainHandler } from '../../core/strategy/game/rules/rulesChainHandler';
-import { IncorrectMove } from '../../core/model/rules';
+import { BaseRuleViolationType, IncorrectMove } from '../../core/model/rules';
 import { IGameLifecycleStrategy } from '../../core/strategy/game/gameLifecycleStrategy';
 import { IOutputAdapter } from '../../core/adapters/terminalOutputAdapter';
 import { createTicTacDojo } from '../../games/tic-tac-dojo/composition/ticTacDojoComposition';
@@ -27,7 +27,7 @@ export type GameComposition = {
   outcomeStrategy: IGameOutcomeStrategy;
   resultPresenter: IOutputPresenter<GameResultPresenterArgs>;
   rulesChecker: IRulesChainHandler;
-  violationPresenter: IOutputPresenter<IncorrectMove>;
+  violationPresenter: IOutputPresenter<IncorrectMove<BaseRuleViolationType>>;
   lifecycleStrategy: IGameLifecycleStrategy;
   moveHandler: IMoveHandler<IPiece>;
 };

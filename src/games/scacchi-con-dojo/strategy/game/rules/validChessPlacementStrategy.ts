@@ -1,23 +1,27 @@
-import { RULES_VIOLATIONS, RuleStrategy, RuleViolation } from '../../../../../core/model/rules';
+import { RuleStrategy, RuleViolation } from '../../../../../core/model/rules';
 import { ProposedChessMove } from '../../../model/move';
+import { CHESS_RULE_VIOLATION_TYPES, ChessRuleViolationType } from './violationTypes';
 
-export class ValidChessPlacementStrategy implements RuleStrategy {
-  check({ move: { piece, position }, moveContext }: ProposedChessMove): RuleViolation[] | null {
+export class ValidChessPlacementStrategy implements RuleStrategy<ChessRuleViolationType> {
+  check({
+    move: { piece, position },
+    moveContext,
+  }: ProposedChessMove): RuleViolation<ChessRuleViolationType>[] | null {
     const currentPosition = moveContext.board.getPiecePositionBy(piece);
 
     if (!currentPosition) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PLACEMENT }];
     }
 
     const isMoveSameAsCurrentPosition =
       currentPosition.column === position.column && currentPosition.row === position.row;
 
     if (isMoveSameAsCurrentPosition) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PLACEMENT }];
     }
 
     if (!piece.canReachPosition(position, moveContext.board)) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PLACEMENT }];
     }
 
     return null;

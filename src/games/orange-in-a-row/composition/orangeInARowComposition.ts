@@ -8,7 +8,7 @@ import { HelpPresenter } from '../../../core/presenter/helpPresenter';
 import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
 import {
-  VIOLATION_MESSAGES,
+  CONNECT_LINE_VIOLATION_MESSAGES,
   ViolationsPresenter,
 } from '../../../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
@@ -84,7 +84,7 @@ export function createOrangeInARowComposition({
     ]),
     violationPresenter: new ViolationsPresenter(
       outputAdapter,
-      VIOLATION_MESSAGES,
+      CONNECT_LINE_VIOLATION_MESSAGES,
       ORANGE_IN_A_ROW_BOARD_UI,
       new PositionToOrangeInARowCliResolver()
     ),

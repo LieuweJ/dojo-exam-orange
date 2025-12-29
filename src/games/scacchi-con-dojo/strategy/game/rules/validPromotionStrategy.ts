@@ -1,7 +1,8 @@
-import { RULES_VIOLATIONS, RuleStrategy } from '../../../../../core/model/rules';
+import { RuleStrategy, RuleViolation } from '../../../../../core/model/rules';
 import { ProposedChessMove } from '../../../model/move';
 import { ChessPiecePawn } from '../../../model/chessPiecePawn';
 import { CHESS_PIECE_KIND, ChessPieceKind } from '../../../config/chessPiecesConfig';
+import { CHESS_RULE_VIOLATION_TYPES, ChessRuleViolationType } from './violationTypes';
 
 const ALLOWED_PROMOTIONS: ReadonlySet<ChessPieceKind> = new Set([
   CHESS_PIECE_KIND.QUEEN,
@@ -10,8 +11,8 @@ const ALLOWED_PROMOTIONS: ReadonlySet<ChessPieceKind> = new Set([
   CHESS_PIECE_KIND.KNIGHT,
 ]);
 
-export class ValidPromotionStrategy implements RuleStrategy {
-  check({ move, moveContext }: ProposedChessMove) {
+export class ValidPromotionStrategy implements RuleStrategy<ChessRuleViolationType> {
+  check({ move, moveContext }: ProposedChessMove): RuleViolation<ChessRuleViolationType>[] | null {
     const { piece, position, promotionKind } = move;
 
     const isPawn = piece instanceof ChessPiecePawn;
@@ -19,17 +20,17 @@ export class ValidPromotionStrategy implements RuleStrategy {
 
     // Case 1: pawn reaches last rank but no promotion specified
     if (canPromote && !promotionKind) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }];
     }
 
     // Case 2: promotion specified but move is not a pawn promotion
     if (promotionKind && !canPromote) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }];
     }
 
     // Case 3: promotion kind is invalid
     if (promotionKind && !ALLOWED_PROMOTIONS.has(promotionKind)) {
-      return [RULES_VIOLATIONS.INVALID_PLACEMENT];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }];
     }
 
     return null;

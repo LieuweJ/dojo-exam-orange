@@ -1,0 +1,6 @@
+export const LINE_CONNECT_MOVE_RULES_VIOLATIONS = {
+  INVALID_PLACEMENT: 'INVALID_PLACEMENT',
+} as const;
+
+export type LineConnectMoveRuleViolationType =
+  (typeof LINE_CONNECT_MOVE_RULES_VIOLATIONS)[keyof typeof LINE_CONNECT_MOVE_RULES_VIOLATIONS];
