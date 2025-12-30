@@ -59,7 +59,7 @@ export function createTicTacDojo({
   playerNames,
 }: GameCompositionInput): GameComposition {
   if (playerNames.length !== 2) {
-    throw new Error('Orange in a Row requires exactly 2 players.');
+    throw new Error('Tic Tac Dojo requires exactly 2 players.');
   }
 
   const e: typeof EMPTY_CELL = EMPTY_CELL;
