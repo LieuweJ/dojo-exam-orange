@@ -5,13 +5,10 @@ export type ITurnState = {
   nextPlayer: () => void;
   getCurrentPlayer(): Player;
   getPlayers(): Player[];
-};
-
-export type TurnConstraint = {
   currentPlayerOwnsPiece(piece: IPiece): boolean;
 };
 
-export class TurnState implements ITurnState, TurnConstraint {
+export class TurnState implements ITurnState {
   playersPointer: number = 0;
   players: Player[];
 

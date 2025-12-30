@@ -1,6 +1,6 @@
 import { createOrangeInARowComposition } from '../../games/orange-in-a-row/composition/orangeInARowComposition';
 import { IInputAdapter } from '../../core/adapters/terminalInputAdapter';
-import { ITurnState, TurnConstraint } from '../../core/model/turnState';
+import { ITurnState } from '../../core/model/turnState';
 import { IBoardState } from '../../core/model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from '../../core/presenter/boardPresenter';
 import { IGameOutcomeStrategy } from '../../core/strategy/game/gameOutcomeStrategy';
@@ -20,7 +20,7 @@ export type GameCompositionInput = {
 };
 
 export type GameComposition = {
-  turnState: ITurnState & TurnConstraint;
+  turnState: ITurnState;
   boardState: IBoardState;
   boardPresenter: IOutputPresenter<BoardPresentArgs>;
   helpPresenter: IOutputPresenter<void>;
