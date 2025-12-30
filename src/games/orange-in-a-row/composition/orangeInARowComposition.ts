@@ -67,12 +67,10 @@ export function createOrangeInARowComposition({
   const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
 
   return {
-    turnState: new TurnState({
-      players: [
-        new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
-        new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
-      ],
-    }),
+    turnState: new TurnState([
+      new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
+      new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
+    ]),
     boardState: new BoardState(emptyBoard),
     boardPresenter,
     helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),

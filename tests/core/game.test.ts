@@ -16,7 +16,7 @@ import {
   RuleStrategy,
   RuleViolation,
 } from '../../src/core/model/rules';
-import { TurnState } from '../../src/core/model/turnState';
+import { Players, TurnState } from '../../src/core/model/turnState';
 import { RulesChainHandler } from '../../src/core/strategy/game/rules/rulesChainHandler';
 import { GameLifecycleStrategy } from '../../src/core/strategy/game/gameLifecycleStrategy';
 import {
@@ -36,7 +36,7 @@ describe('A game of orange-in-a-row can be played', () => {
   let gameResultPresenter: jest.Mocked<IOutputPresenter<GameResultPresenterArgs>>;
   let playerX: Player;
   let playerO: Player;
-  let players: Player[];
+  let players: Players;
   let violationsPresenter: jest.Mocked<IOutputPresenter<IncorrectMove<BaseRuleViolationType>>>;
   let violationStrategy: jest.Mocked<RuleStrategy<BaseRuleViolationType>>;
 
@@ -84,7 +84,7 @@ describe('A game of orange-in-a-row can be played', () => {
     players = [playerX, playerO];
 
     game = new Game(
-      new TurnState({ players }),
+      new TurnState(players),
       board,
       boardPresenter,
       helpPresenter,
@@ -189,23 +189,6 @@ describe('A game of orange-in-a-row can be played', () => {
       board: board.getBoard(),
       outcome,
     });
-  });
-
-  test('throws when players are missing.', () => {
-    expect(() => {
-      new Game(
-        new TurnState({ players: [new Player('Bob', moveStrategy, [PIECE_O])] }),
-        board,
-        boardPresenter,
-        helpPresenter,
-        gameOutcomeStrategy,
-        gameResultPresenter,
-        new RulesChainHandler([violationStrategy]),
-        violationsPresenter,
-        new GameLifecycleStrategy(),
-        new ConnectLineMoveHandler()
-      );
-    }).toThrow(new Error(`In order to play this game, we need at least 2 players.`));
   });
 
   test('player is notified when an invalid move is proposed', async () => {

@@ -4,8 +4,8 @@ import { ValidPromotionStrategy } from '../../../../../../src/games/scacchi-con-
 import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
 import { ProposedChessMove } from '../../../../../../src/games/scacchi-con-dojo/model/move';
 import { Move } from '../../../../../../src/core/model/rules';
-import { TurnState } from '../../../../../../src/core/model/turnState';
-import { Pieces, Player } from '../../../../../../src/core/model/player';
+import { Players, TurnState } from '../../../../../../src/core/model/turnState';
+import { IPlayer, Pieces, Player } from '../../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../../src/core/strategy/player/move-strategy';
 import {
   PIECE_O,
@@ -32,9 +32,9 @@ const createNonPawn = () =>
 
 describe('ValidPromotionStrategy', () => {
   let playerStrategy: jest.Mocked<IMoveStrategy>;
-  let playerO: Player;
-  let playerX: Player;
-  let players: Player[];
+  let playerO: IPlayer;
+  let playerX: IPlayer;
+  let players: Players;
   let baseContext: (board: BoardState) => Pick<ProposedChessMove, 'moveContext'>;
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('ValidPromotionStrategy', () => {
     players = [playerX, playerO];
 
     baseContext = (board: BoardState) => ({
-      moveContext: { board, turn: new TurnState({ players }) },
+      moveContext: { board, turn: new TurnState(players) },
     });
   });
 

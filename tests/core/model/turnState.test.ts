@@ -1,5 +1,5 @@
 import { IBoard } from '../../../src/core/model/boardState';
-import { TurnState } from '../../../src/core/model/turnState';
+import { Players, TurnState } from '../../../src/core/model/turnState';
 import { Pieces, Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../src/core/model/rules';
@@ -14,7 +14,7 @@ describe('Board.addMove', () => {
   let playerStrategy: jest.Mocked<IMoveStrategy>;
   let playerO: Player;
   let playerX: Player;
-  let players: Player[];
+  let players: Players;
 
   beforeEach(() => {
     const createNextMove = jest.fn<Promise<Move>, [IBoard, Pieces, string]>();
@@ -28,7 +28,7 @@ describe('Board.addMove', () => {
 
     players = [playerX, playerO];
 
-    turnState = new TurnState({ players });
+    turnState = new TurnState(players);
   });
 
   it('can determine current player', () => {

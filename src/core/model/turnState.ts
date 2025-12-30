@@ -1,35 +1,30 @@
-import { Player } from './player';
+import { IPlayer, NonEmptyArray } from './player';
 import { IPiece } from './IPiece';
+
+export type Players = NonEmptyArray<IPlayer>;
 
 export type ITurnState = {
   nextPlayer: () => void;
-  getCurrentPlayer(): Player;
-  getPlayers(): Player[];
+  getCurrentPlayer(): IPlayer;
+  getPlayers(): IPlayer[];
   currentPlayerOwnsPiece(piece: IPiece): boolean;
 };
 
 export class TurnState implements ITurnState {
   private playersPointer: number = 0;
-  private readonly players: Player[];
 
-  constructor({ players }: { players: Player[] }) {
-    if (players.length < 2) {
-      throw new Error(`In order to play this game, we need at least 2 players.`);
-    }
-
-    this.players = players;
-  }
+  constructor(private readonly players: Players) {}
 
   nextPlayer(): void {
     this.playersPointer =
       this.playersPointer + 1 < this.players.length ? this.playersPointer + 1 : 0;
   }
 
-  getPlayers(): Player[] {
+  getPlayers(): IPlayer[] {
     return [...this.players];
   }
 
-  getCurrentPlayer(): Player {
+  getCurrentPlayer(): IPlayer {
     return this.players[this.playersPointer];
   }
 

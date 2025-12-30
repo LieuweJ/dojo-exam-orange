@@ -36,9 +36,7 @@ describe('chess rules', () => {
     player1 = new Player('Player 1', playerStrategy, [PIECE_X]);
     player2 = new Player('Player 2', playerStrategy, [PIECE_O]);
 
-    turnState = new TurnState({
-      players: [player1, player2],
-    });
+    turnState = new TurnState([player1, player2]);
   });
 
   afterEach(() => {

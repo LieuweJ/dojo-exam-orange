@@ -6,13 +6,13 @@ import {
 } from '../../../../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
 import { TurnState } from '../../../../../../src/core/model/turnState';
-import { Player } from '../../../../../../src/core/model/player';
+import { IPlayer, Player } from '../../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../../src/core/strategy/player/move-strategy';
 
 describe('ValidPlacementStrategy', () => {
   const e = EMPTY_CELL;
-  let player1: Player;
-  let player2: Player;
+  let player1: IPlayer;
+  let player2: IPlayer;
 
   let turnState: TurnState;
 
@@ -26,9 +26,7 @@ describe('ValidPlacementStrategy', () => {
     player1 = new Player('Player 1', playerStrategy, [PIECE_X]);
     player2 = new Player('Player 2', playerStrategy, [PIECE_O]);
 
-    turnState = new TurnState({
-      players: [player1, player2],
-    });
+    turnState = new TurnState([player1, player2]);
   });
 
   afterEach(() => {

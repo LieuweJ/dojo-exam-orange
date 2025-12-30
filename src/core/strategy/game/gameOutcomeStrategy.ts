@@ -1,5 +1,5 @@
 import { BoardPosition, IBoard } from '../../model/boardState';
-import { Player } from '../../model/player';
+import { IPlayer, Player } from '../../model/player';
 
 export const GAME_OUTCOME = {
   ONGOING: 'ONGOING',
@@ -18,5 +18,5 @@ export type GameOutComeWin = {
 export type GameOutcome = GameOutComeDraw | GameOutcomeOngoing | GameOutComeWin;
 
 export type IGameOutcomeStrategy = {
-  determine(board: IBoard, players: Player[]): GameOutcome;
+  determine(board: IBoard, players: IPlayer[]): GameOutcome;
 };
