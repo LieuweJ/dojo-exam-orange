@@ -9,8 +9,8 @@ export type ITurnState = {
 };
 
 export class TurnState implements ITurnState {
-  playersPointer: number = 0;
-  players: Player[];
+  private playersPointer: number = 0;
+  private readonly players: Player[];
 
   constructor({ players }: { players: Player[] }) {
     if (players.length < 2) {
@@ -26,12 +26,12 @@ export class TurnState implements ITurnState {
   }
 
   getPlayers(): Player[] {
-    return this.players;
+    return [...this.players];
   }
 
-  getCurrentPlayer = (): Player => {
+  getCurrentPlayer(): Player {
     return this.players[this.playersPointer];
-  };
+  }
 
   currentPlayerOwnsPiece = (piece: IPiece): boolean => {
     return this.players[this.playersPointer].hasPiece(piece);

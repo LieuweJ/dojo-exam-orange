@@ -45,7 +45,7 @@ describe('ValidPlacementStrategy', () => {
     const move: Move = { piece: PIECE_X, position: { column: 1, row: 0 } };
     const moveContext = {
       board: new BoardState(boardWithOccupiedCell),
-      turn: new TurnState(turnState),
+      turn: turnState,
     };
 
     const strategy = new ValidLineGamePlacementStrategy();
@@ -66,7 +66,7 @@ describe('ValidPlacementStrategy', () => {
 
     const moveContext = {
       board: new BoardState(emptyBoard),
-      turn: new TurnState(turnState),
+      turn: turnState,
     };
 
     const strategy = new ValidLineGamePlacementStrategy();
