@@ -1,6 +1,7 @@
 import { IMoveHandler } from '../../../core/handler/MoveHandler';
 import { CoinPiece } from '../model/coinPiece';
-import { BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
+import { BoardPosition, EMPTY_CELL, IBoard, IBoardState } from '../../../core/model/boardState';
+import { Move } from '../../../core/model/rules';
 
 export class ConnectLineMoveHandler implements IMoveHandler<CoinPiece> {
   async handle(
@@ -9,7 +10,18 @@ export class ConnectLineMoveHandler implements IMoveHandler<CoinPiece> {
   ): Promise<void> {
     this.assertEmptyCell(move.position, boardState);
 
-    boardState.addMove(move);
+    boardState.updateBoard(this.adaptMoveToBoard(move, boardState.getBoard()));
+  }
+
+  private adaptMoveToBoard(move: Move, board: IBoard): IBoard {
+    const {
+      position: { row, column },
+      piece,
+    } = move;
+
+    board[row][column] = piece;
+
+    return board;
   }
 
   private assertEmptyCell(position: BoardPosition, boardState: IBoardState) {

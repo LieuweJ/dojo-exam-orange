@@ -26,6 +26,7 @@ export type IBoard = BoardCell[][];
 
 export type IBoardState = {
   getBoard(): IBoard;
+  updateBoard(IBoard: IBoard): void;
   addMove(move: Move): void;
   getPiecePositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
@@ -37,6 +38,10 @@ export class BoardState implements IBoardState {
 
   getBoard() {
     return this.board.map((row) => [...row]);
+  }
+
+  updateBoard(IBoard: IBoard) {
+    this.board = IBoard;
   }
 
   addMove(move: Move) {
