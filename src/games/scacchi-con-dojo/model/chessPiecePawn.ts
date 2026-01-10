@@ -1,7 +1,7 @@
 import { ChessPiece, Direction, RelativeMovement } from './chessPiece';
-import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
-import { IPiece } from '../../../core/model/IPiece';
+import { BoardCell, BoardPosition, EmptyCell, IBoardState } from '../../../core/model/boardState';
 import { CHESS_PIECE_KIND } from '../config/chessPiecesConfig';
+import { Team } from '../../../core/model/team';
 
 export class ChessPiecePawn extends ChessPiece {
   private forwardMovement: RelativeMovement;
@@ -14,14 +14,14 @@ export class ChessPiecePawn extends ChessPiece {
       row: number;
       column: number;
     },
-    attackablePieces: Set<IPiece>
+    team: Team
   ) {
     const forwardMovement: RelativeMovement = {
       direction: [forwardDirection],
       maxSteps: 2,
     };
 
-    super(boardValue, CHESS_PIECE_KIND.PAWN, new Set([forwardMovement]), attackablePieces);
+    super(boardValue, CHESS_PIECE_KIND.PAWN, new Set([forwardMovement]), team);
 
     this.forwardMovement = forwardMovement;
     this.attackDirections = [
@@ -97,7 +97,7 @@ export class ChessPiecePawn extends ChessPiece {
       if (
         landingSquare.row === position.row &&
         landingSquare.column === position.column &&
-        boardState.getBoardCellAt(landingSquare) === EMPTY_CELL
+        boardState.getBoardCellAt(landingSquare) instanceof EmptyCell
       ) {
         return true;
       }
@@ -107,7 +107,7 @@ export class ChessPiecePawn extends ChessPiece {
   }
 
   protected isReachableTarget(cell: BoardCell): boolean {
-    return cell === EMPTY_CELL;
+    return cell instanceof EmptyCell;
   }
 
   private canAttack(position: BoardPosition, boardState: IBoardState): boolean {
@@ -125,7 +125,11 @@ export class ChessPiecePawn extends ChessPiece {
       if (target.row === position.row && target.column === position.column) {
         const cell = boardState.getBoardCellAt(target);
 
-        return this.attackablePieces.has(cell);
+        if (!(cell instanceof ChessPiece)) {
+          return false;
+        }
+
+        return !cell.isTeam(this.team);
       }
     }
 

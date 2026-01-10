@@ -1,4 +1,4 @@
-import { BoardPosition, EMPTY_CELL, IBoard } from '../../../../core/model/boardState';
+import { BoardPosition, EMPTY_CELL, EmptyCell, IBoard } from '../../../../core/model/boardState';
 import { Player } from '../../../../core/model/player';
 import {
   GAME_OUTCOME,
@@ -46,7 +46,7 @@ export class ConnectLineGameOutcomeStrategy implements IGameOutcomeStrategy {
       for (let col = 0; col < cols; col++) {
         const cell = board[row][col];
 
-        if (cell === EMPTY_CELL) continue;
+        if (cell instanceof EmptyCell) continue;
 
         for (const direction of DIRECTIONS) {
           const winningPositions = this.hasLine(board, { row, column: col }, direction, cell);

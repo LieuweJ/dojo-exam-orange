@@ -1,13 +1,15 @@
 import { IPiece } from '../../../core/model/IPiece';
-import { BoardCell, BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
+import { BoardCell, BoardPosition, EmptyCell, IBoardState } from '../../../core/model/boardState';
 import { ChessPieceKind } from '../config/chessPiecesConfig';
+import { Team } from '../../../core/model/team';
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;
   isCastlingDestination: (position: BoardPosition, boardState: IBoardState) => boolean;
-  getAttackablePieces: () => Set<IPiece>;
   hasMoved: () => boolean;
   markMoved: () => void;
+  isTeam: (team: Team) => boolean;
+  getTeam: () => Team;
 };
 
 export type Direction = { row: number; column: number };
@@ -25,11 +27,19 @@ export class ChessPiece implements IChessPiece {
     private readonly boardValue: symbol,
     private readonly kind: ChessPieceKind,
     relativeMovement: ReadonlySet<RelativeMovement>,
-    protected readonly attackablePieces: Set<IPiece>,
+    protected readonly team: Team,
     private readonly canInitiateCastlingFlag = false,
     private readonly canParticipateInCastlingFlag = false
   ) {
     this.relativeMovement = new Set(relativeMovement);
+  }
+
+  isTeam(team: Team): boolean {
+    return this.team === team;
+  }
+
+  getTeam(): Team {
+    return this.team;
   }
 
   getKind(): ChessPieceKind {
@@ -62,10 +72,6 @@ export class ChessPiece implements IChessPiece {
     }
 
     return this.canReachByCastling(position, boardState);
-  }
-
-  getAttackablePieces(): Set<IPiece> {
-    return this.attackablePieces;
   }
 
   isCastlingDestination(position: BoardPosition, boardState: IBoardState): boolean {
@@ -114,7 +120,7 @@ export class ChessPiece implements IChessPiece {
           }
 
           // Blocking piece before target → ray stops
-          if (cell !== EMPTY_CELL) {
+          if (!(cell instanceof EmptyCell)) {
             break;
           }
         }
@@ -125,11 +131,11 @@ export class ChessPiece implements IChessPiece {
   }
 
   protected isReachableTarget(cell: BoardCell): boolean {
-    if (cell === EMPTY_CELL) {
+    if (!(cell instanceof ChessPiece)) {
       return true;
     }
 
-    return this.attackablePieces.has(cell as IPiece);
+    return !cell.isTeam(this.team);
   }
 
   private isInsideBoard(position: BoardPosition, boardState: IBoardState): boolean {
@@ -198,7 +204,8 @@ export class ChessPiece implements IChessPiece {
     const rookColumn = direction > 0 ? boardState.getBoard()[from.row].length - 1 : 0;
 
     for (let column = from.column + direction; column !== rookColumn; column += direction) {
-      if (boardState.getBoardCellAt({ row: from.row, column }) !== EMPTY_CELL) {
+      const cell = boardState.getBoardCellAt({ row: from.row, column });
+      if (!(cell instanceof EmptyCell)) {
         return false;
       }
     }

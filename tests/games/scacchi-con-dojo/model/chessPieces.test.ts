@@ -15,68 +15,50 @@ const createEmptyBoard = (rows = 8, columns = 8) =>
 
 const pieceFactory = new ChessPieceFactory();
 const createStaticChessPiece = (symbol = Symbol('static')): ChessPiece =>
-  new ChessPiece(symbol, CHESS_PIECE_KIND.BISHOP, new Set(), new Set<IPiece>());
+  new ChessPiece(symbol, CHESS_PIECE_KIND.BISHOP, new Set(), Symbol('static_team'));
 
 const createKing = () =>
   pieceFactory.create({
-    team: 'white',
+    team: Symbol('white'),
     kind: 'king',
     index: 1,
   });
 
 const createCastlingRook = () =>
   pieceFactory.create({
-    team: 'white',
+    team: Symbol('white'),
     kind: 'rook',
     index: 1,
   });
 
-const createTestRook = (attackablePieces: Set<IPiece>) =>
+const createTestRook = () =>
   pieceFactory.create({
-    team: 'white',
+    team: Symbol('white'),
     kind: 'rook',
     index: 1,
-    attackablePieces,
   });
-
-// --- test-side composition root --------------------------------
-
-// This will grow later with:
-// - isFirstMoveDone
-// - canCastle
-// - enPassantTarget
-// etc.
-type PieceTestContext = {
-  attackablePieces: Set<IPiece>;
-};
-
-// --- test cases -------------------------------------------------
 
 type BlockingReachabilityTestCase = {
   name: string;
   from: BoardPosition;
-  context: PieceTestContext;
-
   blocker: {
     piece: IPiece;
     position: BoardPosition;
   };
-
   reachable: BoardPosition[];
   unreachable: BoardPosition[];
 };
 
-const otherPiece = createStaticChessPiece();
+const otherPieceOtherTeam = createStaticChessPiece();
+const pieceUnderTest = createTestRook();
+const otherPieceSameTeam = pieceFactory.createFrom(pieceUnderTest, CHESS_PIECE_KIND.BISHOP, 2);
 
 const cases: BlockingReachabilityTestCase[] = [
   {
     name: 'Rook can capture attackable piece but not move beyond',
     from: { row: 4, column: 4 },
-    context: {
-      attackablePieces: new Set([otherPiece]),
-    },
     blocker: {
-      piece: otherPiece,
+      piece: otherPieceOtherTeam,
       position: { row: 6, column: 4 },
     },
     reachable: [
@@ -90,11 +72,8 @@ const cases: BlockingReachabilityTestCase[] = [
   {
     name: 'Rook is blocked by non-attackable piece',
     from: { row: 4, column: 4 },
-    context: {
-      attackablePieces: new Set(), // nothing is attackable
-    },
     blocker: {
-      piece: otherPiece,
+      piece: otherPieceSameTeam,
       position: { row: 6, column: 4 },
     },
     reachable: [
@@ -112,14 +91,12 @@ const cases: BlockingReachabilityTestCase[] = [
 describe('ChessPiece.canReachPosition (blocking & capture)', () => {
   test.each(cases)(
     '$name',
-    ({ from, context, blocker, reachable, unreachable }: BlockingReachabilityTestCase) => {
+    ({ from, blocker, reachable, unreachable }: BlockingReachabilityTestCase) => {
       const board = createEmptyBoard();
-      const piece = createTestRook(context.attackablePieces);
-
       const boardState = new BoardState(board);
 
       boardState.addMove({
-        piece,
+        piece: pieceUnderTest,
         position: from,
       });
 
@@ -129,11 +106,11 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       });
 
       for (const target of reachable) {
-        expect(piece.canReachPosition(target, boardState)).toBe(true);
+        expect(pieceUnderTest.canReachPosition(target, boardState)).toBe(true);
       }
 
       for (const target of unreachable) {
-        expect(piece.canReachPosition(target, boardState)).toBe(false);
+        expect(pieceUnderTest.canReachPosition(target, boardState)).toBe(false);
       }
     }
   );
@@ -312,37 +289,19 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       const factory = new ChessPieceFactory();
 
       expect(() => {
-        pieceFactory.create({
-          team: 'white',
+        factory.create({
+          team: Symbol('white'),
           kind: CHESS_PIECE_KIND.PAWN as unknown as CreateChessPieceInput['kind'],
           index: 1,
         });
       }).toThrow('Pawn kind is not allowed in this method.');
     });
 
-    test('throws if team cannot be inferred from source piece', () => {
-      const factory = new ChessPieceFactory();
-
-      // Create a piece with a malformed boardValue symbol
-      const badPiece = new ChessPiece(
-        Symbol(), // no trailing team char
-        CHESS_PIECE_KIND.ROOK,
-        new Set(),
-        new Set(),
-        false,
-        false
-      );
-
-      expect(() => factory.createFrom(badPiece, CHESS_PIECE_KIND.QUEEN, 1)).toThrow(
-        'Cannot infer team from source piece.'
-      );
-    });
-
     test('throws when attempting to create pawn from non-pawn source', () => {
       const factory = new ChessPieceFactory();
 
       const rook = factory.create({
-        team: 'white',
+        team: Symbol('white'),
         kind: CHESS_PIECE_KIND.ROOK,
         index: 1,
       });
@@ -355,7 +314,7 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       const factory = new ChessPieceFactory();
 
       const pawn = factory.createPawn({
-        team: 'white',
+        team: Symbol('white'),
         index: 1,
         forwardDirection: { row: -1, column: 0 },
       });

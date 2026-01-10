@@ -1,33 +1,26 @@
 import { ChessPiece } from '../model/chessPiece';
-import { IPiece } from '../../../core/model/IPiece';
 import {
   CHESS_PIECE_DEFINITIONS,
   CHESS_PIECE_KIND,
   ChessPieceKind,
 } from '../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
+import { Team } from '../../../core/model/team';
 
 export type CreateChessPieceInput = {
-  team: string;
+  team: Team;
   kind: Exclude<ChessPieceKind, typeof CHESS_PIECE_KIND.PAWN>;
   index: number;
-  attackablePieces?: Set<IPiece>;
 };
 
 export type CreatePawnInput = {
-  team: string;
+  team: Team;
   index: number;
   forwardDirection: { row: number; column: number };
-  attackablePieces?: Set<IPiece>;
 };
 
 export class ChessPieceFactory {
-  create({
-    team,
-    kind,
-    index,
-    attackablePieces = new Set<IPiece>(),
-  }: CreateChessPieceInput): ChessPiece {
+  create({ team, kind, index }: CreateChessPieceInput): ChessPiece {
     this.assertNonePawnKind(kind);
 
     const definition = CHESS_PIECE_DEFINITIONS[kind];
@@ -38,32 +31,20 @@ export class ChessPieceFactory {
       boardValue,
       kind,
       definition.movement,
-      attackablePieces,
+      team,
       definition.castling.canInitiate,
       definition.castling.canParticipate
     );
   }
 
-  createPawn({
-    team,
-    index,
-    forwardDirection,
-    attackablePieces = new Set<IPiece>(),
-  }: CreatePawnInput): ChessPiecePawn {
+  createPawn({ team, index, forwardDirection }: CreatePawnInput): ChessPiecePawn {
     const boardValue = this.createBoardValue(team, CHESS_PIECE_KIND.PAWN, index);
 
-    return new ChessPiecePawn(boardValue, forwardDirection, attackablePieces);
+    return new ChessPiecePawn(boardValue, forwardDirection, team);
   }
 
   createFrom(source: ChessPiece, kind: ChessPieceKind, index: number): ChessPiece {
-    const teamChar = source.getBoardValue().description?.slice(-1);
-    if (!teamChar) {
-      throw new Error('Cannot infer team from source piece.');
-    }
-
-    const team = String(teamChar);
-
-    const attackablePieces = source.getAttackablePieces();
+    const team = source.getTeam();
 
     if (kind === CHESS_PIECE_KIND.PAWN) {
       if (!(source instanceof ChessPiecePawn)) {
@@ -74,7 +55,6 @@ export class ChessPieceFactory {
         team,
         index,
         forwardDirection: source.getForwardDirection(),
-        attackablePieces,
       });
     }
 
@@ -82,12 +62,11 @@ export class ChessPieceFactory {
       team,
       kind,
       index,
-      attackablePieces,
     });
   }
 
-  private createBoardValue(team: string, kind: ChessPieceKind, index: number): symbol {
-    const teamChar = team[0]?.toLowerCase() || '';
+  private createBoardValue(team: Team, kind: ChessPieceKind, index: number): symbol {
+    const teamChar = team.description?.[0]?.toLowerCase() || '';
     const pieceChar = kind[0].toUpperCase();
 
     return Symbol(`${pieceChar}${index}${teamChar}`);

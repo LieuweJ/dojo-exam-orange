@@ -1,18 +1,15 @@
 import { Move } from './rules';
-
 import { IPiece } from './IPiece';
 
-type IEmptyCell = {
-  readonly getBoardValue: () => symbol;
-};
-
-export class EmptyCell implements IEmptyCell {
+export class EmptyCell {
   constructor(private readonly id: symbol) {}
 
   getBoardValue(): symbol {
     return this.id;
   }
 }
+
+type IEmptyCell = EmptyCell;
 
 export const EMPTY_CELL_SYMBOL = Symbol('.');
 

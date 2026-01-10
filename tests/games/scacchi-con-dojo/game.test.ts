@@ -4,7 +4,6 @@ import {
   ChessMove,
   ChessMoveHandler,
 } from '../../../src/games/scacchi-con-dojo/handler/ChessMoveHandler';
-import { IPiece } from '../../../src/core/model/IPiece';
 import { ChessPieceFactory } from '../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
 import {
   CHESS_PIECE_KIND,
@@ -17,18 +16,16 @@ const createTestPiece = (overrides?: {
   team?: string;
   kind?: Exclude<ChessPieceKind, typeof CHESS_PIECE_KIND.PAWN>;
   index?: number;
-  attackablePieces?: Set<IPiece>;
 }) =>
   pieceFactory.create({
-    team: overrides?.team || '',
+    team: Symbol(overrides?.team) || Symbol(''),
     kind: overrides?.kind ?? CHESS_PIECE_KIND.BISHOP,
     index: overrides?.index ?? 1,
-    attackablePieces: overrides?.attackablePieces ?? new Set(),
   });
 
 const createPawn = (overrides?: { team?: 'white' | 'black'; index?: number }) =>
   pieceFactory.createPawn({
-    team: overrides?.team ?? 'white',
+    team: Symbol(overrides?.team) || Symbol('white'),
     index: overrides?.index ?? 1,
     forwardDirection:
       overrides?.team === 'black'

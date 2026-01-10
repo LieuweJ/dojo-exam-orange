@@ -8,9 +8,11 @@ import { ChessPiecePawn } from '../../../../src/games/scacchi-con-dojo/model/che
 const createEmptyBoard = (rows = 8, columns = 8) =>
   Array.from({ length: rows }, () => Array.from({ length: columns }, () => EMPTY_CELL));
 
-const createOtherPiece = (): IPiece => ({
-  getBoardValue: () => Symbol('X'),
-});
+const otherTeamSymbol = Symbol('otherTeam');
+
+const createOtherPiece = (): IPiece => {
+  return new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, otherTeamSymbol);
+};
 
 // --- tests ------------------------------------------------------
 
@@ -20,7 +22,7 @@ describe('ChessPiecePawn.canReachPosition (movement only)', () => {
     const pawn = new ChessPiecePawn(
       Symbol('P'),
       { row: -1, column: 0 }, // forward
-      new Set()
+      Symbol('white')
     );
 
     const boardState = new BoardState(board);
@@ -34,7 +36,7 @@ describe('ChessPiecePawn.canReachPosition (movement only)', () => {
 
   test('pawn can move two squares forward on first move', () => {
     const board = createEmptyBoard();
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set());
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -47,7 +49,7 @@ describe('ChessPiecePawn.canReachPosition (movement only)', () => {
 
   test('pawn is blocked by a piece directly in front', () => {
     const board = createEmptyBoard();
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set());
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const blocker = createOtherPiece();
 
@@ -68,7 +70,7 @@ describe('ChessPiecePawn.canReachPosition (movement only)', () => {
 
   test('pawn can only move one square forward after it has moved', () => {
     const board = createEmptyBoard();
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set());
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -90,7 +92,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     const board = createEmptyBoard();
     const enemy = createOtherPiece();
 
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set([enemy]));
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -108,7 +110,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
   test('pawn cannot attack diagonally if square is empty', () => {
     const board = createEmptyBoard();
 
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set());
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -124,11 +126,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     const board = createEmptyBoard();
     const friendly = createOtherPiece();
 
-    const pawn = new ChessPiecePawn(
-      Symbol('P'),
-      { row: -1, column: 0 },
-      new Set() // no attackable pieces
-    );
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, otherTeamSymbol);
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -147,7 +145,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     const board = createEmptyBoard();
     const enemy = createOtherPiece();
 
-    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, new Set([enemy]));
+    const pawn = new ChessPiecePawn(Symbol('P'), { row: -1, column: 0 }, Symbol('white'));
 
     const boardState = new BoardState(board);
     boardState.addMove({
@@ -167,7 +165,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     const pawn = new ChessPiecePawn(
       Symbol('P'),
       { row: -1, column: 0 }, // forward
-      new Set()
+      Symbol('white')
     );
 
     const boardState = new BoardState(board);
@@ -179,7 +177,7 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     const pawn = new ChessPiecePawn(
       Symbol('P1w'),
       { row: -1, column: 0 }, // white pawn
-      new Set()
+      Symbol('white')
     );
 
     const boardState = new BoardState([

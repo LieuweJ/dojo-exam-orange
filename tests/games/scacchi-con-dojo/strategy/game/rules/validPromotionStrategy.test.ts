@@ -18,14 +18,14 @@ const strategy = new ValidPromotionStrategy();
 
 const createPawn = (team: 'white' | 'black' = 'white') =>
   pieceFactory.createPawn({
-    team,
+    team: Symbol(team),
     index: 1,
     forwardDirection: team === 'white' ? { row: -1, column: 0 } : { row: 1, column: 0 },
   });
 
 const createNonPawn = () =>
   pieceFactory.create({
-    team: 'white',
+    team: Symbol('white'),
     kind: CHESS_PIECE_KIND.ROOK,
     index: 1,
   });
