@@ -110,7 +110,7 @@ describe('chess piece can be moved on the board', () => {
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    await expect(moveHandler.handle(move, initBoard)).rejects.toThrow(
+    expect(() => moveHandler.handle(move, initBoard)).toThrow(
       `The chess piece ${String(pieceNotOnBoard.getBoardValue())} is not present on the board. Chess piece cannot be moved.`
     );
   });
@@ -244,7 +244,7 @@ describe('chess piece can be moved on the board', () => {
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    await expect(moveHandler.handle(move, boardState)).rejects.toThrow(
+    expect(() => moveHandler.handle(move, boardState)).toThrow(
       'Castling rook not found where expected.'
     );
   });
@@ -599,7 +599,7 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-      await expect(
+      expect(() =>
         moveHandler.handle(
           {
             piece: pawn,
@@ -608,7 +608,7 @@ describe('chess piece can be moved on the board', () => {
           },
           boardState
         )
-      ).rejects.toThrow('Promotion missing. Piece=ChessPiecePawn, to=0,3');
+      ).toThrow('Promotion missing. Piece=ChessPiecePawn, to=0,3');
     });
   });
 });

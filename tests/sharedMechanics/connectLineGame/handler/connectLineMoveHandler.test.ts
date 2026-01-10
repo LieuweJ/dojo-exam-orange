@@ -19,7 +19,7 @@ describe('ConnectLineMoveHandler – occupied destination guard', () => {
       position: { row: 1, column: 2 },
     };
 
-    await expect(handler.handle(move, boardState)).rejects.toThrow(
+    expect(() => handler.handle(move, boardState)).toThrow(
       'Invalid move: board position with row: 1 and 2 is already occupied'
     );
 

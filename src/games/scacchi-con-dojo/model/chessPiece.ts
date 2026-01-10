@@ -10,6 +10,11 @@ export type IChessPiece = IPiece & {
   markMoved: () => void;
   isTeam: (team: Team) => boolean;
   getTeam: () => Team;
+  getKind: () => ChessPieceKind;
+  canInitiateCastling: () => boolean;
+  canParticipateInCastling: () => boolean;
+  getBoardValue: () => symbol;
+  clone: () => IChessPiece;
 };
 
 export type Direction = { row: number; column: number };

@@ -14,7 +14,7 @@ export type ChessMove = {
 export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   constructor(private pieceFactory: ChessPieceFactory) {}
 
-  async handle(move: ChessMove, boardState: BoardState): Promise<void> {
+  handle(move: ChessMove, boardState: BoardState): void {
     const from = boardState.getPiecePositionBy(move.piece);
 
     if (!from) {

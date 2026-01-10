@@ -25,6 +25,7 @@ export type IBoardState = {
   getPiecePositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
   getBoardCellAt(position: BoardPosition): BoardCell;
+  clone: () => BoardState;
 };
 
 export class BoardState implements IBoardState {

@@ -3,10 +3,10 @@ import { CoinPiece } from '../model/coinPiece';
 import { BoardPosition, EMPTY_CELL, IBoardState } from '../../../core/model/boardState';
 
 export class ConnectLineMoveHandler implements IMoveHandler<CoinPiece> {
-  async handle(
+  handle(
     move: { position: { row: number; column: number }; piece: CoinPiece },
     boardState: IBoardState
-  ): Promise<void> {
+  ): void {
     this.assertEmptyCell(move.position, boardState);
 
     boardState.addMove(move);
