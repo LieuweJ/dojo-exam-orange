@@ -1,13 +1,13 @@
 import { RuleStrategy, RuleViolation } from '../../../../../core/model/rules';
 import { CHESS_RULE_VIOLATION_TYPES, ChessRuleViolationType } from './violationTypes';
 import { ProposedChessMove } from '../../../model/move';
-import { KingInCheckDetector } from '../../../detector/KingInCheckDetector';
-import { ChessMoveHandler } from '../../../handler/ChessMoveHandler';
+import { IKingInCheckDetector } from '../../../detector/KingInCheckDetector';
 import { ChessPiece } from '../../../model/chessPiece';
+import { ChessMoveHandler } from '../../../handler/ChessMoveHandler';
 
 export class IsCurrentPlayerKingInCheckStrategy implements RuleStrategy<ChessRuleViolationType> {
   constructor(
-    private readonly kingInCheckDetector: KingInCheckDetector,
+    private readonly kingInCheckDetector: IKingInCheckDetector,
     private readonly moveHandler: ChessMoveHandler
   ) {}
 

@@ -383,4 +383,26 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       expect(cloned.hasMoved()).toBe(true);
     });
   });
+
+  describe('ChessPiece.getAllReachablePositions', () => {
+    it('returns an empty array when the piece is not on the board', () => {
+      const factory = new ChessPieceFactory();
+
+      const piece = factory.create({
+        team: Symbol('white'),
+        kind: CHESS_PIECE_KIND.BISHOP,
+        index: 1,
+      });
+
+      // Board does NOT contain the piece
+      const board = new BoardState([
+        [EMPTY_CELL, EMPTY_CELL],
+        [EMPTY_CELL, EMPTY_CELL],
+      ]);
+
+      const result = piece.getAllReachablePositions(board);
+
+      expect(result).toEqual([]);
+    });
+  });
 });

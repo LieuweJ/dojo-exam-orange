@@ -3,17 +3,49 @@ import { Team } from '../../../core/model/team';
 import { ChessPiece } from '../model/chessPiece';
 import { CHESS_PIECE_KIND } from '../config/chessPiecesConfig';
 
+export type IKingInCheckDetector = {
+  isInCheck(input: { board: IBoardState; team: Team }): boolean;
+  getKingPosition(board: IBoardState, team: Team): BoardPosition;
+  getCheckingPieces(board: IBoardState, team: Team): ChessPiece[];
+};
+
 type KingInCheckDetectorInput = { board: IBoardState; team: Team };
 
-export class KingInCheckDetector {
+export class KingInCheckDetector implements IKingInCheckDetector {
   isInCheck({ board, team }: KingInCheckDetectorInput): boolean {
-    const kingPosition = this.findKingPosition(board, team);
+    const kingPosition = this.getKingPosition(board, team);
 
-    if (!kingPosition) {
+    return this.isSquareAttacked(board, kingPosition, team);
+  }
+
+  getCheckingPieces(board: IBoardState, teamInCheck: Team): ChessPiece[] {
+    const kingPosition = this.getKingPosition(board, teamInCheck);
+
+    const attackers: ChessPiece[] = [];
+
+    for (const row of board.getBoard()) {
+      for (const cell of row) {
+        if (
+          cell instanceof ChessPiece &&
+          !cell.isTeam(teamInCheck) &&
+          cell.canReachPosition(kingPosition, board)
+        ) {
+          attackers.push(cell);
+        }
+      }
+    }
+
+    return attackers;
+  }
+
+  getKingPosition(board: IBoardState, team: Team): BoardPosition {
+    const position = this.findKingPosition(board, team);
+
+    if (!position) {
       throw new Error(`King for team ${String(team)} not found on the board.`);
     }
 
-    return this.isSquareAttacked(board, kingPosition, team);
+    return position;
   }
 
   private findKingPosition(board: IBoardState, team: Team): BoardPosition | null {

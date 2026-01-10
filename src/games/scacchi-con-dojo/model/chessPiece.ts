@@ -5,6 +5,7 @@ import { Team } from '../../../core/model/team';
 
 export type IChessPiece = IPiece & {
   canReachPosition: (position: BoardPosition, boardState: IBoardState) => boolean;
+  getAllReachablePositions: (board: IBoardState) => BoardPosition[];
   isCastlingDestination: (position: BoardPosition, boardState: IBoardState) => boolean;
   hasMoved: () => boolean;
   markMoved: () => void;
@@ -77,6 +78,28 @@ export class ChessPiece implements IChessPiece {
     }
 
     return this.canReachByCastling(position, boardState);
+  }
+
+  getAllReachablePositions(board: IBoardState): BoardPosition[] {
+    const from = board.getPiecePositionBy(this);
+    if (!from) {
+      return [];
+    }
+
+    const positions: BoardPosition[] = [];
+    const grid = board.getBoard();
+
+    for (let row = 0; row < grid.length; row++) {
+      for (let column = 0; column < grid[row].length; column++) {
+        const target = { row, column };
+
+        if (this.canReachPosition(target, board)) {
+          positions.push(target);
+        }
+      }
+    }
+
+    return positions;
   }
 
   isCastlingDestination(position: BoardPosition, boardState: IBoardState): boolean {

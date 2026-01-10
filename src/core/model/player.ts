@@ -9,10 +9,9 @@ export type Pieces = NonEmptyArray<IPiece>;
 
 export type IPlayer = {
   getScreenName(): string;
-
   hasPiece(piece: IPiece): boolean;
-
   getNextMove(board: IBoard): Promise<Move>;
+  getPieces(): Pieces;
 };
 
 export class Player implements IPlayer {
@@ -32,5 +31,9 @@ export class Player implements IPlayer {
 
   hasPiece(piece: IPiece): boolean {
     return this.pieces.includes(piece);
+  }
+
+  getPieces(): Pieces {
+    return this.pieces;
   }
 }
