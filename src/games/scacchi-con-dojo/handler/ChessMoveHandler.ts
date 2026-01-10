@@ -46,11 +46,15 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     this.handleNormalMove(move, from, boardState);
 
     this.clearAllEnPassant(boardState);
+
+    const pawnPosition = boardState.getPiecePositionBy(move.piece);
+
     if (
       move.piece instanceof ChessPiecePawn &&
-      this.isPawnDoubleStep(move.piece, from, move.position)
+      this.isPawnDoubleStep(move.piece, from, move.position) &&
+      pawnPosition
     ) {
-      this.registerEnPassantTargets(move.piece, move.position, boardState);
+      this.registerEnPassantTargets(pawnPosition, move.position, boardState);
     }
   }
 
@@ -159,7 +163,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   }
 
   private registerEnPassantTargets(
-    pawn: ChessPiecePawn,
+    pawnPosition: BoardPosition,
     to: BoardPosition,
     boardState: BoardState
   ): void {
@@ -175,7 +179,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
       });
 
       if (cell instanceof ChessPiecePawn) {
-        cell.setEnPassantAttackablePawn(pawn);
+        cell.addEnPassantTargetColumn(pawnPosition.column);
       }
     }
   }
@@ -184,7 +188,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     for (const row of boardState.getBoard()) {
       for (const cell of row) {
         if (cell instanceof ChessPiecePawn) {
-          cell.clearEnPassantAttackablePawns();
+          cell.clearEnPassantTargets();
         }
       }
     }

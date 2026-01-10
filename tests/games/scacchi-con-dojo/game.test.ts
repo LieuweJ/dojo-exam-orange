@@ -34,6 +34,10 @@ const createPawn = (overrides?: { team?: 'white' | 'black'; index?: number }) =>
   });
 
 describe('chess piece can be moved on the board', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('a chess piece can move to an empty place on the board.', () => {
     const piece: ChessPiece = createTestPiece({
       team: 'white',

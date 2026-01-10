@@ -6,7 +6,7 @@ import { Team } from '../../../core/model/team';
 export class ChessPiecePawn extends ChessPiece {
   private forwardMovement: RelativeMovement;
   private readonly attackDirections: Direction[];
-  private readonly enPassantAttackablePawns = new Set<ChessPiecePawn>();
+  private readonly enPassantColumns = new Set<number>();
 
   constructor(
     boardValue: symbol,
@@ -67,12 +67,12 @@ export class ChessPiecePawn extends ChessPiece {
     return this.forwardMovement.direction[0];
   }
 
-  setEnPassantAttackablePawn(pawn: ChessPiecePawn): void {
-    this.enPassantAttackablePawns.add(pawn);
+  addEnPassantTargetColumn(column: number): void {
+    this.enPassantColumns.add(column);
   }
 
-  clearEnPassantAttackablePawns(): void {
-    this.enPassantAttackablePawns.clear();
+  clearEnPassantTargets(): void {
+    this.enPassantColumns.clear();
   }
 
   canEnPassantAttack(position: BoardPosition, boardState: IBoardState): boolean {
@@ -82,10 +82,14 @@ export class ChessPiecePawn extends ChessPiece {
     // determine forward direction from pawn movement
     const forwardRow = this.attackDirections[0].row;
 
-    for (const targetPawn of this.enPassantAttackablePawns) {
-      const targetPos = boardState.getPiecePositionBy(targetPawn);
+    for (const targetColumn of this.enPassantColumns) {
+      const targetPos: BoardPosition = {
+        row: from.row,
+        column: targetColumn,
+      };
 
-      if (!targetPos) {
+      const targetCell = boardState.getBoardCellAt(targetPos);
+      if (!(targetCell instanceof ChessPiecePawn)) {
         continue;
       }
 
