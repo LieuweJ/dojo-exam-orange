@@ -6,4 +6,8 @@ export class CoinPiece implements IPiece {
   getBoardValue(): symbol {
     return this.id;
   }
+
+  clone(): CoinPiece {
+    return new CoinPiece(this.id);
+  }
 }

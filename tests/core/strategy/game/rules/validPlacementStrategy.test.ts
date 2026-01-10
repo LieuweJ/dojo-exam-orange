@@ -58,7 +58,6 @@ const createBoardMock = (): jest.Mocked<IBoardState> => ({
   getPiecePositionBy: jest.fn(),
   clearPosition: jest.fn(),
   getBoardCellAt: jest.fn(),
-  updateBoard: jest.fn(),
 });
 
 const createTurnMock = (): jest.Mocked<ITurnState> => ({

@@ -192,3 +192,32 @@ describe('ChessPiecePawn.canReachPosition (attacking)', () => {
     expect(canPromote).toBe(false);
   });
 });
+
+describe('ChessPiecePawn.clone', () => {
+  it('preserves pawn-specific state', () => {
+    const teamWhite = Symbol('white');
+    const teamBlack = Symbol('black');
+    const pawn = new ChessPiecePawn(Symbol('P1'), { row: -1, column: 0 }, teamWhite);
+
+    pawn.markMoved();
+    pawn.addEnPassantTargetColumn(3);
+
+    const opponentPawn = new ChessPiecePawn(Symbol('P2'), { row: 1, column: 0 }, teamBlack);
+
+    const cloned = pawn.clone();
+
+    const board = new BoardState([
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, cloned, opponentPawn],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ]);
+
+    expect(cloned).not.toBe(pawn);
+    expect(cloned.hasMoved()).toBe(pawn.hasMoved());
+    expect(cloned.getForwardDirection()).toEqual({ row: -1, column: 0 });
+    expect(cloned.isTeam(teamWhite)).toBe(pawn.isTeam(teamWhite));
+    expect(cloned.canEnPassantAttack({ row: 1, column: 3 }, board)).toBe(true);
+    expect(cloned.canEnPassantAttack({ row: 1, column: 2 }, board)).toBe(false);
+  });
+});

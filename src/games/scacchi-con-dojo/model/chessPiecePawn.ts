@@ -110,6 +110,20 @@ export class ChessPiecePawn extends ChessPiece {
     return false;
   }
 
+  clone(): ChessPiecePawn {
+    const clone = new ChessPiecePawn(this.getBoardValue(), this.getForwardDirection(), this.team);
+
+    if (this.hasMoved()) {
+      clone.markMoved();
+    }
+
+    for (const column of this.enPassantColumns) {
+      clone.addEnPassantTargetColumn(column);
+    }
+
+    return clone;
+  }
+
   protected isReachableTarget(cell: BoardCell): boolean {
     return cell instanceof EmptyCell;
   }

@@ -89,6 +89,23 @@ export class ChessPiece implements IChessPiece {
     return Math.abs(columnDelta) === 2;
   }
 
+  clone(): ChessPiece {
+    const clone = new ChessPiece(
+      this.boardValue,
+      this.kind,
+      this.relativeMovement,
+      this.team,
+      this.canInitiateCastlingFlag,
+      this.canParticipateInCastlingFlag
+    );
+
+    if (this.hasMovedFlag) {
+      clone.markMoved();
+    }
+
+    return clone;
+  }
+
   protected canReachNormally(position: BoardPosition, boardState: IBoardState): boolean {
     const from = boardState.getPiecePositionBy(this);
 

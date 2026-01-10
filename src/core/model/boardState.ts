@@ -9,13 +9,11 @@ export class EmptyCell {
   }
 }
 
-type IEmptyCell = EmptyCell;
-
 export const EMPTY_CELL_SYMBOL = Symbol('.');
 
 export const EMPTY_CELL = new EmptyCell(EMPTY_CELL_SYMBOL);
 
-export type BoardCell = IEmptyCell | IPiece;
+export type BoardCell = EmptyCell | IPiece;
 
 export type BoardPosition = { row: number; column: number };
 
@@ -23,7 +21,6 @@ export type IBoard = BoardCell[][];
 
 export type IBoardState = {
   getBoard(): IBoard;
-  updateBoard(IBoard: IBoard): void;
   addMove(move: Move): void;
   getPiecePositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
@@ -35,10 +32,6 @@ export class BoardState implements IBoardState {
 
   getBoard() {
     return this.board.map((row) => [...row]);
-  }
-
-  updateBoard(IBoard: IBoard) {
-    this.board = IBoard;
   }
 
   addMove(move: Move) {
@@ -85,5 +78,21 @@ export class BoardState implements IBoardState {
   getBoardCellAt(position: BoardPosition): BoardCell {
     const { row, column } = position;
     return this.board[row][column];
+  }
+
+  clone(): BoardState {
+    const board = this.getBoard();
+
+    const clonedBoard: BoardCell[][] = board.map((row) =>
+      row.map((cell) => {
+        if (cell instanceof EmptyCell) {
+          return cell;
+        }
+
+        return cell.clone();
+      })
+    );
+
+    return new BoardState(clonedBoard);
   }
 }

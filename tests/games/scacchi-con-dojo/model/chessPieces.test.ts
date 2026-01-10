@@ -1,7 +1,10 @@
 // --- helpers ----------------------------------------------------
 
 import { BoardPosition, BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
-import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
+import {
+  ChessPiece,
+  RelativeMovement,
+} from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { IPiece } from '../../../../src/core/model/IPiece';
 import {
   ChessPieceFactory,
@@ -328,6 +331,56 @@ describe('ChessPiece.canReachPosition (blocking & capture)', () => {
       expect(newPawn).toBeInstanceOf(ChessPiecePawn);
       expect(newPawn.getForwardDirection()).toEqual(pawn.getForwardDirection());
       expect(newPawn.getBoardValue().description).toContain('P2w');
+    });
+  });
+
+  describe('ChessPiece.clone', () => {
+    it('creates a new instance with identical state', () => {
+      const teamWhite = Symbol('white');
+      const movement: RelativeMovement = {
+        direction: [{ row: 0, column: 1 }],
+        maxSteps: 7,
+      };
+
+      const piece = new ChessPiece(
+        Symbol('R1'),
+        CHESS_PIECE_KIND.ROOK,
+        new Set([movement]),
+        teamWhite,
+        false,
+        true
+      );
+
+      piece.markMoved();
+
+      const cloned = piece.clone();
+
+      // different instance
+      expect(cloned).not.toBe(piece);
+
+      // same immutable identity
+      expect(cloned.getBoardValue()).toBe(piece.getBoardValue());
+
+      // state is preserved
+      expect(cloned.hasMoved()).toBe(true);
+      expect(cloned.getKind()).toBe(piece.getKind());
+      expect(cloned.getTeam()).toBe(piece.getTeam());
+
+      // castling flags preserved
+      expect(cloned.canInitiateCastling()).toBe(piece.canInitiateCastling());
+      expect(cloned.canParticipateInCastling()).toBe(piece.canParticipateInCastling());
+    });
+
+    it('does not share moved state between original and clone', () => {
+      const teamBlack = Symbol('black');
+      const piece = new ChessPiece(Symbol('N1'), CHESS_PIECE_KIND.KNIGHT, new Set(), teamBlack);
+
+      const cloned = piece.clone();
+
+      cloned.markMoved();
+
+      expect(piece.hasMoved()).toBe(false);
+      expect(cloned.hasMoved()).toBe(true);
     });
   });
 });
