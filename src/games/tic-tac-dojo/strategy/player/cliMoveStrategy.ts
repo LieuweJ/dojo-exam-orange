@@ -3,7 +3,7 @@ import { IInputAdapter } from '../../../../core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter';
 import { BoardPosition, IBoard } from '../../../../core/model/boardState';
 import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
-import { Pieces } from '../../../../core/model/player';
+import { IPlayer } from '../../../../core/model/player';
 import { Move } from '../../../../core/model/rules';
 import { CliPositionResolverArgs } from '../../resolvers/cliInputResolver';
 
@@ -15,12 +15,12 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly positionResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
-  async createNextMove(board: IBoard, pieces: Pieces, displayName: string): Promise<Move> {
-    const defaultPiece = pieces[0];
+  async createNextMove(board: IBoard, currentPlayer: IPlayer): Promise<Move> {
+    const defaultPiece = currentPlayer.getPieces()[0];
 
     while (true) {
       const raw = await this.input.ask(
-        `It is ${displayName}'s turn.\n` +
+        `It is ${currentPlayer.getScreenName()}'s turn.\n` +
           `Choose a position (e.g. a1, b2, c3) for ${this.boardCellToUi.get(defaultPiece.getBoardValue())}: `
       );
 

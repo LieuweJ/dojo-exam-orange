@@ -26,7 +26,7 @@ export class Player implements IPlayer {
   }
 
   getNextMove(board: IBoard): Promise<Move> {
-    return this.strategy.createNextMove(board, this.pieces, this.getScreenName());
+    return this.strategy.createNextMove(board, this);
   }
 
   hasPiece(piece: IPiece): boolean {

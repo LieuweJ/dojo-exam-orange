@@ -5,7 +5,7 @@ describe('CliChessMoveStrategy', () => {
     it('throws a "not implemented yet" error', async () => {
       const strategy = new CliChessMoveStrategy();
 
-      await expect(strategy.createNextMove()).rejects.toThrow('not implemented yet');
+      await expect(strategy.createNextMove()).rejects.toThrow('Not implemented yet');
     });
   });
 });

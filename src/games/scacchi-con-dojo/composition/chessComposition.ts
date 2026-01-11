@@ -159,10 +159,9 @@ export function createChessComposition({
 
   // const cliMoveStrategy = new CliChessMoveStrategy(inputAdapter, outputAdapter, boardPresenter);
   const cliMoveStrategy = new CliChessMoveStrategy();
+
   const kingInCheckDetector = new KingInCheckDetector();
-
   const moveHandler = new ChessMoveHandler(piecesFactory);
-
   const checkMateDetector = new CheckMateDetector(kingInCheckDetector, moveHandler);
 
   return {
@@ -198,49 +197,88 @@ function createStartingBoard(
 ): IBoard {
   const e = EMPTY_CELL;
 
-  const blackRooks = requireKind(blackByKind, CHESS_PIECE_KIND.ROOK);
-  const blackKnights = requireKind(blackByKind, CHESS_PIECE_KIND.KNIGHT);
-  const blackBishops = requireKind(blackByKind, CHESS_PIECE_KIND.BISHOP);
-  const blackQueen = requireKind(blackByKind, CHESS_PIECE_KIND.QUEEN);
-  const blackKing = requireKind(blackByKind, CHESS_PIECE_KIND.KING);
-  const blackPawns = requireKind(blackByKind, CHESS_PIECE_KIND.PAWN);
+  const blackKing = requireKind(blackByKind, CHESS_PIECE_KIND.KING)[0];
 
+  const whiteKing = requireKind(whiteByKind, CHESS_PIECE_KIND.KING)[0];
   const whiteRooks = requireKind(whiteByKind, CHESS_PIECE_KIND.ROOK);
-  const whiteKnights = requireKind(whiteByKind, CHESS_PIECE_KIND.KNIGHT);
-  const whiteBishops = requireKind(whiteByKind, CHESS_PIECE_KIND.BISHOP);
-  const whiteQueen = requireKind(whiteByKind, CHESS_PIECE_KIND.QUEEN);
-  const whiteKing = requireKind(whiteByKind, CHESS_PIECE_KIND.KING);
-  const whitePawns = requireKind(whiteByKind, CHESS_PIECE_KIND.PAWN);
+  const whitePawn = requireKind(whiteByKind, CHESS_PIECE_KIND.PAWN)[0];
 
   return [
-    [
-      blackRooks[0],
-      blackKnights[0],
-      blackBishops[0],
-      blackQueen[0],
-      blackKing[0],
-      blackBishops[1],
-      blackKnights[1],
-      blackRooks[1],
-    ],
-    blackPawns,
+    // 0 ─ Black back rank (minimal, just king so game is valid)
+    [e, e, e, e, blackKing, e, e, e],
+
+    // 1
     [e, e, e, e, e, e, e, e],
+
+    // 2
     [e, e, e, e, e, e, e, e],
+
+    // 3
     [e, e, e, e, e, e, e, e],
+
+    // 4
     [e, e, e, e, e, e, e, e],
-    whitePawns,
-    [
-      whiteRooks[0],
-      whiteKnights[0],
-      whiteBishops[0],
-      whiteQueen[0],
-      whiteKing[0],
-      whiteBishops[1],
-      whiteKnights[1],
-      whiteRooks[1],
-    ],
+
+    // 5
+    [e, e, e, e, e, e, e, e],
+
+    // 6 ─ White pawn one move from promotion
+    [whitePawn, e, e, e, e, e, e, e],
+
+    // 7 ─ White castling setup (king + rook, path clear)
+    [whiteRooks[0], e, e, e, whiteKing, e, e, e],
   ];
 }
+
+// function createStartingBoard(
+//   blackByKind: ChessPieceSetByKind,
+//   whiteByKind: ChessPieceSetByKind
+// ): IBoard {
+//   const e = EMPTY_CELL;
+//
+//   const blackRooks = requireKind(blackByKind, CHESS_PIECE_KIND.ROOK);
+//   const blackKnights = requireKind(blackByKind, CHESS_PIECE_KIND.KNIGHT);
+//   const blackBishops = requireKind(blackByKind, CHESS_PIECE_KIND.BISHOP);
+//   const blackQueen = requireKind(blackByKind, CHESS_PIECE_KIND.QUEEN);
+//   const blackKing = requireKind(blackByKind, CHESS_PIECE_KIND.KING);
+//   const blackPawns = requireKind(blackByKind, CHESS_PIECE_KIND.PAWN);
+//
+//   const whiteRooks = requireKind(whiteByKind, CHESS_PIECE_KIND.ROOK);
+//   const whiteKnights = requireKind(whiteByKind, CHESS_PIECE_KIND.KNIGHT);
+//   const whiteBishops = requireKind(whiteByKind, CHESS_PIECE_KIND.BISHOP);
+//   const whiteQueen = requireKind(whiteByKind, CHESS_PIECE_KIND.QUEEN);
+//   const whiteKing = requireKind(whiteByKind, CHESS_PIECE_KIND.KING);
+//   const whitePawns = requireKind(whiteByKind, CHESS_PIECE_KIND.PAWN);
+//
+//   return [
+//     [
+//       blackRooks[0],
+//       blackKnights[0],
+//       blackBishops[0],
+//       blackQueen[0],
+//       blackKing[0],
+//       blackBishops[1],
+//       blackKnights[1],
+//       blackRooks[1],
+//     ],
+//     blackPawns,
+//     [e, e, e, e, e, e, e, e],
+//     [e, e, e, e, e, e, e, e],
+//     [e, e, e, e, e, e, e, e],
+//     [e, e, e, e, e, e, e, e],
+//     whitePawns,
+//     [
+//       whiteRooks[0],
+//       whiteKnights[0],
+//       whiteBishops[0],
+//       whiteQueen[0],
+//       whiteKing[0],
+//       whiteBishops[1],
+//       whiteKnights[1],
+//       whiteRooks[1],
+//     ],
+//   ];
+// }
 
 function requireKind(byKind: ChessPieceSetByKind, kind: ChessPieceKind): ChessPiece[] {
   const pieces = byKind.get(kind);

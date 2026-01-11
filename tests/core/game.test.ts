@@ -164,9 +164,9 @@ describe('A game of orange-in-a-row can be played', () => {
 
     expect(moveStrategy.createNextMove).toHaveBeenCalledTimes(3);
 
-    expect(moveStrategy.createNextMove.mock.calls[0][1]).toStrictEqual([PIECE_X]);
-    expect(moveStrategy.createNextMove.mock.calls[1][1]).toStrictEqual([PIECE_O]);
-    expect(moveStrategy.createNextMove.mock.calls[2][1]).toStrictEqual([PIECE_X]);
+    expect(moveStrategy.createNextMove.mock.calls[0][1]).toStrictEqual(playerX);
+    expect(moveStrategy.createNextMove.mock.calls[1][1]).toStrictEqual(playerO);
+    expect(moveStrategy.createNextMove.mock.calls[2][1]).toStrictEqual(playerX);
   });
 
   test('game stops when a winning outcome is returned', async () => {

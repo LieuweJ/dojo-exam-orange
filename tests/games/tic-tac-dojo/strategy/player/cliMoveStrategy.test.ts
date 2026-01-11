@@ -1,7 +1,7 @@
 import { IInputAdapter } from '../../../../../src/core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../../src/core/adapters/terminalOutputAdapter';
 import { BoardCell, EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
-import { Pieces } from '../../../../../src/core/model/player';
+import { Pieces, Player } from '../../../../../src/core/model/player';
 import { CliTicTacToeInputResolver } from '../../../../../src/games/tic-tac-dojo/resolvers/cliInputResolver';
 import { CliMoveStrategy } from '../../../../../src/games/tic-tac-dojo/strategy/player/cliMoveStrategy';
 import { IPiece } from '../../../../../src/core/model/IPiece';
@@ -47,7 +47,9 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const strategy = new CliMoveStrategy(input, output, boardCellToUi, resolver);
 
-    const move = await strategy.createNextMove(board, pieces, 'Player 1');
+    const currentPlayer = new Player('Player 1', strategy, pieces);
+
+    const move = await strategy.createNextMove(board, currentPlayer);
 
     expect(move).toEqual({
       piece: X,
@@ -62,7 +64,9 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const strategy = new CliMoveStrategy(input, output, boardCellToUi, resolver);
 
-    const move = await strategy.createNextMove(board, pieces, 'Player 1');
+    const currentPlayer = new Player('Player 1', strategy, pieces);
+
+    const move = await strategy.createNextMove(board, currentPlayer);
 
     expect(output.render).toHaveBeenCalledWith(
       `Input '22' is invalid. Please use a format like 'a1'.`
@@ -76,7 +80,9 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const strategy = new CliMoveStrategy(input, output, boardCellToUi, resolver);
 
-    const move = await strategy.createNextMove(board, pieces, 'Player 1');
+    const currentPlayer = new Player('Player 1', strategy, pieces);
+
+    const move = await strategy.createNextMove(board, currentPlayer);
 
     expect(output.render).toHaveBeenCalledWith(
       `Input 'd1' cannot be placed on the board. Please choose another position.`

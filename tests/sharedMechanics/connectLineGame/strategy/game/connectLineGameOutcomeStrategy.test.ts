@@ -1,8 +1,7 @@
 import { BoardCell, EMPTY_CELL, IBoard } from '../../../../../src/core/model/boardState';
 import { GAME_OUTCOME } from '../../../../../src/core/strategy/game/gameOutcomeStrategy';
-import { Pieces, Player } from '../../../../../src/core/model/player';
+import { Player } from '../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../src/core/strategy/player/move-strategy';
-import { Move } from '../../../../../src/core/model/rules';
 import {
   PIECE_O,
   PIECE_X,
@@ -24,9 +23,8 @@ describe('GameOutcomeStrategy', () => {
   let players: Player[];
 
   beforeEach(() => {
-    const createNextMove = jest.fn<Promise<Move>, [IBoard, Pieces, string]>();
     playerStrategy = {
-      createNextMove,
+      createNextMove: jest.fn(),
     };
 
     playerO = new Player('Player O', playerStrategy, [PIECE_O]);

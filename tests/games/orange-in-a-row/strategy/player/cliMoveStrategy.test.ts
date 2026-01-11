@@ -10,6 +10,7 @@ import {
 import { CliMoveStrategy } from '../../../../../src/games/orange-in-a-row/strategy/player/cliMoveStrategy';
 import { CliColumnInputResolver } from '../../../../../src/games/orange-in-a-row/resolvers/cliColumnInputResolver';
 import { IPiece } from '../../../../../src/core/model/IPiece';
+import { Player } from '../../../../../src/core/model/player';
 
 describe('CliMoveStrategy', () => {
   let inputAdapter: jest.Mocked<IInputAdapter>;
@@ -44,7 +45,9 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, [givenPiece], 'Alice');
+    const currentPlayer = new Player('Alice', moveStrategy, [givenPiece]);
+
+    const move = await moveStrategy.createNextMove(board, currentPlayer);
 
     expect(move).toStrictEqual({ position: { column: 1, row: 2 }, piece: givenPiece });
   });
@@ -59,7 +62,9 @@ describe('CliMoveStrategy', () => {
 
     inputAdapter.ask.mockResolvedValueOnce('2');
 
-    const move = await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
+    const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
+
+    const move = await moveStrategy.createNextMove(board, currentPlayer);
 
     expect(move).toStrictEqual({ position: { column: 1, row: 3 }, piece: PIECE_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
@@ -76,7 +81,9 @@ describe('CliMoveStrategy', () => {
     inputAdapter.ask.mockResolvedValueOnce('-5');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
+    const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
+
+    await moveStrategy.createNextMove(board, currentPlayer);
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
@@ -93,7 +100,9 @@ describe('CliMoveStrategy', () => {
     inputAdapter.ask.mockResolvedValueOnce('99');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
+    const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
+
+    await moveStrategy.createNextMove(board, currentPlayer);
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
@@ -110,7 +119,9 @@ describe('CliMoveStrategy', () => {
     inputAdapter.ask.mockResolvedValueOnce('2');
     inputAdapter.ask.mockResolvedValueOnce('1');
 
-    await moveStrategy.createNextMove(board, [PIECE_X], 'Bob');
+    const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
+
+    await moveStrategy.createNextMove(board, currentPlayer);
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(

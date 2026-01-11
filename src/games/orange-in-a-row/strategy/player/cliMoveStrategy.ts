@@ -3,7 +3,7 @@ import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter'
 import { BoardPosition, IBoard } from '../../../../core/model/boardState';
 import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
 import { CliPositionResolverArgs } from '../../resolvers/cliColumnInputResolver';
-import { Pieces } from '../../../../core/model/player';
+import { IPlayer } from '../../../../core/model/player';
 import { Move } from '../../../../core/model/rules';
 import { IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 
@@ -15,11 +15,11 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly rowResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
-  async createNextMove(board: IBoard, pieces: Pieces, displayName: string): Promise<Move> {
-    const defaultPiece = pieces[0];
+  async createNextMove(board: IBoard, currentPlayer: IPlayer): Promise<Move> {
+    const defaultPiece = currentPlayer.getPieces()[0];
     while (true) {
       const raw = await this.input.ask(
-        `It is ${displayName}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(defaultPiece.getBoardValue())} : `
+        `It is ${currentPlayer.getScreenName()}'s turn.\nChoose column (1-${board[0].length}) for ${this.boardCellToUi.get(defaultPiece.getBoardValue())} : `
       );
 
       if (!this.isValid(raw)) {

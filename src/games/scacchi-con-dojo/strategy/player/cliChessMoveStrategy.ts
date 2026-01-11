@@ -2,21 +2,21 @@ import { IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 import { ChessMove } from '../../handler/ChessMoveHandler';
 
 export class CliChessMoveStrategy implements IMoveStrategy {
-  constructor() {
-    // private readonly input: IInputAdapter,
-    // private readonly output: IOutputAdapter,
-    // private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>
-  }
-
   async createNextMove(): Promise<ChessMove> {
-    throw new Error('not implemented yet');
+    throw new Error('Not implemented yet');
   }
 
-  // async createNextMove(board: IBoard, pieces: Pieces, displayName: string): Promise<ChessMove> {
+  // constructor(
+  //   private readonly input: IInputAdapter,
+  //   private readonly output: IOutputAdapter,
+  //   private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>
+  // ) {}
+  //
+  // async createNextMove(board: IBoard, pieces: Pieces, currentPlayer: IPlayer): Promise<ChessMove> {
   //   const boardState = new BoardState(board);
   //
   //   while (true) {
-  //     const piece = await this.askPiece(pieces, board, displayName);
+  //     const piece = await this.askPiece(pieces, board, currentPlayer.getScreenName());
   //     const reachable = piece.getAllReachablePositions(boardState);
   //
   //     if (reachable.length === 0) {

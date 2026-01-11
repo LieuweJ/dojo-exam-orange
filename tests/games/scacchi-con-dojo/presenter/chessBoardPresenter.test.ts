@@ -1,5 +1,5 @@
 import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdapter';
-import { BoardCell, BoardState, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
+import { BoardCell, BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
 import {
   ChessPieceFactory,
   ChessPieceSetByKind,
@@ -21,8 +21,7 @@ import {
 import { ChessBoardPresenter } from '../../../../src/games/scacchi-con-dojo/presenter/chessBoardPresenter';
 import { CapturedPiecesProvider } from '../../../../src/games/scacchi-con-dojo/provider/CapturedPiecesProvider';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
-import { Move } from '../../../../src/core/model/rules';
-import { NonEmptyArray, Pieces, Player } from '../../../../src/core/model/player';
+import { NonEmptyArray, Player } from '../../../../src/core/model/player';
 import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 
 describe('ChessBoardPresenter', () => {
@@ -39,7 +38,7 @@ describe('ChessBoardPresenter', () => {
     outputAdapter = { render: renderMock };
 
     moveStrategyMock = {
-      createNextMove: jest.fn<Promise<Move>, [IBoard, Pieces, string]>(),
+      createNextMove: jest.fn(),
     };
   });
 

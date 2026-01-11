@@ -1,11 +1,10 @@
 import { CHESS_PIECE_KIND } from '../../../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
 import { ChessPieceFactory } from '../../../../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
 import { ValidPromotionStrategy } from '../../../../../../src/games/scacchi-con-dojo/strategy/game/rules/validPromotionStrategy';
-import { BoardState, EMPTY_CELL, IBoard } from '../../../../../../src/core/model/boardState';
+import { BoardState, EMPTY_CELL } from '../../../../../../src/core/model/boardState';
 import { ProposedChessMove } from '../../../../../../src/games/scacchi-con-dojo/model/move';
-import { Move } from '../../../../../../src/core/model/rules';
 import { Players, TurnState } from '../../../../../../src/core/model/turnState';
-import { IPlayer, Pieces, Player } from '../../../../../../src/core/model/player';
+import { IPlayer, Player } from '../../../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../../../src/core/strategy/player/move-strategy';
 import {
   PIECE_O,
@@ -38,9 +37,8 @@ describe('ValidPromotionStrategy', () => {
   let baseContext: (board: BoardState) => Pick<ProposedChessMove, 'moveContext'>;
 
   beforeEach(() => {
-    const createNextMove = jest.fn<Promise<Move>, [IBoard, Pieces, string]>();
     playerStrategy = {
-      createNextMove,
+      createNextMove: jest.fn(),
     };
 
     playerO = new Player('Player O', playerStrategy, [PIECE_O]);

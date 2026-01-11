@@ -1,8 +1,7 @@
 import { CapturedPiecesProvider } from '../../../../src/games/scacchi-con-dojo/provider/CapturedPiecesProvider';
-import { BoardState, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
-import { Pieces, Player } from '../../../../src/core/model/player';
+import { BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
+import { Player } from '../../../../src/core/model/player';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
-import { Move } from '../../../../src/core/model/rules';
 import { IPiece } from '../../../../src/core/model/IPiece';
 
 describe('CapturedPiecesProvider', () => {
@@ -10,7 +9,7 @@ describe('CapturedPiecesProvider', () => {
 
   beforeEach(() => {
     moveStrategyMock = {
-      createNextMove: jest.fn<Promise<Move>, [IBoard, Pieces, string]>(),
+      createNextMove: jest.fn(),
     };
   });
 
