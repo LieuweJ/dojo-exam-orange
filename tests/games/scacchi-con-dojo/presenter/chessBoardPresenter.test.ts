@@ -2,6 +2,7 @@ import { IOutputAdapter } from '../../../../src/core/adapters/terminalOutputAdap
 import { BoardCell, BoardState, EMPTY_CELL, IBoard } from '../../../../src/core/model/boardState';
 import {
   ChessPieceFactory,
+  ChessPieceSetByKind,
   PAWN_DIRECTION,
 } from '../../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
 import {
@@ -21,7 +22,8 @@ import { ChessBoardPresenter } from '../../../../src/games/scacchi-con-dojo/pres
 import { CapturedPiecesProvider } from '../../../../src/games/scacchi-con-dojo/provider/CapturedPiecesProvider';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';
 import { Move } from '../../../../src/core/model/rules';
-import { Pieces, Player } from '../../../../src/core/model/player';
+import { NonEmptyArray, Pieces, Player } from '../../../../src/core/model/player';
+import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 
 describe('ChessBoardPresenter', () => {
   let renderMock: jest.Mock<void, [string]>;
@@ -50,9 +52,12 @@ describe('ChessBoardPresenter', () => {
     const board = Array.from({ length: 8 }, () => [...emptyRow]);
     const boardState = new BoardState(board);
 
-    // Create full sets
-    const whitePieces = factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP);
-    const blackPieces = factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM);
+    const whitePieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP)
+    );
+    const blackPieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM)
+    );
 
     const whitePlayer = new Player('White', moveStrategyMock, whitePieces);
     const blackPlayer = new Player('Black', moveStrategyMock, blackPieces);
@@ -87,25 +92,25 @@ describe('ChessBoardPresenter', () => {
 
     expect(renderMock).toHaveBeenCalledTimes(1);
     expect(output).toBe(
-      `Captured Black        ┌---┬---┬---┬---┬---┬---┬---┬---┐     Captured White
-♕ ♖ ♗ ♗ ♘ ♘ ♙       8 |   | · |   | · |[♚]| · |   | · |     ♛ ♜ ♜ ♝ ♝ ♞ ♞ 
-♙ ♙ ♙ ♙ ♙ ♙ ♙         ├---┼---┼---┼---┼---┼---┼---┼---┤     ♟ ♟ ♟ ♟ ♟ ♟ ♟ 
-                    7 | · |   | · |   | · |   | · |   |     ♟             
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    6 |   | · |   | · |   | · |   | · |                   
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    5 | · |   | · |   | · |   | · |   |                   
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    4 |   | · |   | · |   | · |   | · |                   
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    3 | · |   | · |   | · |   | · |   |                   
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    2 |   | · |   | · |   | · |   | · |                   
-                      ├---┼---┼---┼---┼---┼---┼---┼---┤                   
-                    1 | ♖ |   | · |   |[♔]|   | · |   |                   
-                      └---┴---┴---┴---┴---┴---┴---┴---┘                   
-                        a   b   c   d   e   f   g   h  
-                   `
+      `Captured Bitches        ┌---┬---┬---┬---┬---┬---┬---┬---┐     Captured Witches
+♕ ♖ ♗ ♗ ♘ ♘ ♙ ♙       8 |   | · |   | · |[♚]| · |   | · |     ♛ ♜ ♜ ♝ ♝ ♞ ♞ ♟ 
+♙ ♙ ♙ ♙ ♙ ♙             ├---┼---┼---┼---┼---┼---┼---┼---┤     ♟ ♟ ♟ ♟ ♟ ♟ ♟   
+                      7 | · |   | · |   | · |   | · |   |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      6 |   | · |   | · |   | · |   | · |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      5 | · |   | · |   | · |   | · |   |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      4 |   | · |   | · |   | · |   | · |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      3 | · |   | · |   | · |   | · |   |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      2 |   | · |   | · |   | · |   | · |                     
+                        ├---┼---┼---┼---┼---┼---┼---┼---┤                     
+                      1 | ♖ |   | · |   |[♔]|   | · |   |                     
+                        └---┴---┴---┴---┴---┴---┴---┴---┘                     
+                          a   b   c   d   e   f   g   h  
+                     `
     );
   });
 
@@ -243,8 +248,12 @@ describe('ChessBoardPresenter', () => {
 
     const factory = new ChessPieceFactory();
 
-    const whitePieces = factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP);
-    const blackPieces = factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM);
+    const whitePieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP)
+    );
+    const blackPieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM)
+    );
 
     const whitePlayer = new Player('White', moveStrategyMock, whitePieces);
     const blackPlayer = new Player('Black', moveStrategyMock, blackPieces);
@@ -284,8 +293,12 @@ describe('ChessBoardPresenter', () => {
 
     const factory = new ChessPieceFactory();
 
-    const whitePieces = factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP);
-    const blackPieces = factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM);
+    const whitePieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_WHITE, PAWN_DIRECTION.TOWARDS_TOP)
+    );
+    const blackPieces = toNoneEmptyArray(
+      factory.createInitialPieceSet(TEAM_BLACK, PAWN_DIRECTION.TOWARDS_BOTTOM)
+    );
 
     const whitePlayer = new Player('White', moveStrategyMock, whitePieces);
     const blackPlayer = new Player('Black', moveStrategyMock, blackPieces);
@@ -310,7 +323,16 @@ describe('ChessBoardPresenter', () => {
 
     const output = renderMock.mock.calls[0][0];
 
-    // Presenter should still render without crashing
-    expect(output).toContain('Captured White');
+    expect(output).toContain('Captured Witches');
   });
 });
+
+function toNoneEmptyArray(byKind: ChessPieceSetByKind): NonEmptyArray<ChessPiece> {
+  const array = Array.from(byKind.values()).flat();
+
+  if (array.length === 0) {
+    throw new Error('Array is empty');
+  }
+
+  return [array[0], ...array.slice(1)];
+}

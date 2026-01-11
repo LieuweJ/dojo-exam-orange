@@ -46,14 +46,14 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     const capturedByTeam = this.capturedPiecesProvider.getCapturedPieces(players, board);
 
     const capturedBlackLines = this.renderCapturedColumn(
-      'Captured Black',
+      'Captured Bitches',
       capturedByTeam,
       [...capturedByTeam.keys()][0],
       boardLines.length
     );
 
     const capturedWhiteLines = this.renderCapturedColumn(
-      'Captured White',
+      'Captured Witches',
       capturedByTeam,
       [...capturedByTeam.keys()][1],
       boardLines.length

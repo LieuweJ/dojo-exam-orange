@@ -12,6 +12,7 @@ import { IOutputAdapter } from '../../core/adapters/terminalOutputAdapter';
 import { createTicTacDojo } from '../../games/tic-tac-dojo/composition/ticTacDojoComposition';
 import { IPiece } from '../../core/model/IPiece';
 import { IMoveHandler } from '../../core/handler/MoveHandler';
+import { createChessComposition } from '../../games/scacchi-con-dojo/composition/chessComposition';
 
 export type GameCompositionInput = {
   inputAdapter: IInputAdapter;
@@ -51,5 +52,11 @@ export const GAMES: GameDescriptor[] = [
     displayName: 'Tic Tac Dojo',
     requiredPlayers: 2,
     createComposition: createTicTacDojo,
+  },
+  {
+    id: 'scacchi-con-dojo',
+    displayName: 'Scacchi con Dojo',
+    requiredPlayers: 2,
+    createComposition: createChessComposition,
   },
 ];

@@ -6,7 +6,6 @@ import {
 } from '../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
 import { Team } from '../../../core/model/team';
-import { NonEmptyArray } from '../../../core/model/player';
 
 export const PAWN_DIRECTION = {
   TOWARDS_TOP: 'towards_top',
@@ -31,6 +30,8 @@ export type CreatePawnInput = {
   index: number;
   forwardDirection: { row: number; column: number };
 };
+
+export type ChessPieceSetByKind = Map<ChessPieceKind, ChessPiece[]>;
 
 export class ChessPieceFactory {
   create({ team, kind, index }: CreateChessPieceInput): ChessPiece {
@@ -78,22 +79,28 @@ export class ChessPieceFactory {
     });
   }
 
-  createInitialPieceSet(team: Team, pawnDirection: PawnDirection): NonEmptyArray<ChessPiece> {
-    const pieces: NonEmptyArray<ChessPiece> = [
-      this.create({ team, kind: CHESS_PIECE_KIND.KING, index: 1 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.QUEEN, index: 1 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 1 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 2 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 1 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 2 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 1 }),
-      this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 2 }),
-    ];
+  createInitialPieceSet(team: Team, pawnDirection: PawnDirection): ChessPieceSetByKind {
+    const byKind = new Map<ChessPieceKind, ChessPiece[]>();
+
+    const add = (piece: ChessPiece) => {
+      const list = byKind.get(piece.getKind()) ?? [];
+      list.push(piece);
+      byKind.set(piece.getKind(), list);
+    };
+
+    add(this.create({ team, kind: CHESS_PIECE_KIND.KING, index: 1 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.QUEEN, index: 1 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 1 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 2 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 1 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 2 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 1 }));
+    add(this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 2 }));
 
     const forwardDirection = PAWN_FORWARD_VECTOR[pawnDirection];
 
     for (let i = 1; i <= 8; i++) {
-      pieces.push(
+      add(
         this.createPawn({
           team,
           index: i,
@@ -102,7 +109,7 @@ export class ChessPieceFactory {
       );
     }
 
-    return pieces;
+    return byKind;
   }
 
   private createBoardValue(team: Team, kind: ChessPieceKind, index: number): symbol {
