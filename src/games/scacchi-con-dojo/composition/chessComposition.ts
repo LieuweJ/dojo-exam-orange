@@ -157,8 +157,7 @@ export function createChessComposition({
     new CapturedPiecesProvider()
   );
 
-  // const cliMoveStrategy = new CliChessMoveStrategy(inputAdapter, outputAdapter, boardPresenter);
-  const cliMoveStrategy = new CliChessMoveStrategy();
+  const cliMoveStrategy = new CliChessMoveStrategy(inputAdapter, outputAdapter, boardPresenter);
 
   const kingInCheckDetector = new KingInCheckDetector();
   const moveHandler = new ChessMoveHandler(piecesFactory);

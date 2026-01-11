@@ -2,7 +2,7 @@ import { IBoard } from '../../model/boardState';
 import { Move } from '../../model/rules';
 import { IPlayer } from '../../model/player';
 
-export type NextMoveInput = {
+export type CreateNextMoveInput = {
   context: {
     board: IBoard;
     players: IPlayer[];
@@ -11,5 +11,5 @@ export type NextMoveInput = {
 };
 
 export type IMoveStrategy = {
-  createNextMove(args: NextMoveInput): Promise<Move>;
+  createNextMove(args: CreateNextMoveInput): Promise<Move>;
 };

@@ -4,7 +4,7 @@ import { BoardPosition } from '../../../../core/model/boardState';
 import { IBoardPositionResolver } from '../../../../core/resolvers/MoveResolver';
 import { CliPositionResolverArgs } from '../../resolvers/cliColumnInputResolver';
 import { Move } from '../../../../core/model/rules';
-import { IMoveStrategy, NextMoveInput } from '../../../../core/strategy/player/move-strategy';
+import { CreateNextMoveInput, IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 
 export class CliMoveStrategy implements IMoveStrategy {
   constructor(
@@ -14,7 +14,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly rowResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
-  async createNextMove({ context: { board }, currentPlayer }: NextMoveInput): Promise<Move> {
+  async createNextMove({ context: { board }, currentPlayer }: CreateNextMoveInput): Promise<Move> {
     const defaultPiece = currentPlayer.getPieces()[0];
     while (true) {
       const raw = await this.input.ask(

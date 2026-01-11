@@ -1,4 +1,4 @@
-import { IMoveStrategy, NextMoveInput } from '../../../../core/strategy/player/move-strategy';
+import { CreateNextMoveInput, IMoveStrategy } from '../../../../core/strategy/player/move-strategy';
 import { IInputAdapter } from '../../../../core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../../../../core/adapters/terminalOutputAdapter';
 import { BoardPosition } from '../../../../core/model/boardState';
@@ -14,7 +14,7 @@ export class CliMoveStrategy implements IMoveStrategy {
     private readonly positionResolver: IBoardPositionResolver<CliPositionResolverArgs>
   ) {}
 
-  async createNextMove({ context: { board }, currentPlayer }: NextMoveInput): Promise<Move> {
+  async createNextMove({ context: { board }, currentPlayer }: CreateNextMoveInput): Promise<Move> {
     const defaultPiece = currentPlayer.getPieces()[0];
 
     while (true) {
