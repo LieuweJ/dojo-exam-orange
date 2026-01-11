@@ -6,6 +6,19 @@ import {
 } from '../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
 import { Team } from '../../../core/model/team';
+import { NonEmptyArray } from '../../../core/model/player';
+
+export const PAWN_DIRECTION = {
+  TOWARDS_TOP: 'towards_top',
+  TOWARDS_BOTTOM: 'towards_bottom',
+} as const;
+
+export type PawnDirection = (typeof PAWN_DIRECTION)[keyof typeof PAWN_DIRECTION];
+
+export const PAWN_FORWARD_VECTOR: Record<PawnDirection, { row: number; column: number }> = {
+  [PAWN_DIRECTION.TOWARDS_TOP]: { row: -1, column: 0 },
+  [PAWN_DIRECTION.TOWARDS_BOTTOM]: { row: 1, column: 0 },
+};
 
 export type CreateChessPieceInput = {
   team: Team;
@@ -63,6 +76,33 @@ export class ChessPieceFactory {
       kind,
       index,
     });
+  }
+
+  createInitialPieceSet(team: Team, pawnDirection: PawnDirection): NonEmptyArray<ChessPiece> {
+    const pieces: NonEmptyArray<ChessPiece> = [
+      this.create({ team, kind: CHESS_PIECE_KIND.KING, index: 1 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.QUEEN, index: 1 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 1 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.ROOK, index: 2 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 1 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.BISHOP, index: 2 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 1 }),
+      this.create({ team, kind: CHESS_PIECE_KIND.KNIGHT, index: 2 }),
+    ];
+
+    const forwardDirection = PAWN_FORWARD_VECTOR[pawnDirection];
+
+    for (let i = 1; i <= 8; i++) {
+      pieces.push(
+        this.createPawn({
+          team,
+          index: i,
+          forwardDirection,
+        })
+      );
+    }
+
+    return pieces;
   }
 
   private createBoardValue(team: Team, kind: ChessPieceKind, index: number): symbol {

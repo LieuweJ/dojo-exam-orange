@@ -33,14 +33,14 @@ export class Game implements IGame {
     while (true) {
       await this.playTurn();
 
-      const outcome = this.outcomeStrategy.determine(
-        this.boardState.getBoard(),
-        this.turnState.getPlayers()
-      );
+      const players = this.turnState.getPlayers();
+
+      const outcome = this.outcomeStrategy.determine(this.boardState.getBoard(), players);
 
       if (this.gameLifeCycleStrategy.isGameOver(outcome)) {
         this.resultPresenter.present({
           board: this.boardState.getBoard(),
+          players,
           outcome,
         });
 
@@ -52,7 +52,10 @@ export class Game implements IGame {
   }
 
   private async playTurn() {
-    this.boardPresenter.present({ board: this.boardState.getBoard() });
+    this.boardPresenter.present({
+      board: this.boardState.getBoard(),
+      players: this.turnState.getPlayers(),
+    });
 
     let proposedMove: Move;
 

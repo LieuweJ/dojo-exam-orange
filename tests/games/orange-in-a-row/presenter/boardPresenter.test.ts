@@ -26,7 +26,7 @@ describe('BoardPresenter', () => {
       [PIECE_O, PIECE_X],
     ];
 
-    presenter.present({ board });
+    presenter.present({ board, players: [] });
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
       `| · | · |\n| · | ● |\n| ○ | ● |\n|---|---|\n| 1 | 2 |\n`
@@ -46,7 +46,7 @@ describe('BoardPresenter', () => {
       [PIECE_O, PIECE_X],
     ];
 
-    presenter.present({ board, highlightPositions });
+    presenter.present({ board, highlightPositions, players: [] });
 
     expect(outputAdapter.render).toHaveBeenCalledWith(
       `| ○ |[·]|\n| · | ● |\n|[○]|[●]|\n|---|---|\n| 1 | 2 |\n`
@@ -68,7 +68,7 @@ describe('BoardPresenter', () => {
 
     const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, uiMappingWithoutPieceX);
 
-    expect(() => boardPresenter.present({ board })).toThrow(
+    expect(() => boardPresenter.present({ board, players: [] })).toThrow(
       `Piece cannot be rendered at boardPosition: {\"row\":1,\"column\":2}.`
     );
   });

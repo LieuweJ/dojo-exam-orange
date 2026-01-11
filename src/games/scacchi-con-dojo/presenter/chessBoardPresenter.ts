@@ -9,6 +9,8 @@ import {
   ChessPieceUi,
   ChessRowToString,
 } from '../composition/chessComposition';
+import { CapturedPiecesProvider } from '../provider/CapturedPiecesProvider';
+import { Team } from '../../../core/model/team';
 
 enum SeparatorStyle {
   TOP = 'top',
@@ -27,43 +29,68 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     private readonly outputAdapter: IOutputAdapter,
     private readonly pieceUi: Map<ChessPieceKind, ChessPieceUi>,
     private readonly squareUi: Map<BoardParity, string>,
-    private readonly rowToString: ChessRowToString
+    private readonly rowToString: ChessRowToString,
+    private readonly capturedPiecesProvider: CapturedPiecesProvider
   ) {}
 
-  public present({ board, highlightPositions = [] }: BoardPresentArgs): void {
+  public present({ board, highlightPositions = [], players }: BoardPresentArgs): void {
     const highlightSet = this.toHighlightSet(highlightPositions);
     const columnCount = board[0].length;
 
-    const output =
-      this.renderSeparatorLine(columnCount, '-', SeparatorStyle.TOP) +
-      this.renderBoardRows(board, highlightSet) +
-      this.renderColumnReferences(columnCount);
+    const boardLines: string[] = [
+      ...this.renderSeparatorLine(columnCount, '-', SeparatorStyle.TOP),
+      ...this.renderBoardRows(board, highlightSet),
+      ...this.renderColumnReferences(columnCount),
+    ];
 
-    this.outputAdapter.render(output);
+    const capturedByTeam = this.capturedPiecesProvider.getCapturedPieces(players, board);
+
+    const capturedBlackLines = this.renderCapturedColumn(
+      'Captured Black',
+      capturedByTeam,
+      [...capturedByTeam.keys()][0],
+      boardLines.length
+    );
+
+    const capturedWhiteLines = this.renderCapturedColumn(
+      'Captured White',
+      capturedByTeam,
+      [...capturedByTeam.keys()][1],
+      boardLines.length
+    );
+
+    const combined: string[] = boardLines.map((boardLine, i) => {
+      const left = capturedBlackLines[i];
+      const right = capturedWhiteLines[i];
+      return `${left}     ${boardLine}     ${right}`;
+    });
+
+    this.print(combined);
   }
 
-  private renderBoardRows(board: IBoard, highlightSet: Set<string>): string {
-    let output = '';
+  private renderBoardRows(board: IBoard, highlightSet: Set<string>): string[] {
+    const lines: string[] = [];
 
     board.forEach((row, rowIndex) => {
       const rowUiNumber = row.length - rowIndex;
-      output += ` ${rowUiNumber} |`;
+      let rowLine = ` ${rowUiNumber} |`;
       row.forEach((cell, colIndex) => {
-        output += this.renderCell(cell, { row: rowIndex, column: colIndex }, highlightSet);
+        rowLine += this.renderCell(cell, { row: rowIndex, column: colIndex }, highlightSet);
       });
+      lines.push(rowLine);
 
       const place = rowIndex === board.length - 1 ? SeparatorStyle.BOTTOM : SeparatorStyle.MIDDLE;
-      output += `\n${this.renderSeparatorLine(row.length, '-', place)}`;
+      lines.push(this.renderSeparatorLine(row.length, '-', place)[0]);
     });
 
-    return output;
+    return lines;
   }
 
   private renderSeparatorLine(
     columnCount: number,
     horizontalCharacter: string,
     renderStyle: SeparatorStyle
-  ): string {
+  ): string[] {
     const h = horizontalCharacter;
 
     const corner = this.separatorFrame[renderStyle];
@@ -75,11 +102,10 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
       separator += col < columnCount - 1 ? corner.middle : corner.right;
     }
 
-    separator += `\n`;
-    return separator;
+    return [separator];
   }
 
-  private renderColumnReferences(columnCount: number): string {
+  private renderColumnReferences(columnCount: number): string[] {
     let bottomNumbers = '    ';
 
     for (let col = 0; col < columnCount; col++) {
@@ -87,7 +113,7 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     }
     bottomNumbers += '\n';
 
-    return bottomNumbers;
+    return [bottomNumbers];
   }
 
   private renderCell(
@@ -152,5 +178,48 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
 
   private createCellKey(boardPosition: BoardPosition): string {
     return `${boardPosition.row},${boardPosition.column}`;
+  }
+
+  private renderCapturedColumn(
+    title: string,
+    captured: Map<Team, ChessPiece[]>,
+    team: Team,
+    height: number
+  ): string[] {
+    const pieces = captured.get(team) ?? [];
+    const width = title.length;
+
+    const lines: string[] = [];
+    lines.push(title.padEnd(width));
+
+    let current = '';
+
+    for (const piece of pieces) {
+      const pieceUi = this.pieceUi.get(piece.getKind());
+      const symbol = pieceUi?.get(piece.getTeam()) ?? '?';
+
+      const next = current ? `${current} ${symbol}` : symbol;
+
+      if (next.length > width) {
+        lines.push(current.padEnd(width));
+        current = symbol;
+      } else {
+        current = next;
+      }
+    }
+
+    if (current) {
+      lines.push(current.padEnd(width));
+    }
+
+    while (lines.length < height) {
+      lines.push(' '.repeat(width));
+    }
+
+    return lines;
+  }
+
+  private print(lines: string[]): void {
+    this.outputAdapter.render(lines.join('\n'));
   }
 }

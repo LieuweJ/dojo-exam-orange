@@ -37,7 +37,7 @@ describe('TicTacDojoBoardPresenter', () => {
 
     const presenter = new TicTacDojoBoardPresenter(outputAdapter, boardCellToUi, ROW_TO_STRING);
 
-    presenter.present({ board });
+    presenter.present({ board, players: [] });
 
     expect(outputAdapter.render).toHaveBeenCalledTimes(1);
 
@@ -58,7 +58,7 @@ describe('TicTacDojoBoardPresenter', () => {
 
     const presenter = new TicTacDojoBoardPresenter(outputAdapter, boardCellToUi, ROW_TO_STRING);
 
-    presenter.present({ board });
+    presenter.present({ board, players: [] });
 
     const output = outputAdapter.render.mock.calls[0][0];
 
@@ -81,7 +81,7 @@ describe('TicTacDojoBoardPresenter', () => {
 
     const presenter = new TicTacDojoBoardPresenter(outputAdapter, boardCellToUi, ROW_TO_STRING);
 
-    presenter.present({ board, highlightPositions });
+    presenter.present({ board, highlightPositions, players: [] });
 
     const output = outputAdapter.render.mock.calls[0][0];
 
@@ -96,7 +96,7 @@ describe('TicTacDojoBoardPresenter', () => {
 
     const presenter = new TicTacDojoBoardPresenter(outputAdapter, boardCellToUi, ROW_TO_STRING);
 
-    expect(() => presenter.present({ board })).toThrow(
+    expect(() => presenter.present({ board, players: [] })).toThrow(
       `Piece cannot be rendered at boardPosition: {"row":0,"column":0}.`
     );
   });

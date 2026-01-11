@@ -57,6 +57,7 @@ describe('GameResultPresenter', () => {
           { row: 0, column: 2 },
         ],
       },
+      players: [],
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
@@ -66,6 +67,7 @@ describe('GameResultPresenter', () => {
         { row: 0, column: 1 },
         { row: 0, column: 2 },
       ],
+      players: [],
     });
 
     expect(outputAdapter.render).toHaveBeenCalledWith('Alice wins!');
@@ -82,10 +84,12 @@ describe('GameResultPresenter', () => {
       outcome: {
         type: GAME_OUTCOME.DRAW,
       },
+      players: [],
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
       board,
+      players: [],
     });
 
     expect(outputAdapter.render).toHaveBeenCalledWith("It's a draw.");

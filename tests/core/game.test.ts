@@ -188,6 +188,7 @@ describe('A game of orange-in-a-row can be played', () => {
     expect(gameResultPresenter.present).toHaveBeenLastCalledWith({
       board: board.getBoard(),
       outcome,
+      players: [playerX, playerO],
     });
   });
 
