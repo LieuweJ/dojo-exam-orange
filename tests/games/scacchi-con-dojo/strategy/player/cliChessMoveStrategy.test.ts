@@ -353,4 +353,106 @@ describe('CliChessMoveStrategy', () => {
 
     expect(result.promotionKind).toBe(expectedKind);
   });
+
+  test('retries destination selection when user enters retry token', async () => {
+    const boardState = new BoardState(makeEmptyBoard());
+
+    const pawn = factory.createPawn({
+      team: white,
+      index: 1,
+      forwardDirection: PAWN_FORWARD_VECTOR[PAWN_DIRECTION.TOWARDS_TOP],
+    });
+
+    boardState.addMove({ position: { row: 6, column: 4 }, piece: pawn });
+
+    const player = new Player('White', unusedMoveStrategy, [pawn]);
+
+    input.ask
+      .mockResolvedValueOnce('e2') // select piece
+      .mockResolvedValueOnce('!') // retry destination → back to piece selection
+      .mockResolvedValueOnce('e2') // reselect same piece
+      .mockResolvedValueOnce('e4'); // valid destination
+
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+
+    const result = await strategy.createNextMove({
+      context: { board: boardState.getBoard(), players: [player] },
+      currentPlayer: player,
+    });
+
+    expect(boardPresenter.present).toHaveBeenCalledWith({
+      board: boardState.getBoard(),
+      players: [player],
+    });
+
+    expect(result.piece).toBe(pawn);
+    expect(result.position).toEqual({ row: 4, column: 4 });
+  });
+
+  test('retries promotion selection when user enters retry token', async () => {
+    const boardState = new BoardState(makeEmptyBoard());
+
+    const pawn = factory.createPawn({
+      team: white,
+      index: 1,
+      forwardDirection: PAWN_FORWARD_VECTOR[PAWN_DIRECTION.TOWARDS_TOP],
+    });
+
+    boardState.addMove({ position: { row: 1, column: 0 }, piece: pawn });
+
+    const player = new Player('White', unusedMoveStrategy, [pawn]);
+
+    input.ask
+      .mockResolvedValueOnce('a7') // select pawn
+      .mockResolvedValueOnce('a8') // promotion square
+      .mockResolvedValueOnce('!') // retry promotion → back to piece selection
+      .mockResolvedValueOnce('a7') // reselect pawn
+      .mockResolvedValueOnce('a8') // promotion square again
+      .mockResolvedValueOnce('Q'); // valid promotion
+
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+
+    const result = await strategy.createNextMove({
+      context: { board: boardState.getBoard(), players: [player] },
+      currentPlayer: player,
+    });
+
+    expect(boardPresenter.present).toHaveBeenCalledWith({
+      board: boardState.getBoard(),
+      players: [player],
+    });
+
+    expect(result.promotionKind).toBe(CHESS_PIECE_KIND.QUEEN);
+  });
+
+  test('retry during promotion does not emit invalid promotion error', async () => {
+    const boardState = new BoardState(makeEmptyBoard());
+
+    const pawn = factory.createPawn({
+      team: white,
+      index: 1,
+      forwardDirection: PAWN_FORWARD_VECTOR[PAWN_DIRECTION.TOWARDS_TOP],
+    });
+
+    boardState.addMove({ position: { row: 1, column: 0 }, piece: pawn });
+
+    const player = new Player('White', unusedMoveStrategy, [pawn]);
+
+    input.ask
+      .mockResolvedValueOnce('a7')
+      .mockResolvedValueOnce('a8')
+      .mockResolvedValueOnce('!') // retry promotion
+      .mockResolvedValueOnce('a7')
+      .mockResolvedValueOnce('a8')
+      .mockResolvedValueOnce('N');
+
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+
+    await strategy.createNextMove({
+      context: { board: boardState.getBoard(), players: [player] },
+      currentPlayer: player,
+    });
+
+    expect(output.render).not.toHaveBeenCalledWith('Invalid promotion choice.');
+  });
 });

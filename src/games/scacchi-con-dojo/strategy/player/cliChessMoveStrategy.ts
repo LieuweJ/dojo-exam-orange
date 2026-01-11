@@ -9,6 +9,8 @@ import { ChessPiece } from '../../model/chessPiece';
 import { CHESS_PIECE_KIND, ChessPieceKind } from '../../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../../model/chessPiecePawn';
 
+const RETRY = '!';
+
 export class CliChessMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
@@ -37,7 +39,16 @@ export class CliChessMoveStrategy implements IMoveStrategy {
 
       this.presentReachable(board, reachable, players);
       const destination = await this.askDestination(reachable);
+      if (destination === RETRY) {
+        this.boardPresenter.present({ board, players });
+        continue;
+      }
+
       const promotionKind = await this.askPromotionIfNeeded(piece, destination, boardState);
+      if (promotionKind === RETRY) {
+        this.boardPresenter.present({ board, players });
+        continue;
+      }
 
       return {
         piece,
@@ -88,11 +99,17 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     });
   }
 
-  private async askDestination(reachable: BoardPosition[]): Promise<BoardPosition> {
+  private async askDestination(reachable: BoardPosition[]): Promise<BoardPosition | typeof RETRY> {
     const reachableSet = new Set(reachable.map((p) => `${p.row},${p.column}`));
 
     while (true) {
-      const input = await this.input.ask('Choose destination (e.g. e4): ');
+      const input = await this.input.ask(
+        `Choose destination (e.g. e4) or ${RETRY} to reselect piece: `
+      );
+
+      if (input === RETRY) {
+        return RETRY;
+      }
 
       let position: BoardPosition;
 
@@ -116,7 +133,7 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     piece: ChessPiece,
     destination: BoardPosition,
     board: BoardState
-  ): Promise<ChessPieceKind | undefined> {
+  ): Promise<ChessPieceKind | typeof RETRY | undefined> {
     if (!(piece instanceof ChessPiecePawn)) {
       return undefined;
     }
@@ -126,7 +143,11 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     }
 
     while (true) {
-      const input = await this.input.ask('Promote to (Q, R, B, N): ');
+      const input = await this.input.ask(`Promote to (Q, R, B, N) or ${RETRY} to reselect piece: `);
+
+      if (input === RETRY) {
+        return RETRY;
+      }
 
       const promotion = this.mapPromotion(input);
       if (!promotion) {
