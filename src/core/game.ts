@@ -76,6 +76,6 @@ export class Game implements IGame {
       this.violationPresenter.present({ move: proposedMove, violations });
     }
 
-    await this.moveHandler.handle(proposedMove, this.boardState);
+    this.moveHandler.handle(proposedMove, this.boardState);
   }
 }

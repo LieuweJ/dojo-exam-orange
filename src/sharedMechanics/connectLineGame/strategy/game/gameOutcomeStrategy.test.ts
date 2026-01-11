@@ -12,8 +12,8 @@ import { CoinPiece } from '../../model/coinPiece';
 import { IMoveHandler } from '../../../../core/handler/MoveHandler';
 
 describe('ChessGameOutcomeStrategy', () => {
-  const white = Symbol('white') as Team;
-  const black = Symbol('black') as Team;
+  const white: Team = Symbol('white');
+  const black: Team = Symbol('black');
 
   let factory: ChessPieceFactory;
   let kingInCheckDetector: KingInCheckDetector;

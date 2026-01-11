@@ -5,8 +5,8 @@ import { CHESS_PIECE_KIND } from '../../../../src/games/scacchi-con-dojo/config/
 import { BoardState, EMPTY_CELL } from '../../../../src/core/model/boardState';
 
 describe('KingInCheckDetector', () => {
-  const white = Symbol('white') as Team;
-  const black = Symbol('black') as Team;
+  const white: Team = Symbol('white');
+  const black: Team = Symbol('black');
 
   let factory: ChessPieceFactory;
   let detector: KingInCheckDetector;
