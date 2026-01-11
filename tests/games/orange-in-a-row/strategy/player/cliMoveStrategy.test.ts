@@ -47,7 +47,10 @@ describe('CliMoveStrategy', () => {
 
     const currentPlayer = new Player('Alice', moveStrategy, [givenPiece]);
 
-    const move = await moveStrategy.createNextMove(board, currentPlayer);
+    const move = await moveStrategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(move).toStrictEqual({ position: { column: 1, row: 2 }, piece: givenPiece });
   });
@@ -64,7 +67,10 @@ describe('CliMoveStrategy', () => {
 
     const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
 
-    const move = await moveStrategy.createNextMove(board, currentPlayer);
+    const move = await moveStrategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(move).toStrictEqual({ position: { column: 1, row: 3 }, piece: PIECE_X });
     expect(inputAdapter.ask).toHaveBeenCalledWith(
@@ -83,7 +89,10 @@ describe('CliMoveStrategy', () => {
 
     const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
 
-    await moveStrategy.createNextMove(board, currentPlayer);
+    await moveStrategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
@@ -102,7 +111,10 @@ describe('CliMoveStrategy', () => {
 
     const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
 
-    await moveStrategy.createNextMove(board, currentPlayer);
+    await moveStrategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(
@@ -121,7 +133,10 @@ describe('CliMoveStrategy', () => {
 
     const currentPlayer = new Player('Bob', moveStrategy, [PIECE_X]);
 
-    await moveStrategy.createNextMove(board, currentPlayer);
+    await moveStrategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(inputAdapter.ask).toHaveBeenCalledTimes(2);
     expect(outputAdapter.render).toHaveBeenCalledWith(

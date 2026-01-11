@@ -49,7 +49,10 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const currentPlayer = new Player('Player 1', strategy, pieces);
 
-    const move = await strategy.createNextMove(board, currentPlayer);
+    const move = await strategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(move).toEqual({
       piece: X,
@@ -66,7 +69,10 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const currentPlayer = new Player('Player 1', strategy, pieces);
 
-    const move = await strategy.createNextMove(board, currentPlayer);
+    const move = await strategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(output.render).toHaveBeenCalledWith(
       `Input '22' is invalid. Please use a format like 'a1'.`
@@ -82,7 +88,10 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
 
     const currentPlayer = new Player('Player 1', strategy, pieces);
 
-    const move = await strategy.createNextMove(board, currentPlayer);
+    const move = await strategy.createNextMove({
+      context: { board, players: [currentPlayer] },
+      currentPlayer,
+    });
 
     expect(output.render).toHaveBeenCalledWith(
       `Input 'd1' cannot be placed on the board. Please choose another position.`

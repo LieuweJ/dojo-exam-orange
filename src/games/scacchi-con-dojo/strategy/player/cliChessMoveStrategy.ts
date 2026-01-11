@@ -6,6 +6,7 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     throw new Error('Not implemented yet');
   }
 
+  //
   // constructor(
   //   private readonly input: IInputAdapter,
   //   private readonly output: IOutputAdapter,

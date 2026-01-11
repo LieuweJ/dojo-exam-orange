@@ -10,7 +10,7 @@ export type Pieces = NonEmptyArray<IPiece>;
 export type IPlayer = {
   getScreenName(): string;
   hasPiece(piece: IPiece): boolean;
-  getNextMove(board: IBoard): Promise<Move>;
+  getNextMove(board: IBoard, players: IPlayer[]): Promise<Move>;
   getPieces(): Pieces;
 };
 
@@ -25,8 +25,14 @@ export class Player implements IPlayer {
     return this.name;
   }
 
-  getNextMove(board: IBoard): Promise<Move> {
-    return this.strategy.createNextMove(board, this);
+  getNextMove(board: IBoard, players: IPlayer[]): Promise<Move> {
+    return this.strategy.createNextMove({
+      context: {
+        board,
+        players,
+      },
+      currentPlayer: this,
+    });
   }
 
   hasPiece(piece: IPiece): boolean {
