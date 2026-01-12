@@ -9,6 +9,11 @@ async function main() {
   try {
     const game = await createGameFromUserSelection({ inputAdapter, outputAdapter });
 
+    if (!game) {
+      outputAdapter.render('\nOtsukaresama deshita!\n');
+      return;
+    }
+
     await game.play();
   } catch (error) {
     outputAdapter.render('An unexpected error occurred.');

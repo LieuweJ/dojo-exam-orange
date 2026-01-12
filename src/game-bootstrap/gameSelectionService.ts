@@ -3,7 +3,7 @@ import { GameDescriptor } from './composition/games-config';
 import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 
 type IGameSelectionService = {
-  selectGame(): Promise<GameDescriptor>;
+  selectGame(): Promise<GameDescriptor | null>;
   collectPlayerNames(count: number): Promise<string[]>;
 };
 
@@ -18,13 +18,20 @@ export class GameSelectionService implements IGameSelectionService {
     }
   }
 
-  async selectGame(): Promise<GameDescriptor> {
+  async selectGame(): Promise<GameDescriptor | null> {
     while (true) {
-      const menu = this.games.map((game, index) => `${index + 1}. ${game.displayName}`).join('\n');
+      const menu = this.games
+        .map((game, index) => `${index + 1}. ${game.displayName}`)
+        .concat(`${this.games.length + 1}. Quit`)
+        .join('\n');
 
       const answer = await this.input.ask(`What do you want to play?\n${menu}\nChoose a number: `);
 
       const index = Number(answer) - 1;
+
+      if (index === this.games.length) {
+        return null;
+      }
 
       if (!Number.isInteger(index) || !this.games[index]) {
         this.outputAdapter.render('Invalid choice. Please select a valid game.');

@@ -12,10 +12,15 @@ type createGameInput = {
 export async function createGameFromUserSelection({
   inputAdapter,
   outputAdapter,
-}: createGameInput): Promise<Game> {
+}: createGameInput): Promise<Game | null> {
   const gameSelector = new GameSelectionService(inputAdapter, outputAdapter, GAMES);
 
   const gameDescriptor = await gameSelector.selectGame();
+
+  if (!gameDescriptor) {
+    return null;
+  }
+
   const playerNames = await gameSelector.collectPlayerNames(gameDescriptor.requiredPlayers);
 
   const composition = gameDescriptor.createComposition({

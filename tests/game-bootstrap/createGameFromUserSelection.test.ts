@@ -82,4 +82,23 @@ describe('createGameFromUserSelection', () => {
       'Invalid composition'
     );
   });
+
+  it('returns null if user opts to quit', async () => {
+    (GameSelectionService as jest.Mock).mockImplementation(() => ({
+      selectGame: jest.fn().mockResolvedValue(null),
+    }));
+
+    const game = await createGameFromUserSelection({
+      inputAdapter,
+      outputAdapter,
+    });
+
+    expect(GameSelectionService).toHaveBeenCalledWith(
+      inputAdapter,
+      outputAdapter,
+      expect.any(Array)
+    );
+
+    expect(game).toBe(null);
+  });
 });

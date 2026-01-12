@@ -18,7 +18,7 @@ describe('GameSelectionService', () => {
 
     const selected = await service.selectGame();
 
-    expect(selected.id).toBe('a');
+    expect(selected?.id).toBe('a');
     expect(input.ask).toHaveBeenCalledTimes(2);
   });
 
@@ -102,5 +102,26 @@ describe('GameSelectionService', () => {
     };
 
     expect(() => new GameSelectionService(input, output, [])).toThrow('No games registered.');
+  });
+
+  it('can select "quit"', async () => {
+    const input = {
+      ask: jest.fn().mockResolvedValueOnce('2'),
+    };
+
+    const output = {
+      render: jest.fn(),
+    };
+
+    const games = [
+      { id: 'a', displayName: 'Game A', requiredPlayers: 2, createComposition: jest.fn() },
+    ];
+
+    const service = new GameSelectionService(input, output, games);
+
+    const selected = await service.selectGame();
+
+    expect(selected).toBe(null);
+    expect(input.ask).toHaveBeenCalledTimes(1);
   });
 });
