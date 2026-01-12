@@ -25,7 +25,9 @@ export class GameSelectionService implements IGameSelectionService {
         .concat(`${this.games.length + 1}. Quit`)
         .join('\n');
 
-      const answer = await this.input.ask(`What do you want to play?\n${menu}\nChoose a number: `);
+      const answer = await this.input.ask(
+        `What would you like to play?\n${menu}\n\nChoose a number: `
+      );
 
       const index = Number(answer) - 1;
 

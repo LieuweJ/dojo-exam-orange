@@ -7,14 +7,18 @@ async function main() {
   const outputAdapter = new TerminalOutputAdapter();
 
   try {
-    const game = await createGameFromUserSelection({ inputAdapter, outputAdapter });
+    while (true) {
+      const game = await createGameFromUserSelection({ inputAdapter, outputAdapter });
 
-    if (!game) {
-      outputAdapter.render('\nOtsukaresama deshita!\n');
-      return;
+      if (!game) {
+        outputAdapter.render('\nOtsukaresama deshita!\n');
+        return;
+      }
+
+      await game.play();
+
+      outputAdapter.render('\nPractice makes perfect!');
     }
-
-    await game.play();
   } catch (error) {
     outputAdapter.render('An unexpected error occurred.');
     console.error(error);
