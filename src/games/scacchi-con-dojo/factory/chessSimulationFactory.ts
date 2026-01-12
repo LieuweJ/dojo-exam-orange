@@ -73,16 +73,14 @@ export class ChessSimulationFactory implements ISimulationFactory<IChessPiece> {
       const remappedPieces: IPiece[] = [];
 
       for (const originalPiece of originalPieces) {
-        const clonedPiece = clonedPieces.get(originalPiece);
-        if (clonedPiece !== undefined) {
-          remappedPieces.push(clonedPiece);
-        }
-      }
+        let clonedPiece = clonedPieces.get(originalPiece);
 
-      if (remappedPieces.length === 0) {
-        throw new Error(
-          'Player would have no pieces on the board after cloning; invariant violation.'
-        );
+        if (clonedPiece === undefined) {
+          clonedPiece = originalPiece.clone();
+          clonedPieces.set(originalPiece, clonedPiece);
+        }
+
+        remappedPieces.push(clonedPiece);
       }
 
       const nonEmptyPieces: Pieces = [remappedPieces[0], ...remappedPieces.slice(1)];

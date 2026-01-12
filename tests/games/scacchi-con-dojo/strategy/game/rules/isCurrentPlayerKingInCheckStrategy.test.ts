@@ -141,23 +141,8 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
           turn: turnState,
         },
       })
-    ).toThrow('Move piece not found in cloned board.');
-  });
-
-  it('throws when a player has no pieces on the board', () => {
-    const board = new BoardState([[EMPTY_CELL]]);
-
-    expect(() =>
-      strategy.check({
-        move: {
-          piece: whiteBishop,
-          position: { row: 0, column: 0 },
-        },
-        moveContext: {
-          board,
-          turn: turnState,
-        },
-      })
-    ).toThrow('Player would have no pieces on the board after cloning; invariant violation.');
+    ).toThrow(
+      'The chess piece Symbol(B1w) is not present on the board. Chess piece cannot be moved.'
+    );
   });
 });
