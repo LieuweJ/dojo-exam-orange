@@ -8,6 +8,7 @@ import { IPlayer, Pieces } from '../../../../core/model/player';
 import { ChessPiece } from '../../model/chessPiece';
 import { CHESS_PIECE_KIND, ChessPieceKind } from '../../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../../model/chessPiecePawn';
+import { ChessPieceUi } from '../../composition/chessComposition';
 
 const RETRY = '!';
 
@@ -15,7 +16,8 @@ export class CliChessMoveStrategy implements IMoveStrategy {
   constructor(
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
-    private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>
+    private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
+    private readonly chessPieceToUi: Map<ChessPieceKind, ChessPieceUi>
   ) {}
 
   async createNextMove({
@@ -64,7 +66,9 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     displayName: string
   ): Promise<ChessPiece> {
     while (true) {
-      const input = await this.input.ask(`${displayName}, select a piece to move (e.g. e2): `);
+      const input = await this.input.ask(
+        `${displayName} (${this.getPlayerUi(currentPlayerPieces)}), select a piece under to move (e.g. e2): `
+      );
 
       let position: BoardPosition;
 
@@ -183,5 +187,17 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     const row = 8 - Number(input[1]);
 
     return { row, column };
+  }
+
+  private getPlayerUi(currentPlayerPieces: Pieces): string {
+    let playerUi = 'unknown side';
+
+    const playerPiece = currentPlayerPieces[0];
+
+    if (!(playerPiece instanceof ChessPiece)) {
+      return playerUi;
+    }
+
+    return this.chessPieceToUi.get(CHESS_PIECE_KIND.KING)?.get(playerPiece.getTeam()) ?? playerUi;
   }
 }

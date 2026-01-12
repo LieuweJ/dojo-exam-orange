@@ -14,10 +14,16 @@ import { BoardState, EMPTY_CELL, IBoard } from '../../../../../src/core/model/bo
 import { Player } from '../../../../../src/core/model/player';
 import { CliChessMoveStrategy } from '../../../../../src/games/scacchi-con-dojo/strategy/player/cliChessMoveStrategy';
 import { CHESS_PIECE_KIND } from '../../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
+import {
+  CHESS_PIECE_UI,
+  TEAM_BLACK,
+  TEAM_WHITE,
+} from '../../../../../src/games/scacchi-con-dojo/composition/chessComposition';
+import { CoinPiece } from '../../../../../src/sharedMechanics/connectLineGame/model/coinPiece';
 
 describe('CliChessMoveStrategy', () => {
-  const white: symbol = Symbol('white');
-  const black: symbol = Symbol('black');
+  const white: symbol = TEAM_WHITE;
+  const black: symbol = TEAM_BLACK;
 
   let input: jest.Mocked<IInputAdapter>;
   let output: jest.Mocked<IOutputAdapter>;
@@ -58,7 +64,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -69,6 +75,8 @@ describe('CliChessMoveStrategy', () => {
     expect(result.position).toEqual({ row: 4, column: 4 });
     expect(result.promotionKind).toBeUndefined();
     expect(boardPresenter.present).toHaveBeenCalled();
+
+    expect(input.ask).toHaveBeenCalledWith('White (♔), select a piece under to move (e.g. e2): ');
   });
 
   test('rejects selecting opponent piece', async () => {
@@ -93,7 +101,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('e7').mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -120,7 +128,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('e2').mockResolvedValueOnce('e6').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -146,7 +154,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('a7').mockResolvedValueOnce('a8').mockResolvedValueOnce('Q');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -175,7 +183,7 @@ describe('CliChessMoveStrategy', () => {
       .mockResolvedValueOnce('X')
       .mockResolvedValueOnce('N');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -201,7 +209,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('z9').mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -226,7 +234,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('e2').mockResolvedValueOnce('z9').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -251,7 +259,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('a3').mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -283,7 +291,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('a8').mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -310,7 +318,7 @@ describe('CliChessMoveStrategy', () => {
 
     input.ask.mockResolvedValueOnce('a1').mockResolvedValueOnce('a2');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -344,7 +352,7 @@ describe('CliChessMoveStrategy', () => {
       .mockResolvedValueOnce('a8')
       .mockResolvedValueOnce(inputChar);
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -373,7 +381,7 @@ describe('CliChessMoveStrategy', () => {
       .mockResolvedValueOnce('e2') // reselect same piece
       .mockResolvedValueOnce('e4'); // valid destination
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -410,7 +418,7 @@ describe('CliChessMoveStrategy', () => {
       .mockResolvedValueOnce('a8') // promotion square again
       .mockResolvedValueOnce('Q'); // valid promotion
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     const result = await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -446,7 +454,7 @@ describe('CliChessMoveStrategy', () => {
       .mockResolvedValueOnce('a8')
       .mockResolvedValueOnce('N');
 
-    const strategy = new CliChessMoveStrategy(input, output, boardPresenter);
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
 
     await strategy.createNextMove({
       context: { board: boardState.getBoard(), players: [player] },
@@ -454,5 +462,61 @@ describe('CliChessMoveStrategy', () => {
     });
 
     expect(output.render).not.toHaveBeenCalledWith('Invalid promotion choice.');
+  });
+
+  test('renders if ui element cannot be detected', async () => {
+    const boardState = new BoardState(makeEmptyBoard());
+
+    const pawn = factory.createPawn({
+      team: white,
+      index: 1,
+      forwardDirection: PAWN_FORWARD_VECTOR[PAWN_DIRECTION.TOWARDS_TOP],
+    });
+
+    boardState.addMove({ position: { row: 6, column: 4 }, piece: pawn });
+
+    const noneChessPiece = new CoinPiece(Symbol('none-chess-piece'));
+
+    const player = new Player('White', unusedMoveStrategy, [noneChessPiece, pawn]);
+
+    input.ask.mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
+
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, CHESS_PIECE_UI);
+
+    await strategy.createNextMove({
+      context: { board: boardState.getBoard(), players: [player] },
+      currentPlayer: player,
+    });
+
+    expect(input.ask).toHaveBeenCalledWith(
+      'White (unknown side), select a piece under to move (e.g. e2): '
+    );
+  });
+
+  test('renders if ui element cannot be translated to piece on screen', async () => {
+    const boardState = new BoardState(makeEmptyBoard());
+
+    const pawn = factory.createPawn({
+      team: white,
+      index: 1,
+      forwardDirection: PAWN_FORWARD_VECTOR[PAWN_DIRECTION.TOWARDS_TOP],
+    });
+
+    boardState.addMove({ position: { row: 6, column: 4 }, piece: pawn });
+
+    const player = new Player('White', unusedMoveStrategy, [pawn]);
+
+    input.ask.mockResolvedValueOnce('e2').mockResolvedValueOnce('e4');
+
+    const strategy = new CliChessMoveStrategy(input, output, boardPresenter, new Map());
+
+    await strategy.createNextMove({
+      context: { board: boardState.getBoard(), players: [player] },
+      currentPlayer: player,
+    });
+
+    expect(input.ask).toHaveBeenCalledWith(
+      'White (unknown side), select a piece under to move (e.g. e2): '
+    );
   });
 });
