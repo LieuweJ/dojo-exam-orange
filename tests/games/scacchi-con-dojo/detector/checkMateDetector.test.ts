@@ -6,6 +6,7 @@ import { IKingInCheckDetector } from '../../../../src/games/scacchi-con-dojo/det
 import { IMoveHandler } from '../../../../src/core/handler/MoveHandler';
 import { ChessPiece } from '../../../../src/games/scacchi-con-dojo/model/chessPiece';
 import { CheckMateDetector } from '../../../../src/games/scacchi-con-dojo/detector/CheckMateDetector';
+import { ChessSimulationFactory } from '../../../../src/games/scacchi-con-dojo/factory/chessSimulationFactory';
 
 describe('CheckMateDetector – defensive branches', () => {
   const white = Symbol('white') as Team;
@@ -14,6 +15,8 @@ describe('CheckMateDetector – defensive branches', () => {
   let factory: ChessPieceFactory;
   let kingInCheckDetector: IKingInCheckDetector;
   let moveHandler: jest.Mocked<IMoveHandler<ChessPiece>>;
+
+  const chessSimulationFactory = new ChessSimulationFactory();
 
   beforeEach(() => {
     factory = new ChessPieceFactory();
@@ -48,9 +51,16 @@ describe('CheckMateDetector – defensive branches', () => {
 
     const board = new BoardState([[whiteKing], [blackRook]]);
 
-    jest.spyOn(board, 'clone').mockReturnValue(new BoardState([[EMPTY_CELL], [EMPTY_CELL]]));
+    jest.spyOn(board, 'clone').mockReturnValue({
+      clonedBoard: new BoardState([[EMPTY_CELL], [EMPTY_CELL]]),
+      clonedPieces: new Map(),
+    });
 
-    const detector = new CheckMateDetector(kingInCheckDetector, moveHandler);
+    const detector = new CheckMateDetector(
+      kingInCheckDetector,
+      moveHandler,
+      chessSimulationFactory
+    );
 
     const result = detector.isCheckMate({ board, team: white });
 
@@ -69,7 +79,11 @@ describe('CheckMateDetector – defensive branches', () => {
 
     jest.spyOn(board, 'getPiecePositionBy').mockReturnValue(undefined);
 
-    const detector = new CheckMateDetector(kingInCheckDetector, moveHandler);
+    const detector = new CheckMateDetector(
+      kingInCheckDetector,
+      moveHandler,
+      chessSimulationFactory
+    );
 
     const result = detector.isCheckMate({ board, team: white });
 

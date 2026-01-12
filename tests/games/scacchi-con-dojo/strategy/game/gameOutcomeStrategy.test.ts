@@ -1,15 +1,16 @@
-import { Team } from '../../../../core/model/team';
-import { ChessPieceFactory } from '../../../../games/scacchi-con-dojo/factory/chessPieceFactory';
-import { KingInCheckDetector } from '../../../../games/scacchi-con-dojo/detector/KingInCheckDetector';
-import { CheckMateDetector } from '../../../../games/scacchi-con-dojo/detector/CheckMateDetector';
-import { ChessGameOutcomeStrategy } from '../../../../games/scacchi-con-dojo/strategy/game/gameOutcomeStrategy';
-import { Player } from '../../../../core/model/player';
-import { CHESS_PIECE_KIND } from '../../../../games/scacchi-con-dojo/config/chessPiecesConfig';
-import { BoardState, EMPTY_CELL } from '../../../../core/model/boardState';
-import { GAME_OUTCOME } from '../../../../core/strategy/game/gameOutcomeStrategy';
-import { ChessPiece } from '../../../../games/scacchi-con-dojo/model/chessPiece';
-import { CoinPiece } from '../../model/coinPiece';
-import { IMoveHandler } from '../../../../core/handler/MoveHandler';
+import { Team } from '../../../../../src/core/model/team';
+import { ChessPieceFactory } from '../../../../../src/games/scacchi-con-dojo/factory/chessPieceFactory';
+import { KingInCheckDetector } from '../../../../../src/games/scacchi-con-dojo/detector/KingInCheckDetector';
+import { CheckMateDetector } from '../../../../../src/games/scacchi-con-dojo/detector/CheckMateDetector';
+import { ChessGameOutcomeStrategy } from '../../../../../src/games/scacchi-con-dojo/strategy/game/gameOutcomeStrategy';
+import { Player } from '../../../../../src/core/model/player';
+import { CHESS_PIECE_KIND } from '../../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
+import { BoardState, EMPTY_CELL } from '../../../../../src/core/model/boardState';
+import { GAME_OUTCOME } from '../../../../../src/core/strategy/game/gameOutcomeStrategy';
+import { ChessPiece } from '../../../../../src/games/scacchi-con-dojo/model/chessPiece';
+import { CoinPiece } from '../../../../../src/sharedMechanics/connectLineGame/model/coinPiece';
+import { IMoveHandler } from '../../../../../src/core/handler/MoveHandler';
+import { ChessSimulationFactory } from '../../../../../src/games/scacchi-con-dojo/factory/chessSimulationFactory';
 
 describe('ChessGameOutcomeStrategy', () => {
   const white: Team = Symbol('white');
@@ -77,7 +78,11 @@ describe('ChessGameOutcomeStrategy', () => {
       handle: jest.fn(),
     };
 
-    checkMateDetector = new CheckMateDetector(kingInCheckDetector, moveHandler);
+    checkMateDetector = new CheckMateDetector(
+      kingInCheckDetector,
+      moveHandler,
+      new ChessSimulationFactory()
+    );
 
     strategy = new ChessGameOutcomeStrategy(checkMateDetector, kingInCheckDetector);
   });

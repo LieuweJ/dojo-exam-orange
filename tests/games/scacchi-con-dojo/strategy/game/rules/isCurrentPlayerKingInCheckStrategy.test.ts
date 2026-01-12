@@ -9,6 +9,7 @@ import { CHESS_RULE_VIOLATION_TYPES } from '../../../../../../src/games/scacchi-
 import { Player } from '../../../../../../src/core/model/player';
 import { TurnState } from '../../../../../../src/core/model/turnState';
 import { ChessPiece } from '../../../../../../src/games/scacchi-con-dojo/model/chessPiece';
+import { ChessSimulationFactory } from '../../../../../../src/games/scacchi-con-dojo/factory/chessSimulationFactory';
 
 describe('IsCurrentPlayerKingInCheckStrategy', () => {
   const white = Symbol('white') as Team;
@@ -27,11 +28,13 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
   let blackPlayer: Player;
   let turnState: TurnState;
 
+  const simulationFactory = new ChessSimulationFactory();
+
   beforeEach(() => {
     factory = new ChessPieceFactory();
     moveHandler = new ChessMoveHandler(factory);
     detector = new KingInCheckDetector();
-    strategy = new IsCurrentPlayerKingInCheckStrategy(detector, moveHandler);
+    strategy = new IsCurrentPlayerKingInCheckStrategy(detector, moveHandler, simulationFactory);
 
     whiteKing = factory.create({
       team: white,
@@ -131,25 +134,6 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
           turn: turnState,
         },
       })
-    ).toThrow('Piece to move not found on the board');
-  });
-
-  it('throws when the cloned board cell is not a ChessPiece', () => {
-    const board = new BoardState([[whiteBishop]]);
-
-    jest.spyOn(board, 'clone').mockReturnValue(new BoardState([[EMPTY_CELL]]));
-
-    expect(() =>
-      strategy.check({
-        move: {
-          piece: whiteBishop,
-          position: { row: 0, column: 0 },
-        },
-        moveContext: {
-          board,
-          turn: turnState,
-        },
-      })
-    ).toThrow('Cloned piece is not a valid ChessPiece');
+    ).toThrow('Move piece not found in cloned board.');
   });
 });

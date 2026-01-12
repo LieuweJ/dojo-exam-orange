@@ -1,20 +1,20 @@
 import { IMoveHandler } from '../../../core/handler/MoveHandler';
-import { BoardPosition, BoardState } from '../../../core/model/boardState';
-import { ChessPiece } from '../model/chessPiece';
+import { BoardPosition, IBoardState } from '../../../core/model/boardState';
+import { ChessPiece, IChessPiece } from '../model/chessPiece';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
 import { ChessPieceKind } from '../config/chessPiecesConfig';
 import { ChessPieceFactory } from '../factory/chessPieceFactory';
 
 export type ChessMove = {
   position: BoardPosition;
-  piece: ChessPiece;
+  piece: IChessPiece;
   promotionKind?: ChessPieceKind;
 };
 
 export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   constructor(private pieceFactory: ChessPieceFactory) {}
 
-  handle(move: ChessMove, boardState: BoardState): void {
+  handle(move: ChessMove, boardState: IBoardState): void {
     const from = boardState.getPiecePositionBy(move.piece);
 
     if (!from) {
@@ -58,15 +58,15 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     }
   }
 
-  private isCastlingMove({ piece, position }: ChessMove, boardState: BoardState): boolean {
+  private isCastlingMove({ piece, position }: ChessMove, boardState: IBoardState): boolean {
     return piece.canInitiateCastling() && piece.isCastlingDestination(position, boardState);
   }
 
-  private handleNormalMove(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
+  private handleNormalMove(move: ChessMove, from: BoardPosition, boardState: IBoardState): void {
     this.movePiece(move.piece, from, move.position, boardState);
   }
 
-  private handleCastling(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
+  private handleCastling(move: ChessMove, from: BoardPosition, boardState: IBoardState): void {
     const { piece: king, position: kingTarget } = move;
 
     // Determine direction
@@ -97,7 +97,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     this.movePiece(rook, rookFrom, rookTo, boardState);
   }
 
-  private handlePromotion(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
+  private handlePromotion(move: ChessMove, from: BoardPosition, boardState: IBoardState): void {
     const { piece, position, promotionKind } = move;
 
     if (!promotionKind) {
@@ -115,7 +115,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     promoted.markMoved();
   }
 
-  private getNextIndexForKind(kind: ChessPieceKind, boardState: BoardState): number {
+  private getNextIndexForKind(kind: ChessPieceKind, boardState: IBoardState): number {
     let maxIndex = 0;
 
     for (const row of boardState.getBoard()) {
@@ -132,18 +132,18 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     return maxIndex + 1;
   }
 
-  private isPromotion(move: ChessMove, boardState: BoardState): boolean {
+  private isPromotion(move: ChessMove, boardState: IBoardState): boolean {
     return move.piece instanceof ChessPiecePawn && move.piece.canPromote(move.position, boardState);
   }
 
-  private isEnPassantMove(move: ChessMove, boardState: BoardState): boolean {
+  private isEnPassantMove(move: ChessMove, boardState: IBoardState): boolean {
     return (
       move.piece instanceof ChessPiecePawn &&
       move.piece.canEnPassantAttack(move.position, boardState)
     );
   }
 
-  private handleEnPassant(move: ChessMove, from: BoardPosition, boardState: BoardState): void {
+  private handleEnPassant(move: ChessMove, from: BoardPosition, boardState: IBoardState): void {
     const pawn = move.piece;
 
     const capturedPawnPosition: BoardPosition = {
@@ -165,7 +165,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   private registerEnPassantTargets(
     pawnPosition: BoardPosition,
     to: BoardPosition,
-    boardState: BoardState
+    boardState: IBoardState
   ): void {
     const targetRow = to.row; // IMPORTANT: enemy pawns are on the landing row
     const col = to.column;
@@ -184,7 +184,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     }
   }
 
-  private clearAllEnPassant(boardState: BoardState): void {
+  private clearAllEnPassant(boardState: IBoardState): void {
     for (const row of boardState.getBoard()) {
       for (const cell of row) {
         if (cell instanceof ChessPiecePawn) {
@@ -195,10 +195,10 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   }
 
   private movePiece(
-    piece: ChessPiece,
+    piece: IChessPiece,
     from: BoardPosition,
     to: BoardPosition,
-    boardState: BoardState
+    boardState: IBoardState
   ): void {
     boardState.clearPosition(from);
     boardState.addMove({ piece, position: to });

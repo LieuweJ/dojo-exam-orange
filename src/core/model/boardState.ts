@@ -19,13 +19,15 @@ export type BoardPosition = { row: number; column: number };
 
 export type IBoard = BoardCell[][];
 
+type ClonedResult = { clonedBoard: BoardState; clonedPieces: Map<IPiece, IPiece> };
+
 export type IBoardState = {
   getBoard(): IBoard;
   addMove(move: Move): void;
   getPiecePositionBy(piece: IPiece): BoardPosition | undefined;
   clearPosition(position: BoardPosition): void;
   getBoardCellAt(position: BoardPosition): BoardCell;
-  clone: () => BoardState;
+  clone: () => ClonedResult;
 };
 
 export class BoardState implements IBoardState {
@@ -81,19 +83,22 @@ export class BoardState implements IBoardState {
     return this.board[row][column];
   }
 
-  clone(): BoardState {
+  clone(): ClonedResult {
     const board = this.getBoard();
+    const pieceMap = new Map<IPiece, IPiece>();
 
     const clonedBoard: BoardCell[][] = board.map((row) =>
       row.map((cell) => {
         if (cell instanceof EmptyCell) {
           return cell;
         }
+        const clonedPiece = cell.clone();
+        pieceMap.set(cell, clonedPiece);
 
-        return cell.clone();
+        return clonedPiece;
       })
     );
 
-    return new BoardState(clonedBoard);
+    return { clonedBoard: new BoardState(clonedBoard), clonedPieces: pieceMap };
   }
 }

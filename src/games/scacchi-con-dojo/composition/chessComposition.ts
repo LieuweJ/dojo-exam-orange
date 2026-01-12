@@ -34,6 +34,7 @@ import { ValidChessPlacementStrategy } from '../strategy/game/rules/validChessPl
 import { ValidPromotionStrategy } from '../strategy/game/rules/validPromotionStrategy';
 import { IsCurrentPlayerKingInCheckStrategy } from '../strategy/game/rules/isCurrentPlayerKingInCheckStrategy';
 import { CliChessMoveStrategy } from '../strategy/player/cliChessMoveStrategy';
+import { ChessSimulationFactory } from '../factory/chessSimulationFactory';
 
 const HELP_FILE = 'docs/scacchi-con-dojo.md';
 /* ──────────────────────────────────────────────────────────
@@ -161,7 +162,12 @@ export function createChessComposition({
 
   const kingInCheckDetector = new KingInCheckDetector();
   const moveHandler = new ChessMoveHandler(piecesFactory);
-  const checkMateDetector = new CheckMateDetector(kingInCheckDetector, moveHandler);
+
+  const checkMateDetector = new CheckMateDetector(
+    kingInCheckDetector,
+    moveHandler,
+    new ChessSimulationFactory()
+  );
 
   return {
     turnState: new TurnState([
@@ -177,7 +183,11 @@ export function createChessComposition({
       new ValidPlayerTurnStrategy(),
       new ValidChessPlacementStrategy(),
       new ValidPromotionStrategy(),
-      new IsCurrentPlayerKingInCheckStrategy(kingInCheckDetector, moveHandler),
+      new IsCurrentPlayerKingInCheckStrategy(
+        kingInCheckDetector,
+        moveHandler,
+        new ChessSimulationFactory()
+      ),
     ]),
     violationPresenter: new ViolationsPresenter(
       outputAdapter,

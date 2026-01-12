@@ -47,18 +47,25 @@ describe('BoardState.clone', () => {
       [EMPTY_CELL, coinB],
     ]);
 
-    const cloned = board.clone();
+    const { clonedBoard, clonedPieces } = board.clone();
 
-    expect(cloned).not.toBe(board);
-    expect(cloned.getBoard()).toHaveLength(2);
+    // Board instance is new
+    expect(clonedBoard).not.toBe(board);
+    expect(clonedBoard.getBoard()).toHaveLength(2);
 
-    const clonedA = cloned.getBoardCellAt({ row: 0, column: 0 });
-    const clonedB = cloned.getBoardCellAt({ row: 1, column: 1 });
+    // Pieces are cloned
+    const clonedA = clonedBoard.getBoardCellAt({ row: 0, column: 0 });
+    const clonedB = clonedBoard.getBoardCellAt({ row: 1, column: 1 });
 
     expect(clonedA).not.toBe(coinA);
     expect(clonedB).not.toBe(coinB);
 
+    // Board values are preserved
     expect(clonedA.getBoardValue()).toBe(coinA.getBoardValue());
     expect(clonedB.getBoardValue()).toBe(coinB.getBoardValue());
+
+    // Identity mapping is correct
+    expect(clonedPieces.get(coinA)).toBe(clonedA);
+    expect(clonedPieces.get(coinB)).toBe(clonedB);
   });
 });

@@ -2,33 +2,25 @@ import { RuleStrategy, RuleViolation } from '../../../../../core/model/rules';
 import { CHESS_RULE_VIOLATION_TYPES, ChessRuleViolationType } from './violationTypes';
 import { ProposedChessMove } from '../../../model/move';
 import { IKingInCheckDetector } from '../../../detector/KingInCheckDetector';
-import { ChessPiece } from '../../../model/chessPiece';
+import { IChessPiece } from '../../../model/chessPiece';
 import { ChessMoveHandler } from '../../../handler/ChessMoveHandler';
+import { ISimulationFactory } from '../../../factory/chessSimulationFactory';
 
 export class IsCurrentPlayerKingInCheckStrategy implements RuleStrategy<ChessRuleViolationType> {
   constructor(
     private readonly kingInCheckDetector: IKingInCheckDetector,
-    private readonly moveHandler: ChessMoveHandler
+    private readonly moveHandler: ChessMoveHandler,
+    private readonly simulationFactory: ISimulationFactory<IChessPiece>
   ) {}
 
   check({
     move: { piece, position, promotionKind },
     moveContext,
   }: ProposedChessMove): RuleViolation<ChessRuleViolationType>[] | null {
-    const { board } = moveContext;
-
-    const clonedBoard = board.clone();
-
-    const clonedPosition = board.getPiecePositionBy(piece);
-
-    if (!clonedPosition) {
-      throw new Error('Piece to move not found on the board');
-    }
-    const clonedPiece = clonedBoard.getBoardCellAt(clonedPosition);
-
-    if (!(clonedPiece instanceof ChessPiece)) {
-      throw new Error('Cloned piece is not a valid ChessPiece');
-    }
+    const {
+      board: clonedBoard,
+      move: { piece: clonedPiece },
+    } = this.simulationFactory.createForMove(moveContext.board, { piece, position });
 
     this.moveHandler.handle(
       {

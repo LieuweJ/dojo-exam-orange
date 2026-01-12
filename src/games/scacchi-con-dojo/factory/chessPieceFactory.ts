@@ -1,4 +1,4 @@
-import { ChessPiece } from '../model/chessPiece';
+import { ChessPiece, IChessPiece } from '../model/chessPiece';
 import {
   CHESS_PIECE_DEFINITIONS,
   CHESS_PIECE_KIND,
@@ -57,7 +57,7 @@ export class ChessPieceFactory {
     return new ChessPiecePawn(boardValue, forwardDirection, team);
   }
 
-  createFrom(source: ChessPiece, kind: ChessPieceKind, index: number): ChessPiece {
+  createFrom(source: IChessPiece, kind: ChessPieceKind, index: number): ChessPiece {
     const team = source.getTeam();
 
     if (kind === CHESS_PIECE_KIND.PAWN) {
