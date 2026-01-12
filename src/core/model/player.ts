@@ -12,6 +12,7 @@ export type IPlayer = {
   hasPiece(piece: IPiece): boolean;
   getNextMove(board: IBoard, players: IPlayer[]): Promise<Move>;
   getPieces(): Pieces;
+  cloneWithPieces(pieces: Pieces): IPlayer;
 };
 
 export class Player implements IPlayer {
@@ -41,5 +42,9 @@ export class Player implements IPlayer {
 
   getPieces(): Pieces {
     return this.pieces;
+  }
+
+  cloneWithPieces(pieces: Pieces): Player {
+    return new Player(this.name, this.strategy, pieces);
   }
 }

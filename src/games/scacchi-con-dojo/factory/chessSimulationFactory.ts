@@ -2,9 +2,11 @@ import { BoardPosition, IBoardState } from '../../../core/model/boardState';
 import { IPiece } from '../../../core/model/IPiece';
 import { ChessPiece, IChessPiece } from '../model/chessPiece';
 import { ChessMove } from '../handler/ChessMoveHandler';
+import { IPlayer, Pieces } from '../../../core/model/player';
 
 export type BoardSimulationSnapshot = {
   board: IBoardState;
+  players: IPlayer[];
 };
 
 export type MoveSimulationSnapshot<TPiece extends IPiece> = BoardSimulationSnapshot & {
@@ -12,23 +14,32 @@ export type MoveSimulationSnapshot<TPiece extends IPiece> = BoardSimulationSnaps
 };
 
 export interface ISimulationFactory<TPiece extends IPiece> {
-  createForBoard(board: IBoardState): BoardSimulationSnapshot;
+  createForBoard(board: IBoardState, players: IPlayer[]): BoardSimulationSnapshot;
 
   createForMove(
     board: IBoardState,
+    players: IPlayer[],
     move: { piece: TPiece; position: BoardPosition }
   ): MoveSimulationSnapshot<TPiece>;
 }
 
 export class ChessSimulationFactory implements ISimulationFactory<IChessPiece> {
-  createForBoard(board: IBoardState): BoardSimulationSnapshot {
-    const { clonedBoard } = board.clone();
+  createForBoard(board: IBoardState, players: IPlayer[]): BoardSimulationSnapshot {
+    const { clonedBoard, clonedPlayers } = this.cloneBoardWithPlayers(board, players);
 
-    return { board: clonedBoard };
+    return {
+      board: clonedBoard,
+      players: clonedPlayers,
+    };
   }
 
-  createForMove(board: IBoardState, move: ChessMove): MoveSimulationSnapshot<ChessPiece> {
-    const { clonedBoard, clonedPieces } = board.clone();
+  createForMove(
+    board: IBoardState,
+    players: IPlayer[],
+    move: ChessMove
+  ): MoveSimulationSnapshot<ChessPiece> {
+    const { clonedBoard, clonedPlayers, clonedPieces } = this.cloneBoardWithPlayers(board, players);
+
     const clonedMovePiece = clonedPieces.get(move.piece);
 
     if (!(clonedMovePiece instanceof ChessPiece)) {
@@ -37,10 +48,52 @@ export class ChessSimulationFactory implements ISimulationFactory<IChessPiece> {
 
     return {
       board: clonedBoard,
+      players: clonedPlayers,
       move: {
         piece: clonedMovePiece,
         position: move.position,
       },
+    };
+  }
+
+  private cloneBoardWithPlayers(
+    board: IBoardState,
+    players: IPlayer[]
+  ): {
+    clonedBoard: IBoardState;
+    clonedPlayers: IPlayer[];
+    clonedPieces: Map<IPiece, IPiece>;
+  } {
+    const { clonedBoard, clonedPieces } = board.clone();
+
+    const clonedPlayers: IPlayer[] = [];
+
+    for (const player of players) {
+      const originalPieces = player.getPieces();
+      const remappedPieces: IPiece[] = [];
+
+      for (const originalPiece of originalPieces) {
+        const clonedPiece = clonedPieces.get(originalPiece);
+        if (clonedPiece !== undefined) {
+          remappedPieces.push(clonedPiece);
+        }
+      }
+
+      if (remappedPieces.length === 0) {
+        throw new Error(
+          'Player would have no pieces on the board after cloning; invariant violation.'
+        );
+      }
+
+      const nonEmptyPieces: Pieces = [remappedPieces[0], ...remappedPieces.slice(1)];
+
+      clonedPlayers.push(player.cloneWithPieces(nonEmptyPieces));
+    }
+
+    return {
+      clonedBoard,
+      clonedPlayers,
+      clonedPieces,
     };
   }
 }

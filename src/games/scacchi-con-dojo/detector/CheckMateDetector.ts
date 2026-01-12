@@ -4,14 +4,12 @@ import { Team } from '../../../core/model/team';
 import { ChessPiece, IChessPiece } from '../model/chessPiece';
 import { IMoveHandler } from '../../../core/handler/MoveHandler';
 import { ISimulationFactory } from '../factory/chessSimulationFactory';
+import { IPlayer } from '../../../core/model/player';
+
+type CheckMateInput = { board: IBoardState; team: Team; players: IPlayer[] };
 
 export type ICheckMateDetector = {
-  isCheckMate(input: { board: IBoardState; team: Team }): boolean;
-};
-
-type CheckMateInput = {
-  board: IBoardState;
-  team: Team;
+  isCheckMate(input: CheckMateInput): boolean;
 };
 
 export class CheckMateDetector implements ICheckMateDetector {
@@ -21,7 +19,7 @@ export class CheckMateDetector implements ICheckMateDetector {
     private readonly simulationFactory: ISimulationFactory<IChessPiece>
   ) {}
 
-  isCheckMate({ board, team }: CheckMateInput): boolean {
+  isCheckMate({ board, team, players }: CheckMateInput): boolean {
     if (!this.kingInCheckDetector.isInCheck({ board, team })) {
       return false;
     }
@@ -34,7 +32,7 @@ export class CheckMateDetector implements ICheckMateDetector {
       }
 
       for (const target of piece.getAllReachablePositions(board)) {
-        const { board: clonedBoard } = this.simulationFactory.createForBoard(board);
+        const { board: clonedBoard } = this.simulationFactory.createForBoard(board, players);
 
         const clonedPiece = clonedBoard.getBoardCellAt(from);
         if (!(clonedPiece instanceof ChessPiece)) {

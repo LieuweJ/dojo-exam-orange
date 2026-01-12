@@ -92,6 +92,7 @@ export class BoardState implements IBoardState {
         if (cell instanceof EmptyCell) {
           return cell;
         }
+
         const clonedPiece = cell.clone();
         pieceMap.set(cell, clonedPiece);
 

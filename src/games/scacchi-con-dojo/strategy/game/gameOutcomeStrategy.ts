@@ -21,7 +21,7 @@ export class ChessGameOutcomeStrategy implements IGameOutcomeStrategy {
     for (const player of players) {
       const team = this.getTeamForPlayer(player);
 
-      if (this.checkMateDetector.isCheckMate({ board: boardState, team })) {
+      if (this.checkMateDetector.isCheckMate({ board: boardState, team, players })) {
         const winner = this.findOpponent(player, players);
         const kingPosition = this.kingInCheckDetector.getKingPosition(boardState, team);
         const attackers = this.kingInCheckDetector.getCheckingPieces(boardState, team);

@@ -69,7 +69,7 @@ describe('ChessGameOutcomeStrategy', () => {
           throw new Error('not used');
         },
       },
-      [blackRook]
+      [blackRook, blackKing]
     );
 
     kingInCheckDetector = new KingInCheckDetector();

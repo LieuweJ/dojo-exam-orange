@@ -23,6 +23,7 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
   let whiteKing: ChessPiece;
   let whiteBishop: ChessPiece;
   let blackRook: ChessPiece;
+  let blackKing: ChessPiece;
 
   let whitePlayer: Player;
   let blackPlayer: Player;
@@ -54,6 +55,12 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
       index: 1,
     });
 
+    blackKing = factory.create({
+      team: black,
+      kind: CHESS_PIECE_KIND.KING,
+      index: 1,
+    });
+
     whitePlayer = new Player(
       'white',
       {
@@ -71,7 +78,7 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
           throw new Error('not used');
         },
       },
-      [blackRook]
+      [blackRook, blackKing]
     );
 
     turnState = new TurnState([whitePlayer, blackPlayer]);
@@ -79,7 +86,7 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
 
   it('returns a violation when a move exposes own king to check', () => {
     const board = new BoardState([
-      [EMPTY_CELL, blackRook, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, blackRook, EMPTY_CELL, blackKing],
       [EMPTY_CELL, whiteBishop, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, whiteKing, EMPTY_CELL, EMPTY_CELL],
@@ -101,8 +108,8 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
 
   it('returns null when the move does not put own king in check', () => {
     const board = new BoardState([
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, whiteBishop, EMPTY_CELL],
+      [EMPTY_CELL, blackKing, EMPTY_CELL],
+      [EMPTY_CELL, whiteBishop, blackRook],
       [EMPTY_CELL, whiteKing, EMPTY_CELL],
     ]);
 
@@ -121,7 +128,7 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
   });
 
   it('throws when the piece to move is not found on the board', () => {
-    const board = new BoardState([[EMPTY_CELL]]);
+    const board = new BoardState([[blackKing, EMPTY_CELL, whiteKing]]);
 
     expect(() =>
       strategy.check({
@@ -135,5 +142,22 @@ describe('IsCurrentPlayerKingInCheckStrategy', () => {
         },
       })
     ).toThrow('Move piece not found in cloned board.');
+  });
+
+  it('throws when a player has no pieces on the board', () => {
+    const board = new BoardState([[EMPTY_CELL]]);
+
+    expect(() =>
+      strategy.check({
+        move: {
+          piece: whiteBishop,
+          position: { row: 0, column: 0 },
+        },
+        moveContext: {
+          board,
+          turn: turnState,
+        },
+      })
+    ).toThrow('Player would have no pieces on the board after cloning; invariant violation.');
   });
 });

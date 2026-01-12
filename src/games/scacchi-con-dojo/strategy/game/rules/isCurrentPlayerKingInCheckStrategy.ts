@@ -13,27 +13,26 @@ export class IsCurrentPlayerKingInCheckStrategy implements RuleStrategy<ChessRul
     private readonly simulationFactory: ISimulationFactory<IChessPiece>
   ) {}
 
-  check({
-    move: { piece, position, promotionKind },
-    moveContext,
-  }: ProposedChessMove): RuleViolation<ChessRuleViolationType>[] | null {
+  check({ move, moveContext }: ProposedChessMove): RuleViolation<ChessRuleViolationType>[] | null {
     const {
       board: clonedBoard,
       move: { piece: clonedPiece },
-    } = this.simulationFactory.createForMove(moveContext.board, { piece, position });
+    } = this.simulationFactory.createForMove(
+      moveContext.board,
+      moveContext.turn.getPlayers(),
+      move
+    );
 
     this.moveHandler.handle(
       {
         piece: clonedPiece,
-        position,
-        promotionKind,
+        position: move.position,
+        promotionKind: move.promotionKind,
       },
       clonedBoard
     );
 
-    const currentTeam = piece.getTeam();
-
-    if (this.kingInCheckDetector.isInCheck({ board: clonedBoard, team: currentTeam })) {
+    if (this.kingInCheckDetector.isInCheck({ board: clonedBoard, team: clonedPiece.getTeam() })) {
       return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_OWN_KING_IN_CHECK }];
     }
 

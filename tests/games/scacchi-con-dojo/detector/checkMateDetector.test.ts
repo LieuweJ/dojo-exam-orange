@@ -62,7 +62,7 @@ describe('CheckMateDetector – defensive branches', () => {
       chessSimulationFactory
     );
 
-    const result = detector.isCheckMate({ board, team: white });
+    const result = detector.isCheckMate({ board, team: white, players: [] });
 
     expect(result).toBe(true); // no escape found
     expect(moveHandler.handle).not.toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('CheckMateDetector – defensive branches', () => {
       chessSimulationFactory
     );
 
-    const result = detector.isCheckMate({ board, team: white });
+    const result = detector.isCheckMate({ board, team: white, players: [] });
 
     expect(result).toBe(true); // no escape found
     expect(moveHandler.handle).not.toHaveBeenCalled();
