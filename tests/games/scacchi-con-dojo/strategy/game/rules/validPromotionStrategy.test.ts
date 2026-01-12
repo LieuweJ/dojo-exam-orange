@@ -70,7 +70,9 @@ describe('ValidPromotionStrategy', () => {
 
     const result = strategy.check(proposedMove);
 
-    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
+    expect(result).toStrictEqual([
+      { reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION_MISSING_PROMOTION },
+    ]);
   });
 
   test('promotionKind given but pawn is not promoting → INVALID', () => {
@@ -131,7 +133,9 @@ describe('ValidPromotionStrategy', () => {
       ...baseContext(board),
     } as ProposedChessMove);
 
-    expect(result).toStrictEqual([{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }]);
+    expect(result).toStrictEqual([
+      { reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION_REQUESTED_PIECE_NOT_ALLOWED },
+    ]);
   });
 
   test('pawn promotes to valid piece → OK', () => {

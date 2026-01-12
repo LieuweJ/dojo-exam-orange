@@ -63,7 +63,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
+    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT_NO_CURRENT_POSITION' }]);
   });
 
   test('a move will be seen as invalid if the move.piece is on the same element as the current move.position on the board.', async () => {
@@ -86,7 +86,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
+    expect(violations).toStrictEqual([{ reason: 'NOT_MOVED' }]);
   });
 
   test('a move is invalid if the piece cannot reach the target position', () => {
@@ -109,7 +109,7 @@ describe('chess rules', () => {
       moveContext: { board: initBoard, turn: turnState },
     });
 
-    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT' }]);
+    expect(violations).toStrictEqual([{ reason: 'INVALID_PLACEMENT_CANNOT_REACH_POSITION' }]);
   });
 
   test('a move is valid when the piece can reach the target position', () => {
@@ -130,7 +130,7 @@ describe('chess rules', () => {
     const initBoard = new BoardState([
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
       [EMPTY_CELL, piece, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL], // 👈 added row
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL], // added row
     ]);
 
     const move: Move = {

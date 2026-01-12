@@ -20,7 +20,7 @@ export class ValidPromotionStrategy implements RuleStrategy<ChessRuleViolationTy
 
     // Case 1: pawn reaches last rank but no promotion specified
     if (canPromote && !promotionKind) {
-      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION_MISSING_PROMOTION }];
     }
 
     // Case 2: promotion specified but move is not a pawn promotion
@@ -30,7 +30,7 @@ export class ValidPromotionStrategy implements RuleStrategy<ChessRuleViolationTy
 
     // Case 3: promotion kind is invalid
     if (promotionKind && !ALLOWED_PROMOTIONS.has(promotionKind)) {
-      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION }];
+      return [{ reason: CHESS_RULE_VIOLATION_TYPES.INVALID_PROMOTION_REQUESTED_PIECE_NOT_ALLOWED }];
     }
 
     return null;

@@ -11,13 +11,7 @@ import { HelpPresenter } from '../../../core/presenter/helpPresenter';
 import { GameOutcomePresenter } from '../../../core/presenter/gameOutcomePresenter';
 import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainHandler';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
-import {
-  CONNECT_LINE_VIOLATION_MESSAGES,
-  ViolationsPresenter,
-} from '../../../core/presenter/violationsPresenter';
-import { PositionToOrangeInARowCliResolver } from '../../orange-in-a-row/resolvers/positionToOrangeInARowCliResolver';
 import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
-import { ORANGE_IN_A_ROW_BOARD_UI } from '../../orange-in-a-row/composition/orangeInARowComposition';
 import {
   ChessPieceFactory,
   ChessPieceSetByKind,
@@ -35,6 +29,10 @@ import { ValidPromotionStrategy } from '../strategy/game/rules/validPromotionStr
 import { IsCurrentPlayerKingInCheckStrategy } from '../strategy/game/rules/isCurrentPlayerKingInCheckStrategy';
 import { CliChessMoveStrategy } from '../strategy/player/cliChessMoveStrategy';
 import { ChessSimulationFactory } from '../factory/chessSimulationFactory';
+import { ChessViolationsPresenter } from '../presenter/chessViolationsPresenter';
+import { PlayerRuleViolationType } from '../../../core/model/rules';
+import { ChessRuleViolationType } from '../strategy/game/rules/violationTypes';
+import { PositionToChessBoardResolver } from '../resolver/positionToChessBoardResolver';
 
 const HELP_FILE = 'docs/scacchi-con-dojo.md';
 /* ──────────────────────────────────────────────────────────
@@ -131,6 +129,21 @@ export const CHESS_ROW_TO_STRING = Object.fromEntries(
 
 export type ChessRowToString = typeof CHESS_ROW_TO_STRING;
 
+export const CHESS_VIOLATION_MESSAGES: Record<
+  PlayerRuleViolationType | ChessRuleViolationType,
+  string
+> = {
+  INVALID_PLACEMENT: 'The move cannot be placed on the board.',
+  INVALID_PLAYER_TURN: "It's not the player's turn to make a move.",
+  INVALID_PLACEMENT_NO_CURRENT_POSITION: 'The piece is not on the board.',
+  INVALID_PLACEMENT_CANNOT_REACH_POSITION: 'The piece cannot reach the specified position.',
+  INVALID_PROMOTION: 'The move is not a valid promotion.',
+  INVALID_PROMOTION_MISSING_PROMOTION: 'A promotion piece must be specified.',
+  INVALID_PROMOTION_REQUESTED_PIECE_NOT_ALLOWED: 'The requested promotion piece is not allowed.',
+  INVALID_OWN_KING_IN_CHECK: 'The move would leave your own king in check.',
+  NOT_MOVED: 'The piece must be moved to a different position.',
+};
+
 export function createChessComposition({
   inputAdapter,
   outputAdapter,
@@ -189,12 +202,13 @@ export function createChessComposition({
         new ChessSimulationFactory()
       ),
     ]),
-    violationPresenter: new ViolationsPresenter(
+    violationPresenter: new ChessViolationsPresenter(
       outputAdapter,
-      CONNECT_LINE_VIOLATION_MESSAGES,
-      ORANGE_IN_A_ROW_BOARD_UI,
-      new PositionToOrangeInARowCliResolver()
+      CHESS_VIOLATION_MESSAGES,
+      CHESS_PIECE_UI,
+      new PositionToChessBoardResolver(CHESS_ROW_TO_STRING)
     ),
+
     lifecycleStrategy: new GameLifecycleStrategy(),
     moveHandler,
   };
@@ -214,13 +228,13 @@ export function createChessComposition({
 //
 //   return [
 //     // 0 ─ Black back rank (minimal, just king so game is valid)
-//     [e, e, e, e, blackKing, e, e, e],
+//     [e, e, e, e, e, e, blackKing, e],
 //
 //     // 1
-//     [e, e, e, e, e, e, e, e],
+//     [whitePawn, e, e, e, e, e, e, e],
 //
 //     // 2
-//     [e, e, e, e, e, e, e, e],
+//     [e, e, whiteRooks[1], e, e, e, e, e],
 //
 //     // 3
 //     [e, e, e, e, e, e, e, e],
@@ -232,10 +246,10 @@ export function createChessComposition({
 //     [e, e, e, e, e, e, e, e],
 //
 //     // 6 ─ White pawn one move from promotion
-//     [whitePawn, e, e, e, e, e, e, e],
+//     [e, e, e, e, e, e, e, e],
 //
 //     // 7 ─ White castling setup (king + rook, path clear)
-//     [whiteRooks[0], e, e, e, whiteKing, e, e, e],
+//     [e, whiteRooks[0], e, e, whiteKing, e, e, e],
 //   ];
 // }
 
