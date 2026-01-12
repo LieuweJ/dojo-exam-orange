@@ -29,7 +29,8 @@ export class IsCurrentPlayerKingInCheckStrategy implements RuleStrategy<ChessRul
         position: move.position,
         promotionKind: move.promotionKind,
       },
-      clonedBoard
+      clonedBoard,
+      moveContext.turn.getCurrentPlayer()
     );
 
     if (this.kingInCheckDetector.isInCheck({ board: clonedBoard, team: clonedPiece.getTeam() })) {

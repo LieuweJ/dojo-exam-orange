@@ -32,14 +32,32 @@ export class CheckMateDetector implements ICheckMateDetector {
       }
 
       for (const target of piece.getAllReachablePositions(board)) {
-        const { board: clonedBoard } = this.simulationFactory.createForBoard(board, players);
+        const { board: clonedBoard, players: clonedPlayers } =
+          this.simulationFactory.createForBoard(board, players);
 
         const clonedPiece = clonedBoard.getBoardCellAt(from);
         if (!(clonedPiece instanceof ChessPiece)) {
           continue;
         }
 
-        this.moveHandler.handle({ piece: clonedPiece, position: target }, clonedBoard);
+        let clonedCurrentPlayer: IPlayer | undefined = undefined;
+        for (const player of clonedPlayers) {
+          if (player.hasPiece(clonedPiece)) {
+            clonedCurrentPlayer = player;
+
+            break;
+          }
+        }
+
+        if (!clonedCurrentPlayer) {
+          throw new Error('Cloned current player not found.');
+        }
+
+        this.moveHandler.handle(
+          { piece: clonedPiece, position: target },
+          clonedBoard,
+          clonedCurrentPlayer
+        );
 
         if (!this.kingInCheckDetector.isInCheck({ board: clonedBoard, team })) {
           return false; // escape found

@@ -2,14 +2,13 @@ import { CoinPiece } from '../../../src/sharedMechanics/connectLineGame/model/co
 import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
 import { Pieces, Player } from '../../../src/core/model/player';
 
-describe('Player.cloneWithPieces', () => {
+describe('Player', () => {
   let strategy: IMoveStrategy;
   let originalPieces: Pieces;
   let clonedPieces: Pieces;
   let player: Player;
 
   beforeEach(() => {
-    // Simple mock strategy – behavior not under test here
     strategy = {
       createNextMove: jest.fn(),
     };
@@ -41,10 +40,26 @@ describe('Player.cloneWithPieces', () => {
     expect(clonedPlayer.getScreenName()).toBe(player.getScreenName());
 
     // Uses provided pieces
-    expect(clonedPlayer.getPieces()).toBe(clonedPieces);
+    expect(clonedPlayer.getPieces()).not.toBe(clonedPieces);
+    expect(clonedPlayer.getPieces()).toStrictEqual(clonedPieces);
 
     // Does not reuse original pieces
     expect(clonedPlayer.hasPiece(originalPieces[0])).toBe(false);
     expect(clonedPlayer.hasPiece(clonedPieces[0])).toBe(true);
+  });
+
+  it('throws when creating a player with no pieces', () => {
+    expect(() => {
+      new Player('Alice', strategy, [] as unknown as Pieces);
+    }).toThrow('Player must have at least one piece.');
+  });
+
+  it('throws when removing the last remaining piece', () => {
+    const singlePiece = new CoinPiece(Symbol('C'));
+    const singlePiecePlayer = new Player('Bob', strategy, [singlePiece]);
+
+    expect(() => {
+      singlePiecePlayer.removePiece(singlePiece);
+    }).toThrow('Player must keep at least one piece.');
   });
 });

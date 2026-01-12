@@ -4,6 +4,7 @@ import { ChessPiece, IChessPiece } from '../model/chessPiece';
 import { ChessPiecePawn } from '../model/chessPiecePawn';
 import { ChessPieceKind } from '../config/chessPiecesConfig';
 import { ChessPieceFactory } from '../factory/chessPieceFactory';
+import { IPlayer } from '../../../core/model/player';
 
 export type ChessMove = {
   position: BoardPosition;
@@ -14,7 +15,7 @@ export type ChessMove = {
 export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
   constructor(private pieceFactory: ChessPieceFactory) {}
 
-  handle(move: ChessMove, boardState: IBoardState): void {
+  handle(move: ChessMove, boardState: IBoardState, currentPlayer: IPlayer): void {
     const from = boardState.getPiecePositionBy(move.piece);
 
     if (!from) {
@@ -38,7 +39,7 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     }
 
     if (this.isPromotion(move, boardState)) {
-      this.handlePromotion(move, from, boardState);
+      this.handlePromotion(move, from, boardState, currentPlayer);
       this.clearAllEnPassant(boardState);
       return;
     }
@@ -97,7 +98,12 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
     this.movePiece(rook, rookFrom, rookTo, boardState);
   }
 
-  private handlePromotion(move: ChessMove, from: BoardPosition, boardState: IBoardState): void {
+  private handlePromotion(
+    move: ChessMove,
+    from: BoardPosition,
+    boardState: IBoardState,
+    currentPlayer: IPlayer
+  ): void {
     const { piece, position, promotionKind } = move;
 
     if (!promotionKind) {
@@ -112,6 +118,10 @@ export class ChessMoveHandler implements IMoveHandler<ChessPiece> {
 
     boardState.clearPosition(from);
     boardState.addMove({ piece: promoted, position });
+
+    currentPlayer.addPiece(promoted);
+    currentPlayer.removePiece(piece);
+
     promoted.markMoved();
   }
 

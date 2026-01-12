@@ -9,6 +9,8 @@ import {
   CHESS_PIECE_KIND,
   ChessPieceKind,
 } from '../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
+import { Player } from '../../../src/core/model/player';
+import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
 
 const pieceFactory = new ChessPieceFactory();
 
@@ -34,6 +36,13 @@ const createPawn = (overrides?: { team?: 'white' | 'black'; index?: number }) =>
   });
 
 describe('chess piece can be moved on the board', () => {
+  let playerMoveStrategy: IMoveStrategy;
+
+  beforeEach(() => {
+    playerMoveStrategy = {
+      createNextMove: jest.fn(),
+    };
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -60,9 +69,11 @@ describe('chess piece can be moved on the board', () => {
       piece: piece,
     };
 
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
+
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    moveHandler.handle(move, initBoard);
+    moveHandler.handle(move, initBoard, player);
 
     const boardAfterMove = initBoard.getBoard();
     expect(boardAfterMove).toStrictEqual(expectedBoardAfterMove);
@@ -87,9 +98,11 @@ describe('chess piece can be moved on the board', () => {
       piece: attackingPiece,
     };
 
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
+
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    moveHandler.handle(move, initBoard);
+    moveHandler.handle(move, initBoard, player);
 
     const boardAfterMove = initBoard.getBoard();
     expect(boardAfterMove).toStrictEqual(expectedBoardAfterMove);
@@ -108,9 +121,11 @@ describe('chess piece can be moved on the board', () => {
       piece: pieceNotOnBoard,
     };
 
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
+
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    expect(() => moveHandler.handle(move, initBoard)).toThrow(
+    expect(() => moveHandler.handle(move, initBoard, player)).toThrow(
       `The chess piece ${String(pieceNotOnBoard.getBoardValue())} is not present on the board. Chess piece cannot be moved.`
     );
   });
@@ -148,7 +163,9 @@ describe('chess piece can be moved on the board', () => {
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-    await moveHandler.handle(move, boardState);
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
+
+    moveHandler.handle(move, boardState, player);
 
     const board = boardState.getBoard();
 
@@ -198,7 +215,9 @@ describe('chess piece can be moved on the board', () => {
     };
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
-    await moveHandler.handle(move, boardState);
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
+
+    moveHandler.handle(move, boardState, player);
 
     const board = boardState.getBoard();
 
@@ -243,8 +262,9 @@ describe('chess piece can be moved on the board', () => {
     };
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
+    const player = new Player('Player 1', playerMoveStrategy, [move.piece]);
 
-    expect(() => moveHandler.handle(move, boardState)).toThrow(
+    expect(() => moveHandler.handle(move, boardState, player)).toThrow(
       'Castling rook not found where expected.'
     );
   });
@@ -277,7 +297,9 @@ describe('chess piece can be moved on the board', () => {
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
       // White pawn double-step: d2 → d4
-      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+      const player = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+
+      moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState, player);
 
       expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
     });
@@ -301,11 +323,22 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+      const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+      const player2 = new Player('Player 2', playerMoveStrategy, [blackPawn]);
+
       // d2 → d4
-      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: whitePawn, position: { row: 4, column: 3 } },
+        boardState,
+        player1
+      );
 
       // en passant: d5 → d4
-      await moveHandler.handle({ piece: blackPawn, position: { row: 4, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: blackPawn, position: { row: 4, column: 3 } },
+        boardState,
+        player2
+      );
 
       const board = boardState.getBoard();
 
@@ -339,11 +372,22 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+      const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+      const player2 = new Player('Player 2', playerMoveStrategy, [blackPawn]);
+
       // White: d2 → d4
-      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: whitePawn, position: { row: 4, column: 3 } },
+        boardState,
+        player1
+      );
 
       // Black plays something else
-      await moveHandler.handle({ piece: blackRook, position: { row: 6, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: blackRook, position: { row: 6, column: 3 } },
+        boardState,
+        player2
+      );
 
       // En passant should now be invalid
       expect(blackPawn.canEnPassantAttack({ row: 4, column: 3 }, boardState)).toBe(false);
@@ -374,8 +418,14 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+      const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+
       // White pawn double-step: d2 → d4
-      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: whitePawn, position: { row: 4, column: 3 } },
+        boardState,
+        player1
+      );
 
       // Block en passant landing square (c4)
       boardState.addMove({
@@ -406,8 +456,14 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+      const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+
       // White pawn double-step: d2 → d4
-      await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+      moveHandler.handle(
+        { piece: whitePawn, position: { row: 4, column: 3 } },
+        boardState,
+        player1
+      );
 
       // Sanity: en passant would normally be possible
       expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
@@ -439,14 +495,17 @@ describe('chess piece can be moved on the board', () => {
 
     const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+    const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+    const player2 = new Player('Player 2', playerMoveStrategy, [blackPawn]);
+
     // White pawn double-step: d2 → d4
-    await moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState);
+    moveHandler.handle({ piece: whitePawn, position: { row: 4, column: 3 } }, boardState, player1);
 
     // Sanity check: en passant is available
     expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(true);
 
     // Black performs en passant: c4 → d3
-    await moveHandler.handle({ piece: blackPawn, position: { row: 5, column: 3 } }, boardState);
+    moveHandler.handle({ piece: blackPawn, position: { row: 5, column: 3 } }, boardState, player2);
 
     const board = boardState.getBoard();
 
@@ -482,13 +541,16 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-      await moveHandler.handle(
+      const player1 = new Player('Player 1', playerMoveStrategy, [whitePawn]);
+
+      moveHandler.handle(
         {
           piece: whitePawn,
           position: { row: 0, column: 3 }, // promote
           promotionKind: CHESS_PIECE_KIND.QUEEN,
         },
-        boardState
+        boardState,
+        player1
       );
 
       const board = boardState.getBoard();
@@ -502,6 +564,8 @@ describe('chess piece can be moved on the board', () => {
       expect(promoted).not.toBe(whitePawn);
       expect(promoted.getKind()).toBe(CHESS_PIECE_KIND.QUEEN);
       expect(promoted.hasMoved()).toBe(true);
+      expect(player1.hasPiece(whitePawn)).toBe(false);
+      expect(player1.hasPiece(promoted)).toBe(true);
 
       // Pawn removed
       expect(board[7][3]).toBe(e);
@@ -531,13 +595,16 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-      await moveHandler.handle(
+      const player1 = new Player('Player 1', playerMoveStrategy, [pawn]);
+
+      moveHandler.handle(
         {
           piece: pawn,
           position: { row: 0, column: 3 },
           promotionKind: CHESS_PIECE_KIND.QUEEN,
         },
-        boardState
+        boardState,
+        player1
       );
 
       const promoted = boardState.getBoard()[0][3];
@@ -569,13 +636,16 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
-      await moveHandler.handle(
+      const player1 = new Player('Player 1', playerMoveStrategy, [pawn]);
+
+      moveHandler.handle(
         {
           piece: pawn,
           position: { row: 0, column: 3 },
           promotionKind: CHESS_PIECE_KIND.QUEEN,
         },
-        boardState
+        boardState,
+        player1
       );
 
       expect(blackPawn.canEnPassantAttack({ row: 5, column: 3 }, boardState)).toBe(false);
@@ -599,6 +669,8 @@ describe('chess piece can be moved on the board', () => {
 
       const moveHandler = new ChessMoveHandler(new ChessPieceFactory());
 
+      const player1 = new Player('Player 1', playerMoveStrategy, [pawn]);
+
       expect(() =>
         moveHandler.handle(
           {
@@ -606,7 +678,8 @@ describe('chess piece can be moved on the board', () => {
             position: { row: 0, column: 3 }, // promotion square
             // promotionKind missing on purpose
           },
-          boardState
+          boardState,
+          player1
         )
       ).toThrow('Promotion missing. Piece=ChessPiecePawn, to=0,3');
     });
