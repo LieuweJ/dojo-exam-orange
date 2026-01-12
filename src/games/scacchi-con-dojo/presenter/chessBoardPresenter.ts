@@ -46,14 +46,14 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     const capturedByTeam = this.capturedPiecesProvider.getCapturedPieces(players, board);
 
     const capturedBlackLines = this.renderCapturedColumn(
-      'Captured Bitches',
+      14,
       capturedByTeam,
       [...capturedByTeam.keys()][0],
       boardLines.length
     );
 
     const capturedWhiteLines = this.renderCapturedColumn(
-      'Captured Witches',
+      14,
       capturedByTeam,
       [...capturedByTeam.keys()][1],
       boardLines.length
@@ -181,16 +181,14 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
   }
 
   private renderCapturedColumn(
-    title: string,
+    width: number,
     captured: Map<Team, ChessPiece[]>,
     team: Team,
     height: number
   ): string[] {
     const pieces = captured.get(team) ?? [];
-    const width = title.length;
 
     const lines: string[] = [];
-    lines.push(title.padEnd(width));
 
     let current = '';
 
