@@ -1,4 +1,4 @@
-# Welcome to Orange-in-a-Row 🍊
+# Welcome to Orange-in-a-Row
 
 Welcome to **Orange-in-a-Row** — clearly superior to **Connect Four**,
 because it has **AI** *and* **Bluetooth**.
@@ -41,8 +41,6 @@ If all **42 positions** on the board are filled and no player has won, the game 
 ## Ready?
 
 Take a moment to read the rules.
-
-👉 **Press any key to start the game with a fresh board.**
 
 Good luck, and have fun!
 

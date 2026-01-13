@@ -1,4 +1,4 @@
-# Welcome to Tic-tac-dojo 🥋
+# Welcome to Tic-tac-dojo
 
 Welcome to **Tic-tac-dojo** — a timeless battle of wits,
 where **discipline**, **focus**, **reading your opponent**, **sushi eating** and
