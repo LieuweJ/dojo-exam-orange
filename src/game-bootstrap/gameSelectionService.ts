@@ -4,7 +4,6 @@ import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 
 type IGameSelectionService = {
   selectGame(): Promise<GameDescriptor | null>;
-  collectPlayerNames(count: number): Promise<string[]>;
 };
 
 export class GameSelectionService implements IGameSelectionService {
@@ -42,30 +41,5 @@ export class GameSelectionService implements IGameSelectionService {
 
       return this.games[index];
     }
-  }
-
-  async collectPlayerNames(playerCount: number): Promise<string[]> {
-    const names: string[] = [];
-
-    for (let i = 0; i < playerCount; i++) {
-      while (true) {
-        const name = await this.input.ask(`Enter name for Player ${i + 1}: `);
-
-        if (!name.trim()) {
-          this.outputAdapter.render('Name cannot be empty.');
-          continue;
-        }
-
-        if (names.includes(name.trim())) {
-          this.outputAdapter.render('Name must be unique. Please choose another name.');
-          continue;
-        }
-
-        names.push(name.trim());
-        break;
-      }
-    }
-
-    return names;
   }
 }

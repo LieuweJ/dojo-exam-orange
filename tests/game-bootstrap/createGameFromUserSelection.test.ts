@@ -1,10 +1,9 @@
-import { createGameFromUserSelection } from '../../src/game-bootstrap/createGameFromUserSelection';
+import { GameFactory } from '../../src/game-bootstrap/gameFactory';
 import { Game } from '../../src/core/game';
 import { GameSelectionService } from '../../src/game-bootstrap/gameSelectionService';
+import { PlayerNameSelectionService } from '../../src/game-bootstrap/playerNameSelectionService';
 
-jest.mock('../../src/game-bootstrap/gameSelectionService');
-
-describe('createGameFromUserSelection', () => {
+describe('GameFactory.createGameFromUserSelection', () => {
   const inputAdapter = { ask: jest.fn() };
   const outputAdapter = { render: jest.fn() };
 
@@ -18,6 +17,7 @@ describe('createGameFromUserSelection', () => {
     rulesChecker: {} as never,
     violationPresenter: {} as never,
     lifecycleStrategy: {} as never,
+    moveHandler: {} as never,
   };
 
   const mockGameDescriptor = {
@@ -27,31 +27,38 @@ describe('createGameFromUserSelection', () => {
     createComposition: jest.fn().mockReturnValue(mockComposition),
   };
 
+  let gameSelectionService: jest.Mocked<GameSelectionService>;
+  let playerNameSelectionService: jest.Mocked<PlayerNameSelectionService>;
+  let factory: GameFactory;
+
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (GameSelectionService as jest.Mock).mockImplementation(() => ({
+    gameSelectionService = {
       selectGame: jest.fn().mockResolvedValue(mockGameDescriptor),
-      collectPlayerNames: jest.fn().mockResolvedValue(['Alice', 'Bob']),
-    }));
-  });
+    } as unknown as jest.Mocked<GameSelectionService>;
 
-  afterEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
+    playerNameSelectionService = {
+      selectPlayerNames: jest.fn().mockResolvedValue(['Alice', 'Bob']),
+    } as unknown as jest.Mocked<PlayerNameSelectionService>;
+
+    factory = new GameFactory(
+      inputAdapter as never,
+      outputAdapter as never,
+      gameSelectionService,
+      playerNameSelectionService
+    );
   });
 
   it('creates a game from user selection', async () => {
-    const game = await createGameFromUserSelection({
+    const game = await factory.createGameFromUserSelection({
       inputAdapter,
       outputAdapter,
     });
 
-    expect(GameSelectionService).toHaveBeenCalledWith(
-      inputAdapter,
-      outputAdapter,
-      expect.any(Array)
-    );
+    expect(gameSelectionService.selectGame).toHaveBeenCalled();
+
+    expect(playerNameSelectionService.selectPlayerNames).toHaveBeenCalledWith(2);
 
     expect(mockGameDescriptor.createComposition).toHaveBeenCalledWith({
       inputAdapter,
@@ -63,14 +70,11 @@ describe('createGameFromUserSelection', () => {
   });
 
   it('propagates errors from game selection', async () => {
-    (GameSelectionService as jest.Mock).mockImplementationOnce(() => ({
-      selectGame: jest.fn().mockRejectedValue(new Error('Boom')),
-      collectPlayerNames: jest.fn(),
-    }));
+    gameSelectionService.selectGame.mockRejectedValueOnce(new Error('Boom'));
 
-    await expect(createGameFromUserSelection({ inputAdapter, outputAdapter })).rejects.toThrow(
-      'Boom'
-    );
+    await expect(
+      factory.createGameFromUserSelection({ inputAdapter, outputAdapter })
+    ).rejects.toThrow('Boom');
   });
 
   it('propagates errors from composition creation', async () => {
@@ -78,27 +82,19 @@ describe('createGameFromUserSelection', () => {
       throw new Error('Invalid composition');
     });
 
-    await expect(createGameFromUserSelection({ inputAdapter, outputAdapter })).rejects.toThrow(
-      'Invalid composition'
-    );
+    await expect(
+      factory.createGameFromUserSelection({ inputAdapter, outputAdapter })
+    ).rejects.toThrow('Invalid composition');
   });
 
   it('returns null if user opts to quit', async () => {
-    (GameSelectionService as jest.Mock).mockImplementation(() => ({
-      selectGame: jest.fn().mockResolvedValue(null),
-    }));
+    gameSelectionService.selectGame.mockResolvedValueOnce(null);
 
-    const game = await createGameFromUserSelection({
+    const game = await factory.createGameFromUserSelection({
       inputAdapter,
       outputAdapter,
     });
 
-    expect(GameSelectionService).toHaveBeenCalledWith(
-      inputAdapter,
-      outputAdapter,
-      expect.any(Array)
-    );
-
-    expect(game).toBe(null);
+    expect(game).toBeNull();
   });
 });

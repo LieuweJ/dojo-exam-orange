@@ -1,14 +1,26 @@
 import { TerminalInputAdapter } from './core/adapters/terminalInputAdapter';
 import { TerminalOutputAdapter } from './core/adapters/terminalOutputAdapter';
-import { createGameFromUserSelection } from './game-bootstrap/createGameFromUserSelection';
+import { GameFactory } from './game-bootstrap/gameFactory';
+import { GAMES } from './game-bootstrap/composition/games-config';
+import { GameSelectionService } from './game-bootstrap/gameSelectionService';
+import { PlayerNameSelectionService } from './game-bootstrap/playerNameSelectionService';
 
 async function main() {
   const inputAdapter = new TerminalInputAdapter();
   const outputAdapter = new TerminalOutputAdapter();
+  const gameSelectionService = new GameSelectionService(inputAdapter, outputAdapter, GAMES);
+  const playerNameSelectionService = new PlayerNameSelectionService(inputAdapter, outputAdapter);
+
+  const gameFactory = new GameFactory(
+    inputAdapter,
+    outputAdapter,
+    gameSelectionService,
+    playerNameSelectionService
+  );
 
   try {
     while (true) {
-      const game = await createGameFromUserSelection({ inputAdapter, outputAdapter });
+      const game = await gameFactory.createGameFromUserSelection({ inputAdapter, outputAdapter });
 
       if (!game) {
         outputAdapter.render('\nOtsukaresama deshita!\n');
