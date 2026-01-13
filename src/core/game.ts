@@ -79,6 +79,11 @@ export class Game implements IGame {
         break;
       }
 
+      this.boardPresenter.present({
+        board: this.boardState.getBoard(),
+        players: this.turnState.getPlayers(),
+      });
+
       this.violationPresenter.present({ move: proposedMove, violations });
     }
 
