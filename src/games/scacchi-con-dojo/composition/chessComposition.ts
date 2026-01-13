@@ -258,34 +258,20 @@ function createDemoStartingBoard(
   const e = EMPTY_CELL;
 
   const blackKing = requireKind(blackByKind, CHESS_PIECE_KIND.KING)[0];
+  const blackKnight = requireKind(blackByKind, CHESS_PIECE_KIND.KNIGHT)[0];
 
   const whiteKing = requireKind(whiteByKind, CHESS_PIECE_KIND.KING)[0];
   const whiteRooks = requireKind(whiteByKind, CHESS_PIECE_KIND.ROOK);
   const whitePawn = requireKind(whiteByKind, CHESS_PIECE_KIND.PAWN)[0];
 
   return [
-    // 0 ─ Black back rank (minimal, just king so game is valid)
     [e, e, e, e, e, e, blackKing, e],
-
-    // 1
-    [whitePawn, e, e, e, e, e, e, e],
-
-    // 2
+    [whitePawn, e, e, blackKnight, e, e, e, e],
     [e, e, whiteRooks[1], e, e, e, e, e],
-
-    // 3
     [e, e, e, e, e, e, e, e],
-
-    // 4
     [e, e, e, e, e, e, e, e],
-
-    // 5
     [e, e, e, e, e, e, e, e],
-
-    // 6 ─ White pawn one move from promotion
     [e, e, e, e, e, e, e, e],
-
-    // 7 ─ White castling setup (king + rook, path clear)
     [whiteRooks[0], e, e, e, whiteKing, e, e, e],
   ];
 }
