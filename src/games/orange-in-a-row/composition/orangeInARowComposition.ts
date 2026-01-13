@@ -38,25 +38,28 @@ export const ORANGE_IN_A_ROW_BOARD_UI = new Map<symbol, string>([
   [PIECE_O.getBoardValue(), '○'],
 ]);
 
+export const ORANGE_IN_A_ROW_GAME_TYPES = {
+  STANDARD: 'standard',
+  DEMO: 'demo',
+} as const;
+
+export type OrangeInARowGameTypes =
+  (typeof ORANGE_IN_A_ROW_GAME_TYPES)[keyof typeof ORANGE_IN_A_ROW_GAME_TYPES];
+
 export function createOrangeInARowComposition({
   inputAdapter,
   outputAdapter,
   playerNames,
-}: GameCompositionInput): GameComposition {
+  type,
+}: GameCompositionInput & {
+  type: OrangeInARowGameTypes;
+}): GameComposition {
   if (playerNames.length !== 2) {
     throw new Error('Orange in a Row requires exactly 2 players.');
   }
 
-  const e: typeof EMPTY_CELL = EMPTY_CELL;
-
-  const emptyBoard: IBoard = [
-    [e, e, e, e, e, e, e],
-    [e, e, e, e, e, e, e],
-    [e, e, e, e, e, e, e],
-    [e, e, e, e, e, e, e],
-    [e, e, e, e, e, e, e],
-    [e, e, e, e, e, e, e],
-  ];
+  const startingBoard =
+    type === ORANGE_IN_A_ROW_GAME_TYPES.STANDARD ? getEmptyBoard() : getDemoBoard();
 
   const cliMoveStrategy = new CliMoveStrategy(
     inputAdapter,
@@ -71,7 +74,7 @@ export function createOrangeInARowComposition({
       new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
       new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
     ]),
-    boardState: new BoardState(emptyBoard),
+    boardState: new BoardState(startingBoard),
     boardPresenter,
     helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),
     outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 4 }),
@@ -89,4 +92,32 @@ export function createOrangeInARowComposition({
     lifecycleStrategy: new GameLifecycleStrategy(),
     moveHandler: new ConnectLineMoveHandler(),
   };
+}
+
+function getEmptyBoard(): IBoard {
+  const e: typeof EMPTY_CELL = EMPTY_CELL;
+
+  return [
+    [e, e, e, e, e, e, e],
+    [e, e, e, e, e, e, e],
+    [e, e, e, e, e, e, e],
+    [e, e, e, e, e, e, e],
+    [e, e, e, e, e, e, e],
+    [e, e, e, e, e, e, e],
+  ];
+}
+
+function getDemoBoard(): IBoard {
+  const E: typeof EMPTY_CELL = EMPTY_CELL;
+  const X: typeof PIECE_X = PIECE_X;
+  const O: typeof PIECE_O = PIECE_O;
+
+  return [
+    [E, E, E, E, E, E, E],
+    [E, E, E, E, E, E, E],
+    [E, E, E, X, E, E, E],
+    [E, E, O, X, O, E, E],
+    [E, O, X, O, X, E, E],
+    [O, X, O, X, O, E, E],
+  ];
 }

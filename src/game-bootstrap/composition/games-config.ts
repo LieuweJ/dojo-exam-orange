@@ -1,4 +1,7 @@
-import { createOrangeInARowComposition } from '../../games/orange-in-a-row/composition/orangeInARowComposition';
+import {
+  createOrangeInARowComposition,
+  ORANGE_IN_A_ROW_GAME_TYPES,
+} from '../../games/orange-in-a-row/composition/orangeInARowComposition';
 import { IInputAdapter } from '../../core/adapters/terminalInputAdapter';
 import { ITurnState } from '../../core/model/turnState';
 import { IBoardState } from '../../core/model/boardState';
@@ -48,7 +51,8 @@ export const LISTED_GAMES: GameDescriptor[] = [
     id: 'orange-in-a-row',
     displayName: 'Orange in a Row',
     requiredPlayers: 2,
-    createComposition: createOrangeInARowComposition,
+    createComposition: (args) =>
+      createChessComposition({ ...args, ...{ type: ORANGE_IN_A_ROW_GAME_TYPES.STANDARD } }),
   },
   {
     id: 'tic-tac-dojo',
@@ -73,7 +77,17 @@ export const UNLISTED_GAMES: Map<string, GameDescriptor> = new Map([
       displayName: 'Scacchi con Dojo',
       requiredPlayers: 2,
       createComposition: (args) =>
-        createChessComposition({ ...args, ...{ type: CHESS_GAME_TYPES.DEMO } }),
+        createChessComposition({ ...args, ...{ type: ORANGE_IN_A_ROW_GAME_TYPES.DEMO } }),
+    },
+  ],
+  [
+    'demo start',
+    {
+      id: 'orange-in-a-row',
+      displayName: 'Orange in a Row',
+      requiredPlayers: 2,
+      createComposition: (args) =>
+        createOrangeInARowComposition({ ...args, ...{ type: ORANGE_IN_A_ROW_GAME_TYPES.DEMO } }),
     },
   ],
 ]);
