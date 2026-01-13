@@ -116,8 +116,8 @@ function getDemoBoard(): IBoard {
     [E, E, E, E, E, E, E],
     [E, E, E, E, E, E, E],
     [E, E, E, X, E, E, E],
-    [E, E, O, X, O, E, E],
-    [E, O, X, O, X, E, E],
+    [E, E, O, X, E, E, E],
+    [E, O, X, O, E, E, E],
     [O, X, O, X, O, E, E],
   ];
 }
