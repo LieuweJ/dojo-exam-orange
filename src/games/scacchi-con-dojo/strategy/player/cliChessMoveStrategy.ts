@@ -8,7 +8,11 @@ import { IPlayer, Pieces } from '../../../../core/model/player';
 import { ChessPiece } from '../../model/chessPiece';
 import { CHESS_PIECE_KIND, ChessPieceKind } from '../../config/chessPiecesConfig';
 import { ChessPiecePawn } from '../../model/chessPiecePawn';
-import { ChessPieceUi } from '../../composition/chessComposition';
+import {
+  ChessPieceUi,
+  PromotionOption,
+  PromotionSelection,
+} from '../../composition/chessComposition';
 
 const RETRY = '!';
 
@@ -17,7 +21,8 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     private readonly input: IInputAdapter,
     private readonly output: IOutputAdapter,
     private readonly boardPresenter: IOutputPresenter<BoardPresentArgs>,
-    private readonly chessPieceToUi: Map<ChessPieceKind, ChessPieceUi>
+    private readonly chessPieceToUi: Map<ChessPieceKind, ChessPieceUi>,
+    private readonly promotionOptions: Map<PromotionSelection, PromotionOption>
   ) {}
 
   async createNextMove({
@@ -46,7 +51,12 @@ export class CliChessMoveStrategy implements IMoveStrategy {
         continue;
       }
 
-      const promotionKind = await this.askPromotionIfNeeded(piece, destination, boardState);
+      const promotionKind = await this.askPromotionIfNeeded(
+        piece,
+        destination,
+        boardState,
+        currentPlayer
+      );
       if (promotionKind === RETRY) {
         this.boardPresenter.present({ board, players });
         continue;
@@ -67,7 +77,7 @@ export class CliChessMoveStrategy implements IMoveStrategy {
   ): Promise<ChessPiece> {
     while (true) {
       const input = await this.input.ask(
-        `${displayName} (${this.getPlayerUi(currentPlayerPieces)}), select a piece under to move (e.g. e2): `
+        `${displayName} (${this.getPlayerUi(currentPlayerPieces, CHESS_PIECE_KIND.KING)}), select a piece under to move (e.g. e2): `
       );
 
       let position: BoardPosition;
@@ -136,7 +146,8 @@ export class CliChessMoveStrategy implements IMoveStrategy {
   private async askPromotionIfNeeded(
     piece: ChessPiece,
     destination: BoardPosition,
-    board: BoardState
+    board: BoardState,
+    currentPlayer: IPlayer
   ): Promise<ChessPieceKind | typeof RETRY | undefined> {
     if (!(piece instanceof ChessPiecePawn)) {
       return undefined;
@@ -147,13 +158,13 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     }
 
     while (true) {
-      const input = await this.input.ask(`Promote to (Q, R, B, N) or ${RETRY} to reselect piece: `);
+      const input = await this.input.ask(this.getPromotionPrompt(currentPlayer.getPieces()));
 
       if (input === RETRY) {
         return RETRY;
       }
 
-      const promotion = this.mapPromotion(input);
+      const promotion = this.promotionSelection(input);
       if (!promotion) {
         this.output.render('Invalid promotion choice.');
         continue;
@@ -163,19 +174,16 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     }
   }
 
-  private mapPromotion(input: string): ChessPieceKind | undefined {
-    switch (input.toUpperCase()) {
-      case 'Q':
-        return CHESS_PIECE_KIND.QUEEN;
-      case 'R':
-        return CHESS_PIECE_KIND.ROOK;
-      case 'B':
-        return CHESS_PIECE_KIND.BISHOP;
-      case 'N':
-        return CHESS_PIECE_KIND.KNIGHT;
-      default:
-        return undefined;
+  private promotionSelection(value: string): ChessPieceKind | null {
+    const normalized = value.toUpperCase();
+
+    for (const [selection, option] of this.promotionOptions.entries()) {
+      if (selection === normalized) {
+        return option.chessPieceKind;
+      }
     }
+
+    return null;
   }
 
   private parseBoardPosition(input: string): BoardPosition {
@@ -189,7 +197,18 @@ export class CliChessMoveStrategy implements IMoveStrategy {
     return { row, column };
   }
 
-  private getPlayerUi(currentPlayerPieces: Pieces): string {
+  private getPromotionPrompt(currentPlayerPieces: Pieces): string {
+    const options = [...this.promotionOptions.entries()]
+      .map(([selection, { chessPieceKind }]) => {
+        const ui = this.getPlayerUi(currentPlayerPieces, chessPieceKind);
+        return `${selection} ${ui}`;
+      })
+      .join(', ');
+
+    return `Promote to (${options}) or ${RETRY} to reselect piece: `;
+  }
+
+  private getPlayerUi(currentPlayerPieces: Pieces, chessPieceKind: ChessPieceKind): string {
     let playerUi = 'unknown side';
 
     const playerPiece = currentPlayerPieces[0];
@@ -198,6 +217,6 @@ export class CliChessMoveStrategy implements IMoveStrategy {
       return playerUi;
     }
 
-    return this.chessPieceToUi.get(CHESS_PIECE_KIND.KING)?.get(playerPiece.getTeam()) ?? playerUi;
+    return this.chessPieceToUi.get(chessPieceKind)?.get(playerPiece.getTeam()) ?? playerUi;
   }
 }

@@ -120,6 +120,26 @@ export const CHESS_ROW_UI: Record<string, number> = {
   h: 7,
 };
 
+export type PromotionOption = {
+  chessPieceKind: ChessPieceKind;
+};
+
+const PROMOTION_SELECTION = {
+  Q: 'Q',
+  R: 'R',
+  B: 'B',
+  N: 'N',
+} as const;
+
+export type PromotionSelection = (typeof PROMOTION_SELECTION)[keyof typeof PROMOTION_SELECTION];
+
+export const PROMOTION_OPTIONS = new Map<PromotionSelection, PromotionOption>([
+  [PROMOTION_SELECTION.Q, { chessPieceKind: CHESS_PIECE_KIND.QUEEN }],
+  [PROMOTION_SELECTION.R, { chessPieceKind: CHESS_PIECE_KIND.ROOK }],
+  [PROMOTION_SELECTION.B, { chessPieceKind: CHESS_PIECE_KIND.BISHOP }],
+  [PROMOTION_SELECTION.N, { chessPieceKind: CHESS_PIECE_KIND.KNIGHT }],
+]);
+
 export type ChessRowUi = typeof CHESS_ROW_UI;
 export type ChessRow = ChessRowUi[keyof ChessRowUi];
 
@@ -175,7 +195,8 @@ export function createChessComposition({
     inputAdapter,
     outputAdapter,
     boardPresenter,
-    CHESS_PIECE_UI
+    CHESS_PIECE_UI,
+    PROMOTION_OPTIONS
   );
 
   const kingInCheckDetector = new KingInCheckDetector();
