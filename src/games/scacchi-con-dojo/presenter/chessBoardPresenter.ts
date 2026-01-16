@@ -38,7 +38,7 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     const columnCount = board[0].length;
 
     const boardLines: string[] = [
-      ...this.renderSeparatorLine(columnCount, '-', SeparatorStyle.TOP),
+      ...this.renderSeparatorLine(columnCount, '─', SeparatorStyle.TOP),
       ...this.renderBoardRows(board, highlightSet),
       ...this.renderColumnReferences(columnCount),
     ];
@@ -73,14 +73,14 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
 
     board.forEach((row, rowIndex) => {
       const rowUiNumber = row.length - rowIndex;
-      let rowLine = ` ${rowUiNumber} |`;
+      let rowLine = ` ${rowUiNumber} │`;
       row.forEach((cell, colIndex) => {
         rowLine += this.renderCell(cell, { row: rowIndex, column: colIndex }, highlightSet);
       });
       lines.push(rowLine);
 
       const place = rowIndex === board.length - 1 ? SeparatorStyle.BOTTOM : SeparatorStyle.MIDDLE;
-      lines.push(this.renderSeparatorLine(row.length, '-', place)[0]);
+      lines.push(this.renderSeparatorLine(row.length, '─', place)[0]);
     });
 
     return lines;
@@ -124,10 +124,10 @@ export class ChessBoardPresenter implements IOutputPresenter<BoardPresentArgs> {
     const symbol = this.resolveCellUiSymbol(cell, boardPosition);
 
     if (this.isHighlightedCell(boardPosition, highlightSet)) {
-      return `[${symbol}]|`;
+      return `[${symbol}]│`;
     }
 
-    return ` ${symbol} |`;
+    return ` ${symbol} │`;
   }
 
   private resolveCellUiSymbol(cell: BoardCell, position: BoardPosition): string {

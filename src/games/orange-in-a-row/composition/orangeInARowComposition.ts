@@ -5,19 +5,21 @@ import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainH
 import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
 import { Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
-import {
-  ValidLineGamePlacementStrategy
-} from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
+import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
-import { CONNECT_LINE_VIOLATION_MESSAGES, ViolationsPresenter, } from '../../../core/presenter/violationsPresenter';
+import {
+  CONNECT_LINE_VIOLATION_MESSAGES,
+  ViolationsPresenter,
+} from '../../../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
 import { CliColumnInputResolver } from '../resolvers/cliColumnInputResolver';
 import { PositionToOrangeInARowCliResolver } from '../resolvers/positionToOrangeInARowCliResolver';
 import { OrangeInARowBoardPresenter } from '../presenter/orangeInARowBoardPresenter';
+import { ConnectLineGameOutcomeStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 import {
-  ConnectLineGameOutcomeStrategy
-} from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
-import { GameComposition, GameCompositionInput, } from '../../../game-bootstrap/composition/games-config';
+  GameComposition,
+  GameCompositionInput,
+} from '../../../game-bootstrap/composition/games-config';
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
 import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
