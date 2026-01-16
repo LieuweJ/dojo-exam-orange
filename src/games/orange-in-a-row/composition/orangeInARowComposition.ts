@@ -5,21 +5,19 @@ import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainH
 import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
 import { Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
-import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
-import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
 import {
-  CONNECT_LINE_VIOLATION_MESSAGES,
-  ViolationsPresenter,
-} from '../../../core/presenter/violationsPresenter';
+  ValidLineGamePlacementStrategy
+} from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
+import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
+import { CONNECT_LINE_VIOLATION_MESSAGES, ViolationsPresenter, } from '../../../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
 import { CliColumnInputResolver } from '../resolvers/cliColumnInputResolver';
 import { PositionToOrangeInARowCliResolver } from '../resolvers/positionToOrangeInARowCliResolver';
 import { OrangeInARowBoardPresenter } from '../presenter/orangeInARowBoardPresenter';
-import { ConnectLineGameOutcomeStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 import {
-  GameComposition,
-  GameCompositionInput,
-} from '../../../game-bootstrap/composition/games-config';
+  ConnectLineGameOutcomeStrategy
+} from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
+import { GameComposition, GameCompositionInput, } from '../../../game-bootstrap/composition/games-config';
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
 import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
@@ -38,28 +36,30 @@ export const ORANGE_IN_A_ROW_BOARD_UI = new Map<symbol, string>([
   [PIECE_O.getBoardValue(), '○'],
 ]);
 
-export const ORANGE_IN_A_ROW_GAME_TYPES = {
-  STANDARD: 'standard',
-  DEMO: 'demo',
+export const ORANGE_IN_A_ROW_GAME_BOARD_COMPOSITIONS = {
+  DEFAULT: 'default board',
+  DEMO: 'demo board',
 } as const;
 
-export type OrangeInARowGameTypes =
-  (typeof ORANGE_IN_A_ROW_GAME_TYPES)[keyof typeof ORANGE_IN_A_ROW_GAME_TYPES];
+export type OrangeInARowGameBoardComposition =
+  (typeof ORANGE_IN_A_ROW_GAME_BOARD_COMPOSITIONS)[keyof typeof ORANGE_IN_A_ROW_GAME_BOARD_COMPOSITIONS];
 
 export function createOrangeInARowComposition({
   inputAdapter,
   outputAdapter,
   playerNames,
-  type,
+  initBoard,
 }: GameCompositionInput & {
-  type: OrangeInARowGameTypes;
+  initBoard: OrangeInARowGameBoardComposition;
 }): GameComposition {
   if (playerNames.length !== 2) {
     throw new Error('Orange in a Row requires exactly 2 players.');
   }
 
   const startingBoard =
-    type === ORANGE_IN_A_ROW_GAME_TYPES.STANDARD ? getEmptyBoard() : getDemoBoard();
+    initBoard === ORANGE_IN_A_ROW_GAME_BOARD_COMPOSITIONS.DEFAULT
+      ? getEmptyBoard()
+      : getDemoBoard();
 
   const cliMoveStrategy = new CliMoveStrategy(
     inputAdapter,

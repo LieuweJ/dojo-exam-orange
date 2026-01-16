@@ -164,19 +164,20 @@ export const CHESS_VIOLATION_MESSAGES: Record<
   NOT_MOVED: 'The piece must be moved to a different position.',
 };
 
-export const CHESS_GAME_BOARD = {
-  DEFAULT_START: 'default start',
+export const CHESS_GAME_BOARD_COMPOSITIONS = {
+  DEFAULT: 'default start',
   DEMO: 'demo',
 } as const;
 
-export type ChessGameBoard = (typeof CHESS_GAME_BOARD)[keyof typeof CHESS_GAME_BOARD];
+export type ChessGameBoardComposition =
+  (typeof CHESS_GAME_BOARD_COMPOSITIONS)[keyof typeof CHESS_GAME_BOARD_COMPOSITIONS];
 
 export function createChessComposition({
   inputAdapter,
   outputAdapter,
   playerNames,
-  board,
-}: GameCompositionInput & { board: ChessGameBoard }): GameComposition {
+  initBoard,
+}: GameCompositionInput & { initBoard: ChessGameBoardComposition }): GameComposition {
   if (playerNames.length !== 2) {
     throw new Error('Scacchi con Dojo requires exactly 2 players.');
   }
@@ -190,7 +191,7 @@ export function createChessComposition({
   );
 
   const startingBoard =
-    board === CHESS_GAME_BOARD.DEFAULT_START
+    initBoard === CHESS_GAME_BOARD_COMPOSITIONS.DEFAULT
       ? createStartingBoard(blackByKind, whiteByKind)
       : createDemoStartingBoard(blackByKind, whiteByKind);
 
