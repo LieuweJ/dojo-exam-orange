@@ -143,9 +143,9 @@ export const PROMOTION_OPTIONS = new Map<PromotionSelection, PromotionOption>([
 export type ChessRowUi = typeof CHESS_ROW_UI;
 export type ChessRow = ChessRowUi[keyof ChessRowUi];
 
-export const CHESS_ROW_TO_STRING = Object.fromEntries(
+export const CHESS_ROW_TO_STRING: Record<ChessRow, string> = Object.fromEntries(
   Object.entries(CHESS_ROW_UI).map(([letter, row]) => [row, letter])
-) as Record<ChessRow, string>;
+);
 
 export type ChessRowToString = typeof CHESS_ROW_TO_STRING;
 

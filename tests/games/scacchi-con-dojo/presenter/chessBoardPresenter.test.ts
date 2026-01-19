@@ -14,7 +14,10 @@ import {
   TEAM_BLACK,
   TEAM_WHITE,
 } from '../../../../src/games/scacchi-con-dojo/composition/chessComposition';
-import { CHESS_PIECE_KIND, ChessPieceKind, } from '../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
+import {
+  CHESS_PIECE_KIND,
+  ChessPieceKind,
+} from '../../../../src/games/scacchi-con-dojo/config/chessPiecesConfig';
 import { ChessBoardPresenter } from '../../../../src/games/scacchi-con-dojo/presenter/chessBoardPresenter';
 import { CapturedPiecesProvider } from '../../../../src/games/scacchi-con-dojo/provider/CapturedPiecesProvider';
 import { IMoveStrategy } from '../../../../src/core/strategy/player/move-strategy';

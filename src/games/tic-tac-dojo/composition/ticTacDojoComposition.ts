@@ -5,18 +5,16 @@ import { RulesChainHandler } from '../../../core/strategy/game/rules/rulesChainH
 import { GameLifecycleStrategy } from '../../../core/strategy/game/gameLifecycleStrategy';
 import { Player } from '../../../core/model/player';
 import { HelpPresenter } from '../../../core/presenter/helpPresenter';
-import { ValidLineGamePlacementStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
+import {
+  ValidLineGamePlacementStrategy
+} from '../../../sharedMechanics/connectLineGame/strategy/game/rules/validLineGamePlacementStrategy';
 import { ValidPlayerTurnStrategy } from '../../../core/strategy/game/rules/validPlayerTurnStrategy';
-import {
-  CONNECT_LINE_VIOLATION_MESSAGES,
-  ViolationsPresenter,
-} from '../../../core/presenter/violationsPresenter';
+import { CONNECT_LINE_VIOLATION_MESSAGES, ViolationsPresenter, } from '../../../core/presenter/violationsPresenter';
 import { CliMoveStrategy } from '../strategy/player/cliMoveStrategy';
-import { ConnectLineGameOutcomeStrategy } from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
 import {
-  GameComposition,
-  GameCompositionInput,
-} from '../../../game-bootstrap/composition/games-config';
+  ConnectLineGameOutcomeStrategy
+} from '../../../sharedMechanics/connectLineGame/strategy/game/connectLineGameOutcomeStrategy';
+import { GameComposition, GameCompositionInput, } from '../../../game-bootstrap/composition/games-config';
 import { CliTicTacToeInputResolver } from '../resolvers/cliInputResolver';
 import { PositionToTicTacToeCliResolver } from '../resolvers/positionToTicTacDojoCliResolver';
 import { TicTacDojoBoardPresenter } from '../presenter/ticTacDojoBoardPresenter';
@@ -47,9 +45,9 @@ export const TIC_TAC_DOJO_TO_ROW: Record<string, number> = {
 export type TicTacDojoToRow = typeof TIC_TAC_DOJO_TO_ROW;
 export type TicTacDojoRow = TicTacDojoToRow[keyof TicTacDojoToRow];
 
-export const TIC_TAC_DOJO_ROW_TO_STRING = Object.fromEntries(
+export const TIC_TAC_DOJO_ROW_TO_STRING: Record<TicTacDojoRow, string> = Object.fromEntries(
   Object.entries(TIC_TAC_DOJO_TO_ROW).map(([letter, row]) => [row, letter])
-) as Record<TicTacDojoRow, string>;
+);
 
 export type TicTacDojoRowToString = typeof TIC_TAC_DOJO_ROW_TO_STRING;
 
