@@ -1,0 +1,2 @@
+- The class CoinPiece (extends IPiece) has a clone method which is not used in the code.
+    - We have this method due to usage of inheritance.
