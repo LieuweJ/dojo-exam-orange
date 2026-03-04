@@ -71,7 +71,6 @@ Titles may change. Power dynamics remain.
 ## How to Play
 
 - Players take turns making **one move per turn**
-- The faction that feels ready goes first
 - On your turn, move **one piece** according to ancient rules nobody fully agrees on
 - Pieces capture by occupying the same square as another piece
 - Pieces who do not respect personal space will be removed from the game.
