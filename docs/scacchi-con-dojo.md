@@ -74,8 +74,7 @@ Titles may change. Power dynamics remain.
 - The faction that feels ready goes first
 - On your turn, move **one piece** according to ancient rules nobody fully agrees on
 - Pieces capture by occupying the same square as another piece
-- Most pieces respect personal space  
-  (Chaos Consultants do not)
+- Pieces who do not respect personal space will be removed from the game.
 - Moves are **final**, like emails sent too early
 
 ---
@@ -90,15 +89,8 @@ The true goal of Scacchi con Dojo is to achieve an:
 ## **HONORABLE DRAW**
 
 An honorable draw may be achieved by:
-
-- Mutual recognition of existential futility
-- Repetition of the same mistake three times
-- Collective exhaustion
-- Or the ceremonial throwing of one’s own pieces at the opponent  
+- The ceremonial throwing of one’s own pieces at the opponent  
   in a **controlled, mindful rage**
-
-This last method is discouraged —  
-but respected.
 
 ---
 
@@ -114,5 +106,5 @@ and play with honor, restraint, and mild contempt.
 ---
 
 *Note:*  
-Honorably throwing pieces, AI replacement of HR employees, and official Honorable Draw detection  
+Honorably throwing pieces, AI replacement of HR employees, renaming of pieces and official Honorable Draw detection  
 will be implemented at a later date™.
