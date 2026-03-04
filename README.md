@@ -41,7 +41,8 @@ within the same constraints.
 - **Total**: ±75–80 hours
 
 # Useful commands in this project:
-
+- `docker pull ghcr.io/lieuwej/dojo-exam-orange:latest` - pull the latest docker container
+- `docker run -it ghcr.io/lieuwej/dojo-exam-orange:latest` - run the latest docker container (which executes the kata).
 - `npm run help` - see useful commands.
 - `npm run test` - run all tests.
 - `npm run coverage` - run all tests and generate a coverage report.
