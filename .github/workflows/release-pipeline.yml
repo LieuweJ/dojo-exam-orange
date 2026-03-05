@@ -1,0 +1,20 @@
+name: Release Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+
+  quality:
+    name: Run Quality Gates
+    uses: ./.github/workflows/quality-gates.yml
+
+  publish:
+    name: Build And Publish Docker Image
+    needs: quality
+    uses: ./.github/workflows/docker-publish.yml
