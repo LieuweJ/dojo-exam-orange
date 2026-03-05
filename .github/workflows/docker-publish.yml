@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image
+name: Docker Publish
 
 on:
   push:
@@ -9,12 +9,12 @@ permissions:
   packages: write
 
 jobs:
-  docker:
+  docker-publish:
+    name: Publish Docker Image
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Login to GitHub Container Registry
         run: |
@@ -25,9 +25,7 @@ jobs:
           echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build Docker image
-        run: |
-          docker build -t $IMAGE_NAME:latest .
+        run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
-        run: |
-          docker push $IMAGE_NAME:latest
+        run: docker push $IMAGE_NAME:latest
