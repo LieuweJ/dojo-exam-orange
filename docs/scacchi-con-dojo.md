@@ -11,7 +11,7 @@ Instead, in Scacchi con Dojo, we play with:
 - **Bitches**
 - **Witches**
 
-Balanced. Inclusive. Safe at work.
+Balanced. Inclusive. Safe at work. User Friendly.
 
 HR will **not** be contacted —  
 *unless* one, in an **enlightened fit of rage**, throws one’s own pieces at one’s opponent.  
@@ -106,5 +106,5 @@ and play with honor, restraint, and mild contempt.
 ---
 
 *Note:*  
-Honorably throwing pieces, AI replacement of HR employees, renaming of pieces and official Honorable Draw detection  
-will be implemented at a later date™.
+Honorably throwing pieces, AI replacement of HR employees, renaming of pieces, official Honorable Draw detection  
+and User Friendliness will be implemented at a later date™.
