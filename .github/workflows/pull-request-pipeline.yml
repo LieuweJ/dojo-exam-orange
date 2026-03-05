@@ -1,0 +1,15 @@
+name: Pull Request Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  quality:
+    name: Run Quality Gates
+    uses: ./.github/workflows/quality-gates.yml
+
+  build:
+    name: Run Docker Build
+    uses: ./.github/workflows/docker-build.yml
