@@ -33,12 +33,25 @@ within the same constraints.
   Chain of Responsibility
 - Favors composition over inheritance where appropriate
 
+### Workflow for working on this with your team
+- The `main` branch should always reflect the code in production/our artifact (the Docker container)
+- Code we want to add must be added in a separate branch, and merged into `main` via a pull request (PR)
+- The PR is set up so that:
+  - It can only be merged if all tests pass and a docker container can be built successfully (triggered automatically 
+    on the PR  creation and updates)
+  - Github Copilot will do a code review and comment on the PR.
+- After merging the PR into main:
+  - Tests are automatically run on the `main` branch, and 
+  - a new docker container is built, and 
+  - this new docker container is published to the GitHub Container Registry (GHCR)
+
 ### Time spent
 
 - Building Orange In A Row (Dockerized): ±15 hours
 - Adding Tic-Tac-Dojo: ±20 hours
 - Adding Scacchi con Dojo (Chess): ±40 hours
-- **Total**: ±75–80 hours
+- Setup CI/CD pipeline for testing and building Docker container: ±5 hours
+- **Total**: ±80–85 hours
 
 # Useful commands in this project:
 - `docker pull ghcr.io/lieuwej/dojo-exam-orange:latest` - pull the latest docker container
