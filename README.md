@@ -37,30 +37,30 @@ within the same constraints.
 - The `main` branch should always reflect the code in production/our artifact (the Docker container)
 - Code we want to add must be added in a separate branch, and merged into `main` via a pull request (PR)
 - The PR is set up so that:
-  - It can only be merged if all tests pass and a docker container can be built successfully (triggered automatically 
-    on the PR  creation and updates)
-  - Github Copilot will do a code review and comment on the PR.
+  - It can only be merged if all tests pass and a Docker container can be built successfully (triggered automatically
+    on the PR creation and updates)
+  - GitHub Copilot will do a code review and comment on the PR.
 - After merging the PR into main:
   - Tests are automatically run on the `main` branch, and 
-  - a new docker container is built, and 
-  - this new docker container is published to the GitHub Container Registry (GHCR)
+  - a new Docker container is built, and 
+  - this new Docker container is published to the GitHub Container Registry (GHCR)
 
 ### Time spent
 
 - Building Orange In A Row (Dockerized): ±15 hours
 - Adding Tic-Tac-Dojo: ±20 hours
 - Adding Scacchi con Dojo (Chess): ±40 hours
-- Setup CI/CD pipeline for testing and building Docker container: ±5 hours
+- Setting up CI/CD pipeline for testing and building Docker container: ±5 hours
 - **Total**: ±80–85 hours
 
 # Useful commands in this project:
-- `docker pull ghcr.io/lieuwej/dojo-exam-orange:latest` - pull the latest docker container
-- `docker run -it ghcr.io/lieuwej/dojo-exam-orange:latest` - run the latest docker container (which executes the kata).
+- `docker pull ghcr.io/lieuwej/dojo-exam-orange:latest` - pull the latest Docker container
+- `docker run -it ghcr.io/lieuwej/dojo-exam-orange:latest` - run the latest Docker container (which executes the kata).
 - `npm run help` - see useful commands.
 - `npm run test` - run all tests.
 - `npm run coverage` - run all tests and generate a coverage report.
 - `npm run compile` - compile the TypeScript code to JavaScript (output goes to `/dist`).
 - `npm run kata` - run the kata (executes `main.js`).
 - `npm run update-kata` - compile latest code and run the kata (executes `main.js`).
-- `npm run docker:build` - build a new docker continer.
-- `npm run docker:run` - run the docker container.
+- `npm run docker:build` - build a new Docker container.
+- `npm run docker:run` - run the Docker container.
