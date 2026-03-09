@@ -44,7 +44,8 @@ export class GameFactory {
       composition.rulesChecker,
       composition.violationPresenter,
       composition.lifecycleStrategy,
-      composition.moveHandler
+      composition.moveHandler,
+      composition.gameHistory
     );
   }
 }

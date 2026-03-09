@@ -9,6 +9,7 @@ import {
   PIECE_O,
   PIECE_X,
 } from '../../../src/games/orange-in-a-row/composition/orangeInARowComposition';
+import { GameHistory } from '../../../src/core/model/gameHistory';
 
 describe('GameResultPresenter', () => {
   let outputAdapter: jest.Mocked<IOutputAdapter>;
@@ -46,6 +47,20 @@ describe('GameResultPresenter', () => {
       [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
     ];
 
+    const gameHistory: GameHistory = new GameHistory(board);
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 0, column: 0 } },
+      player: player1,
+    });
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 0, column: 1 } },
+      player: player1,
+    });
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 0, column: 2 } },
+      player: player1,
+    });
+
     presenter.present({
       board,
       outcome: {
@@ -58,6 +73,7 @@ describe('GameResultPresenter', () => {
         ],
       },
       players: [],
+      history: gameHistory,
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
@@ -70,7 +86,7 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith('Alice wins!');
+    expect(outputAdapter.render).toHaveBeenCalledWith('After 3 moves, Alice wins!');
   });
 
   test('renders final board and draw message', () => {
@@ -79,12 +95,33 @@ describe('GameResultPresenter', () => {
       [PIECE_O, PIECE_X],
     ];
 
+    const player2 = new Player('Bob', playerStrategy, [PIECE_O]);
+
+    const gameHistory: GameHistory = new GameHistory(board);
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 0, column: 0 } },
+      player: player1,
+    });
+    gameHistory.record({
+      move: { piece: PIECE_O, position: { row: 0, column: 1 } },
+      player: player2,
+    });
+    gameHistory.record({
+      move: { piece: PIECE_O, position: { row: 1, column: 0 } },
+      player: player2,
+    });
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 1, column: 1 } },
+      player: player1,
+    });
+
     presenter.present({
       board,
       outcome: {
         type: GAME_OUTCOME.DRAW,
       },
       players: [],
+      history: gameHistory,
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
@@ -92,6 +129,35 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith("It's a draw.");
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 4 moves, it's a draw.");
+  });
+
+  test('renders final draw message after one move', () => {
+    const board: IBoard = [
+      [PIECE_X, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL],
+    ];
+
+    const gameHistory: GameHistory = new GameHistory(board);
+    gameHistory.record({
+      move: { piece: PIECE_X, position: { row: 0, column: 0 } },
+      player: player1,
+    });
+
+    presenter.present({
+      board,
+      outcome: {
+        type: GAME_OUTCOME.DRAW,
+      },
+      players: [],
+      history: gameHistory,
+    });
+
+    expect(boardPresenter.present).toHaveBeenCalledWith({
+      board,
+      players: [],
+    });
+
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 1 move, it's a draw.");
   });
 });

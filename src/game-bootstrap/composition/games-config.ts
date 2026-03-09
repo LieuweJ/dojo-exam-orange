@@ -19,6 +19,7 @@ import {
   CHESS_GAME_BOARD_COMPOSITIONS,
   createChessComposition,
 } from '../../games/scacchi-con-dojo/composition/chessComposition';
+import { IGameHistory } from '../../core/model/gameHistory';
 
 export type GameCompositionInput = {
   inputAdapter: IInputAdapter;
@@ -37,6 +38,7 @@ export type GameComposition = {
   violationPresenter: IOutputPresenter<IncorrectMove<BaseRuleViolationType>>;
   lifecycleStrategy: IGameLifecycleStrategy;
   moveHandler: IMoveHandler<IPiece>;
+  gameHistory: IGameHistory;
 };
 
 export type GameDescriptor = {

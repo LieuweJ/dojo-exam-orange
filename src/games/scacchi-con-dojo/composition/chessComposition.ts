@@ -33,6 +33,7 @@ import { ChessViolationsPresenter } from '../presenter/chessViolationsPresenter'
 import { PlayerRuleViolationType } from '../../../core/model/rules';
 import { ChessRuleViolationType } from '../strategy/game/rules/violationTypes';
 import { PositionToChessBoardResolver } from '../resolver/positionToChessBoardResolver';
+import { GameHistory } from '../../../core/model/gameHistory';
 
 const HELP_FILE = 'docs/scacchi-con-dojo.md';
 /* ──────────────────────────────────────────────────────────
@@ -220,12 +221,14 @@ export function createChessComposition({
     new ChessSimulationFactory()
   );
 
+  const initialBoardState = new BoardState(startingBoard);
+
   return {
     turnState: new TurnState([
       new Player(playerNames[0], cliMoveStrategy, toNoneEmptyArray(whiteByKind)),
       new Player(playerNames[1], cliMoveStrategy, toNoneEmptyArray(blackByKind)),
     ]),
-    boardState: new BoardState(startingBoard),
+    boardState: initialBoardState,
     boardPresenter,
     helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),
     outcomeStrategy: new ChessGameOutcomeStrategy(checkMateDetector, kingInCheckDetector),
@@ -249,6 +252,7 @@ export function createChessComposition({
 
     lifecycleStrategy: new GameLifecycleStrategy(),
     moveHandler,
+    gameHistory: new GameHistory(initialBoardState.getBoard()),
   };
 }
 

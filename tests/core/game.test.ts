@@ -25,6 +25,7 @@ import {
 } from '../../src/games/orange-in-a-row/composition/orangeInARowComposition';
 import { ConnectLineMoveHandler } from '../../src/sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
 import { LINE_CONNECT_MOVE_RULES_VIOLATIONS } from '../../src/sharedMechanics/connectLineGame/model/rules';
+import { GameHistory } from '../../src/core/model/gameHistory';
 
 describe('A game of orange-in-a-row can be played', () => {
   let board: IBoardState;
@@ -93,7 +94,8 @@ describe('A game of orange-in-a-row can be played', () => {
       new RulesChainHandler([violationStrategy]),
       violationsPresenter,
       new GameLifecycleStrategy(),
-      new ConnectLineMoveHandler()
+      new ConnectLineMoveHandler(),
+      new GameHistory(board.getBoard())
     );
   });
 
@@ -174,6 +176,7 @@ describe('A game of orange-in-a-row can be played', () => {
   });
 
   test('game stops when a winning outcome is returned', async () => {
+    const initialBoard = board.getBoard();
     const outcome: GameOutcome = {
       type: GAME_OUTCOME.WIN,
       winner: playerX,
@@ -187,12 +190,19 @@ describe('A game of orange-in-a-row can be played', () => {
       piece: PIECE_X,
     });
 
+    const expectedGameHistory: GameHistory = new GameHistory(initialBoard);
+    expectedGameHistory.record({
+      move: { position: { column: 4, row: 0 }, piece: PIECE_X },
+      player: playerX,
+    });
+
     await game.play();
 
     expect(gameResultPresenter.present).toHaveBeenLastCalledWith({
       board: board.getBoard(),
       outcome,
       players: [playerX, playerO],
+      history: expectedGameHistory,
     });
   });
 

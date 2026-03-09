@@ -23,6 +23,7 @@ import {
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
 import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
+import { GameHistory } from '../../../core/model/gameHistory';
 
 const HELP_FILE = 'docs/orange-in-a-row.md';
 
@@ -71,12 +72,14 @@ export function createOrangeInARowComposition({
   );
   const boardPresenter = new OrangeInARowBoardPresenter(outputAdapter, ORANGE_IN_A_ROW_BOARD_UI);
 
+  const initialBoardState = new BoardState(startingBoard);
+
   return {
     turnState: new TurnState([
       new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
       new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
     ]),
-    boardState: new BoardState(startingBoard),
+    boardState: initialBoardState,
     boardPresenter,
     helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),
     outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 4 }),
@@ -93,6 +96,7 @@ export function createOrangeInARowComposition({
     ),
     lifecycleStrategy: new GameLifecycleStrategy(),
     moveHandler: new ConnectLineMoveHandler(),
+    gameHistory: new GameHistory(initialBoardState.getBoard()),
   };
 }
 

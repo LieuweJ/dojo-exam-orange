@@ -23,6 +23,7 @@ import { TicTacDojoBoardPresenter } from '../presenter/ticTacDojoBoardPresenter'
 import { IPiece } from '../../../core/model/IPiece';
 import { CoinPiece } from '../../../sharedMechanics/connectLineGame/model/coinPiece';
 import { ConnectLineMoveHandler } from '../../../sharedMechanics/connectLineGame/handler/connectLineMoveHandler';
+import { GameHistory } from '../../../core/model/gameHistory';
 
 const HELP_FILE = 'docs/tic-tac-dojo.md';
 
@@ -82,12 +83,14 @@ export function createTicTacDojo({
     TIC_TAC_DOJO_ROW_TO_STRING
   );
 
+  const initialBoardState = new BoardState(emptyBoard);
+
   return {
     turnState: new TurnState([
       new Player(playerNames[0], cliMoveStrategy, [PIECE_X]),
       new Player(playerNames[1], cliMoveStrategy, [PIECE_O]),
     ]),
-    boardState: new BoardState(emptyBoard),
+    boardState: initialBoardState,
     boardPresenter,
     helpPresenter: new HelpPresenter(outputAdapter, HELP_FILE),
     outcomeStrategy: new ConnectLineGameOutcomeStrategy({ connectionLength: 3 }),
@@ -104,5 +107,6 @@ export function createTicTacDojo({
     ),
     lifecycleStrategy: new GameLifecycleStrategy(),
     moveHandler: new ConnectLineMoveHandler(),
+    gameHistory: new GameHistory(initialBoardState.getBoard()),
   };
 }
