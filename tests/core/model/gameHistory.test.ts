@@ -5,34 +5,85 @@ import { Move } from '../../../src/core/model/rules';
 import { Player } from '../../../src/core/model/player';
 import { IMoveStrategy } from '../../../src/core/strategy/player/move-strategy';
 
-describe('GameHistory.getInitialBoard', () => {
-  it('returns the original board even after moves are recorded', () => {
-    const initialBoard = [
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
-    ];
+describe('GameHistory', () => {
+  const myCoinSymbol = Symbol('myCoinSymbol');
+  const dummyStrategy = {} as IMoveStrategy;
 
-    const history = new GameHistory(initialBoard);
+  const createPlayer = () => new Player('Bob', dummyStrategy, [new CoinPiece(myCoinSymbol)]);
 
-    const myCoinSymbol = Symbol('myCoinSymbol');
+  const createMove = (): Move => ({
+    piece: new CoinPiece(myCoinSymbol),
+    position: { row: 0, column: 1 },
+  });
 
-    const dummyStrategy = {} as IMoveStrategy;
-    const player = new Player('Bob', dummyStrategy, [new CoinPiece(myCoinSymbol)]);
+  describe('getInitialBoard', () => {
+    it('returns the original board even after moves are recorded', () => {
+      const initialBoard = [
+        [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+        [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      ];
 
-    const piece = new CoinPiece(myCoinSymbol);
+      const history = new GameHistory(initialBoard);
 
-    const move: Move = {
-      piece: piece,
-      position: { row: 0, column: 1 },
-    };
+      history.record({
+        move: createMove(),
+        player: createPlayer(),
+      });
 
-    history.record({
-      move,
-      player,
+      const boardFromHistory = history.getInitialBoard();
+
+      expect(boardFromHistory[0][1]).toBe(EMPTY_CELL);
     });
 
-    const boardFromHistory = history.getInitialBoard();
+    it('returns a clone of the initial board', () => {
+      const initialBoard = [
+        [EMPTY_CELL, EMPTY_CELL],
+        [EMPTY_CELL, EMPTY_CELL],
+      ];
 
-    expect(boardFromHistory[0][1]).toBe(EMPTY_CELL);
+      const history = new GameHistory(initialBoard);
+
+      const boardFromHistory = history.getInitialBoard();
+
+      expect(boardFromHistory).not.toBe(initialBoard);
+      expect(boardFromHistory[0]).not.toBe(initialBoard[0]);
+    });
+  });
+
+  describe('record and getRecordedMoves', () => {
+    it('stores a recorded move', () => {
+      const history = new GameHistory([
+        [EMPTY_CELL, EMPTY_CELL],
+        [EMPTY_CELL, EMPTY_CELL],
+      ]);
+
+      const move = createMove();
+      const player = createPlayer();
+
+      history.record({ move, player });
+
+      const recordedMoves = history.getRecordedMoves();
+
+      expect(recordedMoves).toHaveLength(1);
+      expect(recordedMoves[0]).toEqual({ move, player });
+    });
+
+    it('returns a copy of the recorded moves array', () => {
+      const history = new GameHistory([
+        [EMPTY_CELL, EMPTY_CELL],
+        [EMPTY_CELL, EMPTY_CELL],
+      ]);
+
+      history.record({
+        move: createMove(),
+        player: createPlayer(),
+      });
+
+      const recordedMoves = history.getRecordedMoves();
+
+      recordedMoves.pop();
+
+      expect(history.getRecordedMoves()).toHaveLength(1);
+    });
   });
 });

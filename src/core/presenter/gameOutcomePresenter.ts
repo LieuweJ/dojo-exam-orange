@@ -36,7 +36,7 @@ export class GameOutcomePresenter implements IOutputPresenter<GameResultPresente
 
     if (outcome.type === GAME_OUTCOME.DRAW) {
       this.boardPresenter.present({ board, players });
-      this.output.render(`${movesDescription}, It's a draw.`);
+      this.output.render(`${movesDescription}, it's a draw.`);
     }
   }
 }

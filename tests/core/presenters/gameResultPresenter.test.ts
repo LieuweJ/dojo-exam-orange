@@ -129,7 +129,7 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith("After 4 moves, It's a draw.");
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 4 moves, it's a draw.");
   });
 
   test('renders final draw message after one move', () => {
@@ -158,6 +158,6 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith("After 1 move, It's a draw.");
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 1 move, it's a draw.");
   });
 });
