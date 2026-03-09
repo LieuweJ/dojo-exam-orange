@@ -43,16 +43,20 @@ export class BoardState implements IBoardState {
       piece,
     } = move;
 
-    if (!this.canAddMove({ row, column })) {
-      throw new Error(`Cannot add boardPosition: {row: ${row}, column: ${column}} to the board.`);
+    if (!this.isPositionOnBoard({ row, column })) {
+      throw new Error(
+        `Cannot add boardPosition: {row: ${row}, column: ${column}} because it is not on the board.`
+      );
     }
 
     this.board[row][column] = piece;
   }
 
   clearPosition({ column, row }: BoardPosition) {
-    if (!this.canAddMove({ column, row })) {
-      throw new Error(`Cannot clear boardPosition: {row: ${row}, column: ${column}} on the board.`);
+    if (!this.isPositionOnBoard({ column, row })) {
+      throw new Error(
+        `Cannot clear boardPosition: {row: ${row}, column: ${column}} because it is not on the board.`
+      );
     }
 
     this.board[row][column] = EMPTY_CELL;
@@ -95,7 +99,7 @@ export class BoardState implements IBoardState {
     return { clonedBoard: new BoardState(clonedBoard), clonedPieces: pieceMap };
   }
 
-  private canAddMove({ column, row }: BoardPosition): boolean {
+  private isPositionOnBoard({ column, row }: BoardPosition): boolean {
     if (!this.board[row]) {
       return false;
     }

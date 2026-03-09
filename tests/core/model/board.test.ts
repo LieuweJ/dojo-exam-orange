@@ -21,7 +21,7 @@ describe('Board.addMove', () => {
         },
         piece: PIECE_O,
       });
-    }).toThrow('Cannot add boardPosition: {row: 0, column: 99} to the board.');
+    }).toThrow('Cannot add boardPosition: {row: 0, column: 99} because it is not on the board.');
   });
 
   it('throws when row is not on the board', () => {
@@ -33,7 +33,7 @@ describe('Board.addMove', () => {
         },
         piece: PIECE_O,
       });
-    }).toThrow('Cannot add boardPosition: {row: -99, column: 1} to the board.');
+    }).toThrow('Cannot add boardPosition: {row: -99, column: 1} because it is not on the board.');
   });
 });
 
@@ -86,7 +86,7 @@ describe('BoardState.clearPosition', () => {
         column: 99,
         row: 0,
       });
-    }).toThrow('Cannot clear boardPosition: {row: 0, column: 99} on the board.');
+    }).toThrow('Cannot clear boardPosition: {row: 0, column: 99} because it is not on the board.');
   });
 
   it('throws when row is not on the board', () => {
@@ -95,6 +95,6 @@ describe('BoardState.clearPosition', () => {
         column: 1,
         row: -99,
       });
-    }).toThrow('Cannot clear boardPosition: {row: -99, column: 1} on the board.');
+    }).toThrow('Cannot clear boardPosition: {row: -99, column: 1} because it is not on the board.');
   });
 });
