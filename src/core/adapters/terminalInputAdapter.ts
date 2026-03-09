@@ -5,10 +5,11 @@ export interface IInputAdapter {
 }
 
 export class TerminalInputAdapter implements IInputAdapter {
-  private readLine = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+  private readLine: readline.Interface;
+
+  constructor(input: NodeJS.ReadableStream, output: NodeJS.WritableStream) {
+    this.readLine = readline.createInterface({ input, output });
+  }
 
   ask(question: string): Promise<string> {
     return new Promise((resolve) => {
