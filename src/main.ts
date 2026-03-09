@@ -6,7 +6,7 @@ import { GameSelectionService } from './game-bootstrap/gameSelectionService';
 import { PlayerNameSelectionService } from './game-bootstrap/playerNameSelectionService';
 
 async function main() {
-  const inputAdapter = new TerminalInputAdapter();
+  const inputAdapter = new TerminalInputAdapter(process.stdin, process.stdout);
   const outputAdapter = new TerminalOutputAdapter();
   const gameSelectionService = new GameSelectionService(
     inputAdapter,
