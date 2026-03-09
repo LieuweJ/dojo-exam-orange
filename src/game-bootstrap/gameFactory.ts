@@ -1,29 +1,17 @@
 import { IInputAdapter } from '../core/adapters/terminalInputAdapter';
 import { Game } from '../core/game';
-import { GameSelectionService } from './gameSelectionService';
 import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 import { PlayerNameSelectionService } from './playerNameSelectionService';
-
-type createGameInput = {
-  inputAdapter: IInputAdapter;
-  outputAdapter: IOutputAdapter;
-};
+import { GameDescriptor } from './composition/games-config';
 
 export class GameFactory {
   constructor(
     private readonly inputAdapter: IInputAdapter,
     private readonly outputAdapter: IOutputAdapter,
-    private readonly gameSelector: GameSelectionService,
     private readonly playerNameSelectionService: PlayerNameSelectionService
   ) {}
 
-  async createGameFromUserSelection({}: createGameInput): Promise<Game | null> {
-    const gameDescriptor = await this.gameSelector.selectGame();
-
-    if (!gameDescriptor) {
-      return null;
-    }
-
+  async create(gameDescriptor: GameDescriptor): Promise<Game> {
     const playerNames = await this.playerNameSelectionService.selectPlayerNames(
       gameDescriptor.requiredPlayers
     );

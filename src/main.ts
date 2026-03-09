@@ -16,21 +16,18 @@ async function main() {
   );
   const playerNameSelectionService = new PlayerNameSelectionService(inputAdapter, outputAdapter);
 
-  const gameFactory = new GameFactory(
-    inputAdapter,
-    outputAdapter,
-    gameSelectionService,
-    playerNameSelectionService
-  );
+  const gameFactory = new GameFactory(inputAdapter, outputAdapter, playerNameSelectionService);
 
   try {
     while (true) {
-      const game = await gameFactory.createGameFromUserSelection({ inputAdapter, outputAdapter });
+      const gameDescriptor = await gameSelectionService.selectGame();
 
-      if (!game) {
+      if (!gameDescriptor) {
         outputAdapter.render('\nOtsukaresama deshita!\n');
         return;
       }
+
+      const game = await gameFactory.create(gameDescriptor);
 
       await game.play();
 
