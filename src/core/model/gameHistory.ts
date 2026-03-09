@@ -15,7 +15,7 @@ export type RecordedMove = {
 
 export class GameHistory implements IGameHistory {
   private readonly initialBoard: IBoard;
-  private readonly historicMoves: RecordedMove[] = [];
+  private readonly recordedMoves: RecordedMove[] = [];
 
   constructor(initialBoard: IBoard) {
     this.initialBoard = this.cloneBoard(initialBoard);
@@ -26,11 +26,11 @@ export class GameHistory implements IGameHistory {
   }
 
   record(recordedMove: RecordedMove): void {
-    this.historicMoves.push(recordedMove);
+    this.recordedMoves.push(recordedMove);
   }
 
   getRecordedMoves(): RecordedMove[] {
-    return [...this.historicMoves];
+    return [...this.recordedMoves];
   }
 
   private cloneBoard(board: IBoard): IBoard {

@@ -20,6 +20,7 @@ describe('CliMoveStrategy', () => {
   beforeEach(() => {
     inputAdapter = {
       ask: jest.fn(),
+      close: jest.fn(),
     };
 
     outputAdapter = {

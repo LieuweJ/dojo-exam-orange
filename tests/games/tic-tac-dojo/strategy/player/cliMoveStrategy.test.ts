@@ -35,6 +35,7 @@ describe('CliMoveStrategy (Tic-Tac-Toe)', () => {
   beforeEach(() => {
     input = {
       ask: jest.fn(),
+      close: jest.fn(),
     };
 
     output = {

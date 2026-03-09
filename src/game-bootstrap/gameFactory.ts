@@ -1,14 +1,18 @@
 import { IInputAdapter } from '../core/adapters/terminalInputAdapter';
-import { Game } from '../core/game';
+import { Game, IGame } from '../core/game';
 import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
-import { PlayerNameSelectionService } from './playerNameSelectionService';
+import { PlayerSelectionService } from './playerSelectionService';
 import { GameDescriptor } from './composition/games-config';
 
-export class GameFactory {
+export type IGameFactory<Game extends IGame> = {
+  create(gameDescriptor: GameDescriptor): Promise<Game>;
+};
+
+export class GameFactory implements IGameFactory<Game> {
   constructor(
     private readonly inputAdapter: IInputAdapter,
     private readonly outputAdapter: IOutputAdapter,
-    private readonly playerNameSelectionService: PlayerNameSelectionService
+    private readonly playerNameSelectionService: PlayerSelectionService
   ) {}
 
   async create(gameDescriptor: GameDescriptor): Promise<Game> {

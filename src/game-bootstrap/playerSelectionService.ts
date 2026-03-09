@@ -1,12 +1,12 @@
 import { IInputAdapter } from '../core/adapters/terminalInputAdapter';
 import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 
-type IPlayerNameSelectionService = {
+type IPlayerSelectionService = {
   selectPlayerNames(count: number): Promise<string[]>;
 };
 
-export class PlayerNameSelectionService implements IPlayerNameSelectionService {
-  private previousPlayerNames: string[] = [];
+export class PlayerSelectionService implements IPlayerSelectionService {
+  private previousPlayers: string[] = [];
 
   constructor(
     private readonly input: IInputAdapter,
@@ -18,7 +18,7 @@ export class PlayerNameSelectionService implements IPlayerNameSelectionService {
 
     for (let i = 0; i < playerCount; i++) {
       while (true) {
-        const previousName = this.previousPlayerNames[i] || null;
+        const previousName = this.previousPlayers[i] || null;
 
         const previousNameUi = previousName ? ` [${previousName}]` : '';
 
@@ -41,7 +41,7 @@ export class PlayerNameSelectionService implements IPlayerNameSelectionService {
           continue;
         }
 
-        this.previousPlayerNames[i] = name;
+        this.previousPlayers[i] = name;
         names.push(trimmedName);
         break;
       }

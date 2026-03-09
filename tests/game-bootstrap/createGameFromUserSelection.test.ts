@@ -1,6 +1,6 @@
 import { GameFactory } from '../../src/game-bootstrap/gameFactory';
 import { Game } from '../../src/core/game';
-import { PlayerNameSelectionService } from '../../src/game-bootstrap/playerNameSelectionService';
+import { PlayerSelectionService } from '../../src/game-bootstrap/playerSelectionService';
 import { GameDescriptor } from '../../src/game-bootstrap/composition/games-config';
 
 describe('GameFactory.create', () => {
@@ -21,7 +21,7 @@ describe('GameFactory.create', () => {
     gameHistory: {} as never,
   };
 
-  let playerNameSelectionService: jest.Mocked<PlayerNameSelectionService>;
+  let playerNameSelectionService: jest.Mocked<PlayerSelectionService>;
   let factory: GameFactory;
   let mockGameDescriptor: GameDescriptor;
 
@@ -30,7 +30,7 @@ describe('GameFactory.create', () => {
 
     playerNameSelectionService = {
       selectPlayerNames: jest.fn().mockResolvedValue(['Alice', 'Bob']),
-    } as unknown as jest.Mocked<PlayerNameSelectionService>;
+    } as unknown as jest.Mocked<PlayerSelectionService>;
 
     mockGameDescriptor = {
       id: 'test-game',

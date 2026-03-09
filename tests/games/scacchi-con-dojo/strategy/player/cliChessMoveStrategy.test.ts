@@ -37,7 +37,7 @@ describe('CliChessMoveStrategy', () => {
     Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => EMPTY_CELL));
 
   beforeEach(() => {
-    input = { ask: jest.fn() };
+    input = { ask: jest.fn(), close: jest.fn() };
     output = { render: jest.fn() };
     boardPresenter = { present: jest.fn() };
 
