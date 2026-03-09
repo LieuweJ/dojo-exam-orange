@@ -1,15 +1,21 @@
 import { Move } from './rules';
 import { IBoard } from './boardState';
+import { IPlayer } from './player';
 
 export type IGameHistory = {
-  record(move: Move): void;
-  getRecordedMoves(): Move[];
+  record(recordedMove: RecordedMove): void;
+  getRecordedMoves(): RecordedMove[];
   getInitialBoard(): IBoard;
+};
+
+export type RecordedMove = {
+  move: Move;
+  player: IPlayer;
 };
 
 export class GameHistory implements IGameHistory {
   private readonly initialBoard: IBoard;
-  private readonly moves: Move[] = [];
+  private readonly historicMoves: RecordedMove[] = [];
 
   constructor(initialBoard: IBoard) {
     this.initialBoard = this.cloneBoard(initialBoard);
@@ -19,12 +25,12 @@ export class GameHistory implements IGameHistory {
     return this.cloneBoard(this.initialBoard);
   }
 
-  record(move: Move): void {
-    this.moves.push(move);
+  record(recordedMove: RecordedMove): void {
+    this.historicMoves.push(recordedMove);
   }
 
-  getRecordedMoves(): Move[] {
-    return [...this.moves];
+  getRecordedMoves(): RecordedMove[] {
+    return [...this.historicMoves];
   }
 
   private cloneBoard(board: IBoard): IBoard {

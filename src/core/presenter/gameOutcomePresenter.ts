@@ -3,16 +3,13 @@ import { GAME_OUTCOME, GameOutcome } from '../strategy/game/gameOutcomeStrategy'
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { BoardPresentArgs, IOutputPresenter } from './boardPresenter';
 import { IPlayer } from '../model/player';
-import { Move } from '../model/rules';
+import { IGameHistory } from '../model/gameHistory';
 
 export type GameResultPresenterArgs = {
   board: IBoard;
   outcome: GameOutcome;
   players: IPlayer[];
-  history: {
-    moves: Move[];
-    initialBoard: IBoard;
-  };
+  history: IGameHistory;
 };
 
 export class GameOutcomePresenter implements IOutputPresenter<GameResultPresenterArgs> {
@@ -21,7 +18,8 @@ export class GameOutcomePresenter implements IOutputPresenter<GameResultPresente
     private readonly output: IOutputAdapter
   ) {}
 
-  present({ board, players, outcome, history: { moves } }: GameResultPresenterArgs): void {
+  present({ board, players, outcome, history }: GameResultPresenterArgs): void {
+    const moves = history.getRecordedMoves();
     const movesDescription = `After ${moves.length} move${moves.length !== 1 ? 's' : ''}`;
 
     if (outcome.type === GAME_OUTCOME.WIN) {

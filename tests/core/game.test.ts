@@ -190,21 +190,19 @@ describe('A game of orange-in-a-row can be played', () => {
       piece: PIECE_X,
     });
 
+    const expectedGameHistory: GameHistory = new GameHistory(initialBoard);
+    expectedGameHistory.record({
+      move: { position: { column: 4, row: 0 }, piece: PIECE_X },
+      player: playerX,
+    });
+
     await game.play();
 
     expect(gameResultPresenter.present).toHaveBeenLastCalledWith({
       board: board.getBoard(),
       outcome,
       players: [playerX, playerO],
-      history: {
-        moves: [
-          {
-            position: { column: 4, row: 0 },
-            piece: PIECE_X,
-          },
-        ],
-        initialBoard: initialBoard,
-      },
+      history: expectedGameHistory,
     });
   });
 

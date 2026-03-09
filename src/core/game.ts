@@ -44,10 +44,7 @@ export class Game implements IGame {
           board: this.boardState.getBoard(),
           players,
           outcome,
-          history: {
-            moves: this.gameHistory.getRecordedMoves(),
-            initialBoard: this.gameHistory.getInitialBoard(),
-          },
+          history: this.gameHistory,
         });
 
         return;
@@ -65,9 +62,9 @@ export class Game implements IGame {
 
     let proposedMove: Move;
 
-    while (true) {
-      const currentPlayer = this.turnState.getCurrentPlayer();
+    const currentPlayer = this.turnState.getCurrentPlayer();
 
+    while (true) {
       proposedMove = await currentPlayer.getNextMove(
         this.boardState.getBoard(),
         this.turnState.getPlayers()
@@ -95,6 +92,6 @@ export class Game implements IGame {
 
     this.moveHandler.handle(proposedMove, this.boardState, this.turnState.getCurrentPlayer());
 
-    this.gameHistory.record(proposedMove);
+    this.gameHistory.record({ move: proposedMove, player: currentPlayer });
   }
 }
