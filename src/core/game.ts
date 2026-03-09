@@ -1,4 +1,4 @@
-import { IBoard, IBoardState } from './model/boardState';
+import { IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameOutcomePresenter';
@@ -8,7 +8,7 @@ import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 import { IGameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
 import { IMoveHandler } from './handler/MoveHandler';
 import { IPiece } from './model/IPiece';
-import { GameHistory, IGameHistory } from './model/gameHistory';
+import { IGameHistory } from './model/gameHistory';
 
 export type IGame = {
   play(): void;
