@@ -1,4 +1,4 @@
-import { IBoardState } from './model/boardState';
+import { IBoard, IBoardState } from './model/boardState';
 import { BoardPresentArgs, IOutputPresenter } from './presenter/boardPresenter';
 import { IGameOutcomeStrategy } from './strategy/game/gameOutcomeStrategy';
 import { GameResultPresenterArgs } from './presenter/gameOutcomePresenter';
@@ -8,6 +8,7 @@ import { IRulesChainHandler } from './strategy/game/rules/rulesChainHandler';
 import { IGameLifecycleStrategy } from './strategy/game/gameLifecycleStrategy';
 import { IMoveHandler } from './handler/MoveHandler';
 import { IPiece } from './model/IPiece';
+import { GameHistory, IGameHistory } from './model/gameHistory';
 
 export type IGame = {
   play(): void;
@@ -24,7 +25,8 @@ export class Game implements IGame {
     private readonly rulesChecker: IRulesChainHandler,
     private readonly violationPresenter: IOutputPresenter<IncorrectMove<BaseRuleViolationType>>,
     private readonly gameLifeCycleStrategy: IGameLifecycleStrategy,
-    private readonly moveHandler: IMoveHandler<IPiece>
+    private readonly moveHandler: IMoveHandler<IPiece>,
+    private readonly gameHistory: IGameHistory
   ) {}
 
   public async play() {
@@ -42,6 +44,10 @@ export class Game implements IGame {
           board: this.boardState.getBoard(),
           players,
           outcome,
+          history: {
+            moves: this.gameHistory.getRecordedMoves(),
+            initialBoard: this.gameHistory.getInitialBoard(),
+          },
         });
 
         return;
@@ -88,5 +94,7 @@ export class Game implements IGame {
     }
 
     this.moveHandler.handle(proposedMove, this.boardState, this.turnState.getCurrentPlayer());
+
+    this.gameHistory.record(proposedMove);
   }
 }

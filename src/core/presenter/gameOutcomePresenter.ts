@@ -3,11 +3,16 @@ import { GAME_OUTCOME, GameOutcome } from '../strategy/game/gameOutcomeStrategy'
 import { IOutputAdapter } from '../adapters/terminalOutputAdapter';
 import { BoardPresentArgs, IOutputPresenter } from './boardPresenter';
 import { IPlayer } from '../model/player';
+import { Move } from '../model/rules';
 
 export type GameResultPresenterArgs = {
   board: IBoard;
   outcome: GameOutcome;
   players: IPlayer[];
+  history: {
+    moves: Move[];
+    initialBoard: IBoard;
+  };
 };
 
 export class GameOutcomePresenter implements IOutputPresenter<GameResultPresenterArgs> {
@@ -16,7 +21,9 @@ export class GameOutcomePresenter implements IOutputPresenter<GameResultPresente
     private readonly output: IOutputAdapter
   ) {}
 
-  present({ board, players, outcome }: GameResultPresenterArgs): void {
+  present({ board, players, outcome, history: { moves } }: GameResultPresenterArgs): void {
+    const movesDescription = `After ${moves.length} move${moves.length !== 1 ? 's' : ''}`;
+
     if (outcome.type === GAME_OUTCOME.WIN) {
       this.boardPresenter.present({
         board,
@@ -24,14 +31,14 @@ export class GameOutcomePresenter implements IOutputPresenter<GameResultPresente
         players,
       });
 
-      this.output.render(`${outcome.winner.getScreenName()} wins!`);
+      this.output.render(`${movesDescription}, ${outcome.winner.getScreenName()} wins!`);
 
       return;
     }
 
     if (outcome.type === GAME_OUTCOME.DRAW) {
       this.boardPresenter.present({ board, players });
-      this.output.render(`It's a draw.`);
+      this.output.render(`${movesDescription}, It's a draw.`);
     }
   }
 }

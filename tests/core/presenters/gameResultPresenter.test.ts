@@ -58,6 +58,18 @@ describe('GameResultPresenter', () => {
         ],
       },
       players: [],
+      history: {
+        moves: [
+          { piece: PIECE_X, position: { row: 0, column: 0 } },
+          { piece: PIECE_X, position: { row: 0, column: 1 } },
+          { piece: PIECE_X, position: { row: 0, column: 2 } },
+        ],
+        initialBoard: [
+          [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+          [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+          [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+        ],
+      },
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
@@ -70,7 +82,7 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith('Alice wins!');
+    expect(outputAdapter.render).toHaveBeenCalledWith('After 3 moves, Alice wins!');
   });
 
   test('renders final board and draw message', () => {
@@ -85,6 +97,18 @@ describe('GameResultPresenter', () => {
         type: GAME_OUTCOME.DRAW,
       },
       players: [],
+      history: {
+        moves: [
+          { piece: PIECE_X, position: { row: 0, column: 0 } },
+          { piece: PIECE_O, position: { row: 0, column: 1 } },
+          { piece: PIECE_O, position: { row: 1, column: 0 } },
+          { piece: PIECE_X, position: { row: 1, column: 1 } },
+        ],
+        initialBoard: [
+          [EMPTY_CELL, EMPTY_CELL],
+          [EMPTY_CELL, EMPTY_CELL],
+        ],
+      },
     });
 
     expect(boardPresenter.present).toHaveBeenCalledWith({
@@ -92,6 +116,35 @@ describe('GameResultPresenter', () => {
       players: [],
     });
 
-    expect(outputAdapter.render).toHaveBeenCalledWith("It's a draw.");
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 4 moves, It's a draw.");
+  });
+
+  test('renders final draw message after one move', () => {
+    const board: IBoard = [
+      [PIECE_X, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL],
+    ];
+
+    presenter.present({
+      board,
+      outcome: {
+        type: GAME_OUTCOME.DRAW,
+      },
+      players: [],
+      history: {
+        moves: [{ piece: PIECE_X, position: { row: 0, column: 0 } }],
+        initialBoard: [
+          [EMPTY_CELL, EMPTY_CELL],
+          [EMPTY_CELL, EMPTY_CELL],
+        ],
+      },
+    });
+
+    expect(boardPresenter.present).toHaveBeenCalledWith({
+      board,
+      players: [],
+    });
+
+    expect(outputAdapter.render).toHaveBeenCalledWith("After 1 move, It's a draw.");
   });
 });
