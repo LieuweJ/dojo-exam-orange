@@ -1,4 +1,5 @@
 import readline from 'node:readline';
+import { PassThrough } from 'node:stream';
 import { TerminalInputAdapter } from '../../../src/core/adapters/terminalInputAdapter';
 
 jest.mock('node:readline');
@@ -7,10 +8,13 @@ describe('TerminalInputAdapter', () => {
   const questionMock = jest.fn();
   const closeMock = jest.fn();
 
-  const fakeInput = {} as NodeJS.ReadableStream;
-  const fakeOutput = {} as NodeJS.WritableStream;
+  let fakeInput: PassThrough;
+  let fakeOutput: PassThrough;
 
   beforeEach(() => {
+    fakeInput = new PassThrough();
+    fakeOutput = new PassThrough();
+
     (readline.createInterface as jest.Mock).mockReturnValue({
       question: questionMock,
       close: closeMock,
