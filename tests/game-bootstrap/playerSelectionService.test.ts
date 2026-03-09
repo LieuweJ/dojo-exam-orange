@@ -1,4 +1,4 @@
-import { PlayerNameSelectionService } from '../../src/game-bootstrap/playerNameSelectionService';
+import { PlayerSelectionService } from '../../src/game-bootstrap/playerSelectionService';
 
 describe('PlayerNameSelectionService', () => {
   it('retries when player name is empty', async () => {
@@ -10,7 +10,7 @@ describe('PlayerNameSelectionService', () => {
       render: jest.fn(),
     };
 
-    const service = new PlayerNameSelectionService(input as never, output as never);
+    const service = new PlayerSelectionService(input as never, output as never);
 
     const names = await service.selectPlayerNames(1);
 
@@ -28,7 +28,7 @@ describe('PlayerNameSelectionService', () => {
       render: jest.fn(),
     };
 
-    const service = new PlayerNameSelectionService(input as never, output as never);
+    const service = new PlayerSelectionService(input as never, output as never);
 
     const names = await service.selectPlayerNames(1);
 
@@ -50,7 +50,7 @@ describe('PlayerNameSelectionService', () => {
       render: jest.fn(),
     };
 
-    const service = new PlayerNameSelectionService(input as never, output as never);
+    const service = new PlayerSelectionService(input as never, output as never);
 
     const names = await service.selectPlayerNames(2);
 
@@ -68,7 +68,7 @@ describe('PlayerNameSelectionService', () => {
       render: jest.fn(),
     };
 
-    const service = new PlayerNameSelectionService(input as never, output as never);
+    const service = new PlayerSelectionService(input as never, output as never);
 
     const firstRun = await service.selectPlayerNames(1);
     const secondRun = await service.selectPlayerNames(1);

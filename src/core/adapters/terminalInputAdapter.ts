@@ -2,6 +2,7 @@ import readline from 'node:readline';
 
 export interface IInputAdapter {
   ask(question: string): Promise<string>;
+  close(): void;
 }
 
 export class TerminalInputAdapter implements IInputAdapter {

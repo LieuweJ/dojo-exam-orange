@@ -11,7 +11,7 @@ import { IPiece } from './model/IPiece';
 import { IGameHistory } from './model/gameHistory';
 
 export type IGame = {
-  play(): void;
+  play(): Promise<void>;
 };
 
 export class Game implements IGame {

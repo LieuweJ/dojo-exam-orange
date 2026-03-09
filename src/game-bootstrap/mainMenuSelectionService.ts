@@ -2,11 +2,11 @@ import { IInputAdapter } from '../core/adapters/terminalInputAdapter';
 import { GameDescriptor } from './composition/games-config';
 import { IOutputAdapter } from '../core/adapters/terminalOutputAdapter';
 
-type IGameSelectionService = {
-  selectGame(): Promise<GameDescriptor | null>;
+export type IMenuSelectionService<T> = {
+  select(): Promise<T>;
 };
 
-export class GameSelectionService implements IGameSelectionService {
+export class MainMenuSelectionService implements IMenuSelectionService<GameDescriptor | null> {
   constructor(
     private readonly input: IInputAdapter,
     private readonly outputAdapter: IOutputAdapter,
@@ -18,7 +18,7 @@ export class GameSelectionService implements IGameSelectionService {
     }
   }
 
-  async selectGame(): Promise<GameDescriptor | null> {
+  async select(): Promise<GameDescriptor | null> {
     while (true) {
       const menu = this.listedGames
         .map((game, index) => `${index + 1}. ${game.displayName}`)

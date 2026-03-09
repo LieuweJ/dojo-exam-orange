@@ -1,33 +1,36 @@
-import { TerminalInputAdapter } from './core/adapters/terminalInputAdapter';
-import { TerminalOutputAdapter } from './core/adapters/terminalOutputAdapter';
-import { GameFactory } from './game-bootstrap/gameFactory';
-import { LISTED_GAMES, UNLISTED_GAMES } from './game-bootstrap/composition/games-config';
-import { GameSelectionService } from './game-bootstrap/gameSelectionService';
-import { PlayerNameSelectionService } from './game-bootstrap/playerNameSelectionService';
+import { IInputAdapter, TerminalInputAdapter } from './core/adapters/terminalInputAdapter';
+import { IOutputAdapter, TerminalOutputAdapter } from './core/adapters/terminalOutputAdapter';
+import { GameFactory, IGameFactory } from './game-bootstrap/gameFactory';
+import {
+  GameDescriptor,
+  LISTED_GAMES,
+  UNLISTED_GAMES,
+} from './game-bootstrap/composition/games-config';
+import {
+  MainMenuSelectionService,
+  IMenuSelectionService,
+} from './game-bootstrap/mainMenuSelectionService';
+import { PlayerSelectionService } from './game-bootstrap/playerSelectionService';
+import { IGame } from './core/game';
 
-async function main() {
-  const inputAdapter = new TerminalInputAdapter(process.stdin, process.stdout);
-  const outputAdapter = new TerminalOutputAdapter();
-  const gameSelectionService = new GameSelectionService(
-    inputAdapter,
-    outputAdapter,
-    LISTED_GAMES,
-    UNLISTED_GAMES
-  );
-  const playerNameSelectionService = new PlayerNameSelectionService(inputAdapter, outputAdapter);
+type IMainInput = {
+  inputAdapter: IInputAdapter;
+  outputAdapter: IOutputAdapter;
+  mainMenuService: IMenuSelectionService<GameDescriptor | null>;
+  gameFactory: IGameFactory<IGame>;
+};
 
-  const gameFactory = new GameFactory(inputAdapter, outputAdapter, playerNameSelectionService);
-
+async function main({ inputAdapter, outputAdapter, mainMenuService, gameFactory }: IMainInput) {
   try {
     while (true) {
-      const gameDescriptor = await gameSelectionService.selectGame();
+      const userSelection = await mainMenuService.select();
 
-      if (!gameDescriptor) {
+      if (!userSelection) {
         outputAdapter.render('\nOtsukaresama deshita!\n');
         return;
       }
 
-      const game = await gameFactory.create(gameDescriptor);
+      const game = await gameFactory.create(userSelection);
 
       await game.play();
 
@@ -41,4 +44,21 @@ async function main() {
   }
 }
 
-main();
+const inputAdapter = new TerminalInputAdapter(process.stdin, process.stdout);
+const outputAdapter = new TerminalOutputAdapter();
+
+main({
+  inputAdapter,
+  outputAdapter,
+  mainMenuService: new MainMenuSelectionService(
+    inputAdapter,
+    outputAdapter,
+    LISTED_GAMES,
+    UNLISTED_GAMES
+  ),
+  gameFactory: new GameFactory(
+    inputAdapter,
+    outputAdapter,
+    new PlayerSelectionService(inputAdapter, outputAdapter)
+  ),
+});

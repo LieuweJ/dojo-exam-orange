@@ -1,4 +1,4 @@
-import { GameSelectionService } from '../../src/game-bootstrap/gameSelectionService';
+import { MainMenuSelectionService } from '../../src/game-bootstrap/mainMenuSelectionService';
 import { GameDescriptor } from '../../src/game-bootstrap/composition/games-config';
 
 describe('GameSelectionService', () => {
@@ -22,9 +22,14 @@ describe('GameSelectionService', () => {
       ],
     ]);
 
-    const service = new GameSelectionService(input as never, output as never, games, unlistedGames);
+    const service = new MainMenuSelectionService(
+      input as never,
+      output as never,
+      games,
+      unlistedGames
+    );
 
-    const selected = await service.selectGame();
+    const selected = await service.select();
 
     expect(selected?.id).toBe('a');
     expect(input.ask).toHaveBeenCalledTimes(2);
@@ -35,9 +40,9 @@ describe('GameSelectionService', () => {
     const input = { ask: jest.fn() };
     const output = { render: jest.fn() };
 
-    expect(() => new GameSelectionService(input as never, output as never, [], new Map())).toThrow(
-      'No games registered.'
-    );
+    expect(
+      () => new MainMenuSelectionService(input as never, output as never, [], new Map())
+    ).toThrow('No games registered.');
   });
 
   it('can select "quit"', async () => {
@@ -60,9 +65,14 @@ describe('GameSelectionService', () => {
       ],
     ]);
 
-    const service = new GameSelectionService(input as never, output as never, games, unlistedGames);
+    const service = new MainMenuSelectionService(
+      input as never,
+      output as never,
+      games,
+      unlistedGames
+    );
 
-    const selected = await service.selectGame();
+    const selected = await service.select();
 
     expect(selected).toBeNull();
     expect(input.ask).toHaveBeenCalledTimes(1);
@@ -90,9 +100,14 @@ describe('GameSelectionService', () => {
 
     const unlistedGames = new Map<string, GameDescriptor>([['unlisted-key', unlistedGame]]);
 
-    const service = new GameSelectionService(input as never, output as never, games, unlistedGames);
+    const service = new MainMenuSelectionService(
+      input as never,
+      output as never,
+      games,
+      unlistedGames
+    );
 
-    const selected = await service.selectGame();
+    const selected = await service.select();
 
     expect(selected).toStrictEqual(unlistedGame);
     expect(input.ask).toHaveBeenCalledTimes(1);
