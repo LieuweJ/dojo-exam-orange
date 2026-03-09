@@ -43,27 +43,19 @@ export class BoardState implements IBoardState {
       piece,
     } = move;
 
-    if (!this.canAddMove(move)) {
+    if (!this.canAddMove({ row, column })) {
       throw new Error(`Cannot add boardPosition: {row: ${row}, column: ${column}} to the board.`);
     }
 
     this.board[row][column] = piece;
   }
 
-  canAddMove({ position: { column, row } }: Move): boolean {
-    if (!this.board[row]) {
-      return false;
+  clearPosition({ column, row }: BoardPosition) {
+    if (!this.canAddMove({ column, row })) {
+      throw new Error(`Cannot clear boardPosition: {row: ${row}, column: ${column}} on the board.`);
     }
 
-    return this.board[row][column] !== undefined;
-  }
-
-  clearPosition(position: BoardPosition) {
-    const { row, column } = position;
-
-    if (this.board[row] && this.board[row][column]) {
-      this.board[row][column] = EMPTY_CELL;
-    }
+    this.board[row][column] = EMPTY_CELL;
   }
 
   getPiecePositionBy(piece: IPiece): BoardPosition | undefined {
@@ -101,5 +93,13 @@ export class BoardState implements IBoardState {
     );
 
     return { clonedBoard: new BoardState(clonedBoard), clonedPieces: pieceMap };
+  }
+
+  private canAddMove({ column, row }: BoardPosition): boolean {
+    if (!this.board[row]) {
+      return false;
+    }
+
+    return this.board[row][column] !== undefined;
   }
 }
