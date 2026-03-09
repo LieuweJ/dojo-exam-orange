@@ -21,7 +21,7 @@ describe('Board.addMove', () => {
         },
         piece: PIECE_O,
       });
-    }).toThrow('Cannot add boardPosition: {row: 0, column: 99} to the board.');
+    }).toThrow('Cannot add boardPosition: {row: 0, column: 99} because it is not on the board.');
   });
 
   it('throws when row is not on the board', () => {
@@ -33,7 +33,7 @@ describe('Board.addMove', () => {
         },
         piece: PIECE_O,
       });
-    }).toThrow('Cannot add boardPosition: {row: -99, column: 1} to the board.');
+    }).toThrow('Cannot add boardPosition: {row: -99, column: 1} because it is not on the board.');
   });
 });
 
@@ -67,5 +67,34 @@ describe('BoardState.clone', () => {
     // Identity mapping is correct
     expect(clonedPieces.get(coinA)).toBe(clonedA);
     expect(clonedPieces.get(coinB)).toBe(clonedB);
+  });
+});
+
+describe('BoardState.clearPosition', () => {
+  let board: BoardState;
+
+  beforeEach(() => {
+    board = new BoardState([
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+      [EMPTY_CELL, EMPTY_CELL, EMPTY_CELL],
+    ]);
+  });
+
+  it('throws when column is not on the board', () => {
+    expect(() => {
+      board.clearPosition({
+        column: 99,
+        row: 0,
+      });
+    }).toThrow('Cannot clear boardPosition: {row: 0, column: 99} because it is not on the board.');
+  });
+
+  it('throws when row is not on the board', () => {
+    expect(() => {
+      board.clearPosition({
+        column: 1,
+        row: -99,
+      });
+    }).toThrow('Cannot clear boardPosition: {row: -99, column: 1} because it is not on the board.');
   });
 });
