@@ -51,10 +51,7 @@ describe('GameFactory.createGameFromUserSelection', () => {
   });
 
   it('creates a game from user selection', async () => {
-    const game = await factory.createGameFromUserSelection({
-      inputAdapter,
-      outputAdapter,
-    });
+    const game = await factory.create();
 
     expect(gameSelectionService.selectGame).toHaveBeenCalled();
 
@@ -72,9 +69,7 @@ describe('GameFactory.createGameFromUserSelection', () => {
   it('propagates errors from game selection', async () => {
     gameSelectionService.selectGame.mockRejectedValueOnce(new Error('Boom'));
 
-    await expect(
-      factory.createGameFromUserSelection({ inputAdapter, outputAdapter })
-    ).rejects.toThrow('Boom');
+    await expect(factory.create()).rejects.toThrow('Boom');
   });
 
   it('propagates errors from composition creation', async () => {
@@ -82,18 +77,13 @@ describe('GameFactory.createGameFromUserSelection', () => {
       throw new Error('Invalid composition');
     });
 
-    await expect(
-      factory.createGameFromUserSelection({ inputAdapter, outputAdapter })
-    ).rejects.toThrow('Invalid composition');
+    await expect(factory.create()).rejects.toThrow('Invalid composition');
   });
 
   it('returns null if user opts to quit', async () => {
     gameSelectionService.selectGame.mockResolvedValueOnce(null);
 
-    const game = await factory.createGameFromUserSelection({
-      inputAdapter,
-      outputAdapter,
-    });
+    const game = await factory.create();
 
     expect(game).toBeNull();
   });
